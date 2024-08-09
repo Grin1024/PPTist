@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="base-element-shape"
     :style="{
       top: elementInfo.top + 'px',
@@ -12,7 +12,7 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
+      <div
         class="element-content"
         :style="{
           opacity: elementInfo.opacity,
@@ -22,32 +22,38 @@
           fontFamily: text.defaultFontName,
         }"
       >
-        <svg 
-          overflow="visible" 
+        <svg
+          overflow="visible"
           :width="elementInfo.width"
           :height="elementInfo.height"
         >
           <defs v-if="elementInfo.gradient">
             <GradientDefs
-              :id="`base-gradient-${elementInfo.id}`" 
+              :id="`base-gradient-${elementInfo.id}`"
               :type="elementInfo.gradient.type"
               :color1="elementInfo.gradient.color[0]"
               :color2="elementInfo.gradient.color[1]"
               :rotate="elementInfo.gradient.rotate"
             />
           </defs>
-          <g 
-            :transform="`scale(${elementInfo.width / elementInfo.viewBox[0]}, ${elementInfo.height / elementInfo.viewBox[1]}) translate(0,0) matrix(1,0,0,1,0,0)`"
+          <g
+            :transform="`scale(${elementInfo.width / elementInfo.viewBox[0]}, ${
+              elementInfo.height / elementInfo.viewBox[1]
+            }) translate(0,0) matrix(1,0,0,1,0,0)`"
           >
-            <path 
-              vector-effect="non-scaling-stroke" 
-              stroke-linecap="butt" 
+            <path
+              vector-effect="non-scaling-stroke"
+              stroke-linecap="butt"
               stroke-miterlimit="8"
-              :d="elementInfo.path" 
-              :fill="elementInfo.gradient ? `url(#base-gradient-${elementInfo.id})` : elementInfo.fill"
+              :d="elementInfo.path"
+              :fill="
+                elementInfo.gradient
+                  ? `url(#base-gradient-${elementInfo.id})`
+                  : elementInfo.fill
+              "
               :stroke="outlineColor"
-              :stroke-width="outlineWidth" 
-              :stroke-dasharray="strokeDashArray" 
+              :stroke-width="outlineWidth"
+              :stroke-dasharray="strokeDashArray"
             ></path>
           </g>
         </svg>
@@ -70,11 +76,12 @@ import useElementFlip from '@/views/components/element/hooks/useElementFlip'
 import GradientDefs from './GradientDefs.vue'
 
 const props = defineProps<{
-  elementInfo: PPTShapeElement
+  elementInfo: PPTShapeElement;
 }>()
 
 const outline = computed(() => props.elementInfo.outline)
-const { outlineWidth, outlineColor, strokeDashArray } = useElementOutline(outline)
+const { outlineWidth, outlineColor, strokeDashArray } =
+  useElementOutline(outline)
 
 const shadow = computed(() => props.elementInfo.shadow)
 const { shadowStyle } = useElementShadow(shadow)

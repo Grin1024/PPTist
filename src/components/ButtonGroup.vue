@@ -1,15 +1,18 @@
 <template>
-  <div class="button-group" :class="{ 'passive': passive }" ref="groupRef">
+  <div class="button-group" :class="{ passive: passive }" ref="groupRef">
     <slot></slot>
   </div>
 </template>
 
 <script lang="ts" setup>
-withDefaults(defineProps<{
-  passive?: boolean
-}>(), {
-  passive: false,
-})
+withDefaults(
+  defineProps<{
+    passive?: boolean;
+  }>(),
+  {
+    passive: false,
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -30,7 +33,7 @@ withDefaults(defineProps<{
         position: relative;
 
         &::after {
-          content: '';
+          content: "";
           width: 1px;
           height: calc(100% + 2px);
           background-color: $themeColor;
@@ -59,7 +62,7 @@ withDefaults(defineProps<{
         position: relative;
 
         &::after {
-          content: '';
+          content: "";
           width: 1px;
           height: calc(100% + 2px);
           background-color: $themeColor;

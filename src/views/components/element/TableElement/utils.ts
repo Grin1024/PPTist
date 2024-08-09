@@ -19,9 +19,11 @@ export const getTextStyle = (style?: TableCellStyle): CSSProperties => {
     align,
   } = style
 
-  let textDecoration = `${underline ? 'underline' : ''} ${strikethrough ? 'line-through' : ''}`
+  let textDecoration = `${underline ? 'underline' : ''} ${
+    strikethrough ? 'line-through' : ''
+  }`
   if (textDecoration === ' ') textDecoration = 'none'
-  
+
   return {
     fontWeight: bold ? 'bold' : 'normal',
     fontStyle: em ? 'italic' : 'normal',

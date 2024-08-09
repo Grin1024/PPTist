@@ -8,50 +8,56 @@
 
     <template v-if="handleChartElement.chartType === 'line'">
       <div class="row">
-        <Checkbox 
-          @update:value="value => updateOptions({ showArea: value })"
-          :value="showArea" 
-          style="flex: 1;"
-        >面积图样式</Checkbox>
-        <Checkbox 
-          @update:value="value => updateOptions({ showLine: value })"
-          :value="!showLine" 
-          style="flex: 1;"
-        >散点图样式</Checkbox>
+        <Checkbox
+          @update:value="(value) => updateOptions({ showArea: value })"
+          :value="showArea"
+          style="flex: 1"
+          >面积图样式</Checkbox
+        >
+        <Checkbox
+          @update:value="(value) => updateOptions({ showLine: value })"
+          :value="!showLine"
+          style="flex: 1"
+          >散点图样式</Checkbox
+        >
       </div>
       <div class="row">
-        <Checkbox 
-          @update:value="value => updateOptions({ lineSmooth: value })" 
+        <Checkbox
+          @update:value="(value) => updateOptions({ lineSmooth: value })"
           :value="lineSmooth"
-        >使用平滑曲线</Checkbox>
+          >使用平滑曲线</Checkbox
+        >
       </div>
     </template>
     <div class="row" v-if="handleChartElement.chartType === 'bar'">
-      <Checkbox 
-        @update:value="value => updateOptions({ horizontalBars: value })" 
+      <Checkbox
+        @update:value="(value) => updateOptions({ horizontalBars: value })"
         :value="horizontalBars"
-        style="flex: 1;"
-      >条形图样式</Checkbox>
-      <Checkbox 
-        @update:value="value => updateOptions({ stackBars: value })" 
+        style="flex: 1"
+        >条形图样式</Checkbox
+      >
+      <Checkbox
+        @update:value="(value) => updateOptions({ stackBars: value })"
         :value="stackBars"
-        style="flex: 1;"
-      >堆叠样式</Checkbox>
+        style="flex: 1"
+        >堆叠样式</Checkbox
+      >
     </div>
     <div class="row" v-if="handleChartElement.chartType === 'pie'">
-      <Checkbox 
-        @update:value="value => updateOptions({ donut: value })" 
+      <Checkbox
+        @update:value="(value) => updateOptions({ donut: value })"
         :value="donut"
-      >环形图样式</Checkbox>
+        >环形图样式</Checkbox
+      >
     </div>
 
     <Divider />
 
     <div class="row">
-      <div style="width: 40%;">图例：</div>
-      <Select 
-        style="width: 60%;" 
-        :value="legend" 
+      <div style="width: 40%">图例：</div>
+      <Select
+        style="width: 60%"
+        :value="legend"
         @update:value="value => updateLegend(value as '' | 'top' | 'bottom')"
         :options="[
           { label: '不显示', value: '' },
@@ -64,24 +70,24 @@
     <Divider />
 
     <div class="row">
-      <div style="width: 40%;">背景填充：</div>
-      <Popover trigger="click" style="width: 60%;">
+      <div style="width: 40%">背景填充：</div>
+      <Popover trigger="click" style="width: 60%">
         <template #content>
           <ColorPicker
             :modelValue="fill"
-            @update:modelValue="value => updateFill(value)"
+            @update:modelValue="(value) => updateFill(value)"
           />
         </template>
         <ColorButton :color="fill" />
       </Popover>
     </div>
     <div class="row">
-      <div style="width: 40%;">网格颜色：</div>
-      <Popover trigger="click" style="width: 60%;">
+      <div style="width: 40%">网格颜色：</div>
+      <Popover trigger="click" style="width: 60%">
         <template #content>
           <ColorPicker
             :modelValue="gridColor"
-            @update:modelValue="value => updateGridColor(value)"
+            @update:modelValue="(value) => updateGridColor(value)"
           />
         </template>
         <ColorButton :color="gridColor" />
@@ -91,31 +97,50 @@
     <Divider />
 
     <div class="row" v-for="(color, index) in themeColor" :key="index">
-      <div style="width: 40%;">{{index === 0 ? '主题配色：' : ''}}</div>
-      <Popover trigger="click" style="width: 60%;">
+      <div style="width: 40%">{{ index === 0 ? "主题配色：" : "" }}</div>
+      <Popover trigger="click" style="width: 60%">
         <template #content>
           <ColorPicker
             :modelValue="color"
-            @update:modelValue="value => updateTheme(value, index)"
+            @update:modelValue="(value) => updateTheme(value, index)"
           />
         </template>
-        <div class="color-btn-wrap" style="width: 100%;">
+        <div class="color-btn-wrap" style="width: 100%">
           <ColorButton :color="color" />
-          <div class="delete-color-btn" v-tooltip="'删除'" @click.stop="deleteThemeColor(index)" v-if="index !== 0"><IconCloseSmall /></div>
+          <div
+            class="delete-color-btn"
+            v-tooltip="'删除'"
+            @click.stop="deleteThemeColor(index)"
+            v-if="index !== 0"
+          >
+            <IconCloseSmall />
+          </div>
         </div>
       </Popover>
     </div>
     <ButtonGroup class="row" passive>
-      <Popover trigger="click" v-model:open="presetThemesVisible" style="width: 40%;">
+      <Popover
+        trigger="click"
+        v-model:open="presetThemesVisible"
+        style="width: 40%"
+      >
         <template #content>
           <div class="preset-themes">
-            <div class="preset-theme" v-for="(item, index) in presetChartThemes" :key="index">
-              <div 
-                class="preset-theme-color" 
-                :class="{ 'select': presetThemeColorHoverIndex[0] === index && itemIndex <= presetThemeColorHoverIndex[1] }"
-                v-for="(color, itemIndex) in item" 
-                :key="color" 
-                :style="{ backgroundColor: color }" 
+            <div
+              class="preset-theme"
+              v-for="(item, index) in presetChartThemes"
+              :key="index"
+            >
+              <div
+                class="preset-theme-color"
+                :class="{
+                  select:
+                    presetThemeColorHoverIndex[0] === index &&
+                    itemIndex <= presetThemeColorHoverIndex[1],
+                }"
+                v-for="(color, itemIndex) in item"
+                :key="color"
+                :style="{ backgroundColor: color }"
                 @click="applyPresetTheme(item, itemIndex)"
                 @mouseenter="presetThemeColorHoverIndex = [index, itemIndex]"
                 @mouseleave="presetThemeColorHoverIndex = [-1, -1]"
@@ -123,12 +148,12 @@
             </div>
           </div>
         </template>
-        <Button first style="width: 100%;">推荐主题</Button>
+        <Button first style="width: 100%">推荐主题</Button>
       </Popover>
       <Button
         last
-        :disabled="themeColor.length >= 10" 
-        style="width: 60%;" 
+        :disabled="themeColor.length >= 10"
+        style="width: 60%"
         @click="addThemeColor()"
       >
         <IconPlus class="btn-icon" /> 添加主题色
@@ -139,14 +164,11 @@
 
     <ElementOutline />
 
-    <Modal
-      v-model:visible="chartDataEditorVisible" 
-      :width="640"
-    >
-      <ChartDataEditor 
+    <Modal v-model:visible="chartDataEditorVisible" :width="640">
+      <ChartDataEditor
         :data="handleChartElement.data"
         @close="chartDataEditorVisible = false"
-        @save="value => updateData(value)"
+        @save="(value) => updateData(value)"
       />
     </Modal>
   </div>
@@ -213,32 +235,36 @@ const horizontalBars = ref(false)
 const donut = ref(false)
 const stackBars = ref(false)
 
-watch(handleElement, () => {
-  if (!handleElement.value || handleElement.value.type !== 'chart') return
-  fill.value = handleElement.value.fill || '#fff'
+watch(
+  handleElement,
+  () => {
+    if (!handleElement.value || handleElement.value.type !== 'chart') return
+    fill.value = handleElement.value.fill || '#fff'
 
-  if (handleElement.value.options) {
-    const {
-      lineSmooth: _lineSmooth,
-      showLine: _showLine,
-      showArea: _showArea,
-      horizontalBars: _horizontalBars,
-      donut: _donut,
-      stackBars: _stackBars,
-    } = handleElement.value.options
+    if (handleElement.value.options) {
+      const {
+        lineSmooth: _lineSmooth,
+        showLine: _showLine,
+        showArea: _showArea,
+        horizontalBars: _horizontalBars,
+        donut: _donut,
+        stackBars: _stackBars,
+      } = handleElement.value.options
 
-    lineSmooth.value = !!_lineSmooth
-    showLine.value = !!_showLine
-    showArea.value = !!_showArea
-    horizontalBars.value = !!_horizontalBars
-    donut.value = !!_donut
-    stackBars.value = !!_stackBars
-  }
+      lineSmooth.value = !!_lineSmooth
+      showLine.value = !!_showLine
+      showArea.value = !!_showArea
+      horizontalBars.value = !!_horizontalBars
+      donut.value = !!_donut
+      stackBars.value = !!_stackBars
+    }
 
-  themeColor.value = handleElement.value.themeColor
-  gridColor.value = handleElement.value.gridColor || '#333'
-  legend.value = handleElement.value.legend || ''
-}, { deep: true, immediate: true })
+    themeColor.value = handleElement.value.themeColor
+    gridColor.value = handleElement.value.gridColor || '#333'
+    legend.value = handleElement.value.legend || ''
+  },
+  { deep: true, immediate: true }
+)
 
 const updateElement = (props: Partial<PPTChartElement>) => {
   slidesStore.updateElement({ id: handleElementId.value, props })
@@ -267,7 +293,7 @@ const updateOptions = (optionProps: ChartOptions) => {
 // 设置主题色
 const updateTheme = (color: string, index: number) => {
   const props = {
-    themeColor: themeColor.value.map((c, i) => i === index ? color : c),
+    themeColor: themeColor.value.map((c, i) => (i === index ? color : c)),
   }
   updateElement(props)
 }
@@ -305,7 +331,7 @@ const updateLegend = (legend: '' | 'top' | 'bottom') => {
   updateElement({ legend })
 }
 
-const openDataEditor = () => chartDataEditorVisible.value = true
+const openDataEditor = () => (chartDataEditorVisible.value = true)
 
 emitter.on(EmitterEvents.OPEN_CHART_DATA_EDITOR, openDataEditor)
 onUnmounted(() => {

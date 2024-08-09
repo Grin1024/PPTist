@@ -1,14 +1,19 @@
 <template>
   <div class="symbol-panel">
-    <Tabs 
-      :tabs="tabs" 
-      v-model:value="selectedSymbolKey" 
-      :tabsStyle="{ marginBottom: '8px' }" 
+    <Tabs
+      :tabs="tabs"
+      v-model:value="selectedSymbolKey"
+      :tabsStyle="{ marginBottom: '8px' }"
       spaceBetween
     />
     <div class="pool">
-      <div class="symbol-item" v-for="(item, index) in symbolPool" :key="index" @click="selectSymbol(item)">
-        <div class="symbol">{{item}}</div>
+      <div
+        class="symbol-item"
+        v-for="(item, index) in symbolPool"
+        :key="index"
+        @click="selectSymbol(item)"
+      >
+        <div class="symbol">{{ item }}</div>
       </div>
     </div>
   </div>
@@ -22,17 +27,21 @@ import Tabs from '@/components/Tabs.vue'
 
 const selectedSymbolKey = ref(SYMBOL_LIST[0].key)
 const symbolPool = computed(() => {
-  const selectedSymbol = SYMBOL_LIST.find(item => item.key === selectedSymbolKey.value)
+  const selectedSymbol = SYMBOL_LIST.find(
+    (item) => item.key === selectedSymbolKey.value
+  )
   return selectedSymbol?.children || []
 })
 
-const tabs = SYMBOL_LIST.map(item => ({
+const tabs = SYMBOL_LIST.map((item) => ({
   key: item.key,
   label: item.label,
 }))
 
 const selectSymbol = (value: string) => {
-  emitter.emit(EmitterEvents.RICH_TEXT_COMMAND, { action: { command: 'insert', value } })
+  emitter.emit(EmitterEvents.RICH_TEXT_COMMAND, {
+    action: { command: 'insert', value },
+  })
 }
 </script>
 

@@ -1,5 +1,6 @@
 <template>
-  <div class="base-element-audio screen-element-audio"
+  <div
+    class="base-element-audio screen-element-audio"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -12,8 +13,8 @@
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
       <div class="element-content">
-        <IconVolumeNotice 
-          class="audio-icon" 
+        <IconVolumeNotice
+          class="audio-icon"
           :style="{
             fontSize: audioIconSize,
             color: elementInfo.color,
@@ -25,7 +26,7 @@
           ref="audioPlayerRef"
           v-if="inCurrentSlide"
           :style="{ ...audioPlayerPosition }"
-          :src="elementInfo.src" 
+          :src="elementInfo.src"
           :loop="elementInfo.loop"
           :autoplay="elementInfo.autoplay"
           :scale="scale"
@@ -46,7 +47,7 @@ import { VIEWPORT_SIZE } from '@/configs/canvas'
 import AudioPlayer from './AudioPlayer.vue'
 
 const props = defineProps<{
-  elementInfo: PPTAudioElement
+  elementInfo: PPTAudioElement;
 }>()
 
 const { viewportRatio, currentSlide } = storeToRefs(useSlidesStore())
@@ -73,7 +74,7 @@ const audioPlayerPosition = computed(() => {
 
   let left = 0
   let top = elHeight
-  
+
   if (elLeft + audioWidth >= canvasWidth) left = elWidth - audioWidth
   if (elTop + elHeight + audioHeight >= canvasHeight) top = -audioHeight
 

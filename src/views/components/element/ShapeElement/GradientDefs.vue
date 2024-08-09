@@ -1,11 +1,11 @@
 <template>
-  <linearGradient 
+  <linearGradient
     v-if="type === 'linear'"
-    :id="id" 
-    x1="0%" 
-    y1="0%" 
-    x2="100%" 
-    y2="0%" 
+    :id="id"
+    x1="0%"
+    y1="0%"
+    x2="100%"
+    y2="0%"
     :gradientTransform="`rotate(${rotate},0.5,0.5)`"
   >
     <stop offset="0%" :stop-color="color1" />
@@ -19,13 +19,16 @@
 </template>
 
 <script lang="ts" setup>
-withDefaults(defineProps<{
-  id: string
-  type: 'linear' | 'radial'
-  color1: string
-  color2: string
-  rotate?: number
-}>(), {
-  rotate: 0,
-})
+withDefaults(
+  defineProps<{
+    id: string;
+    type: 'linear' | 'radial';
+    color1: string;
+    color2: string;
+    rotate?: number;
+  }>(),
+  {
+    rotate: 0,
+  }
+)
 </script>

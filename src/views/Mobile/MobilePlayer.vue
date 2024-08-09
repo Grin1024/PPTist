@@ -1,50 +1,52 @@
 <template>
-  <div class="mobile-player" 
+  <div
+    class="mobile-player"
     :style="{
       width: playerSize.width + 'px',
       height: playerSize.height + 'px',
       transform: `rotate(90deg) translateY(-${playerSize.height}px)`,
     }"
   >
-    <div 
-      class="screen-slide-list" 
+    <div
+      class="screen-slide-list"
       @click="toolVisible = !toolVisible"
-      @touchstart="$event => touchStartListener($event)"
-      @touchend="$event => touchEndListener($event)"
+      @touchstart="($event) => touchStartListener($event)"
+      @touchend="($event) => touchEndListener($event)"
     >
-      <div 
+      <div
         :class="[
-          'slide-item', 
+          'slide-item',
           `turning-mode-${slide.turningMode || 'slideY'}`,
           {
-            'current': index === slideIndex,
-            'before': index < slideIndex,
-            'after': index > slideIndex,
-            'hide': (index === slideIndex - 1 || index === slideIndex + 1) && slide.turningMode !== currentSlide.turningMode,
-          }
+            current: index === slideIndex,
+            before: index < slideIndex,
+            after: index > slideIndex,
+            hide:
+              (index === slideIndex - 1 || index === slideIndex + 1) &&
+              slide.turningMode !== currentSlide.turningMode,
+          },
         ]"
-        v-for="(slide, index) in slides" 
+        v-for="(slide, index) in slides"
         :key="slide.id"
       >
-        <div 
-          class="slide-content" 
+        <div
+          class="slide-content"
           :style="{
             width: slideSize.width + 'px',
             height: slideSize.height + 'px',
           }"
           v-if="Math.abs(slideIndex - index) < 2"
         >
-          <ThumbnailSlide 
-            :slide="slide" 
-            :size="slideSize.width" 
-          />
+          <ThumbnailSlide :slide="slide" :size="slideSize.width" />
         </div>
       </div>
     </div>
 
     <template v-if="toolVisible">
       <div class="header">
-        <div class="back" @click="changeMode('preview')"><IconLogout /> 退出播放</div>
+        <div class="back" @click="changeMode('preview')">
+          <IconLogout /> 退出播放
+        </div>
       </div>
       <MobileThumbnails class="thumbnails" />
     </template>
@@ -61,11 +63,12 @@ import ThumbnailSlide from '@/views/components/ThumbnailSlide/index.vue'
 import MobileThumbnails from './MobileThumbnails.vue'
 
 defineProps<{
-  changeMode: (mode: Mode) => void
+  changeMode: (mode: Mode) => void;
 }>()
 
 const slidesStore = useSlidesStore()
-const { slides, slideIndex, currentSlide, viewportRatio } = storeToRefs(slidesStore)
+const { slides, slideIndex, currentSlide, viewportRatio } =
+  storeToRefs(slidesStore)
 
 const toolVisible = ref(false)
 
@@ -101,7 +104,7 @@ const slideSize = computed(() => {
   }
 })
 
-const touchInfo = ref<{ x: number; y: number; } | null>(null)
+const touchInfo = ref<{ x: number; y: number } | null>(null)
 const touchStartListener = (e: TouchEvent) => {
   touchInfo.value = {
     x: e.changedTouches[0].pageX,
@@ -114,11 +117,15 @@ const touchEndListener = (e: TouchEvent) => {
   const offsetY = Math.abs(touchInfo.value.y - e.changedTouches[0].pageY)
   const offsetX = e.changedTouches[0].pageX - touchInfo.value.x
 
-  if ( Math.abs(offsetX) > offsetY && Math.abs(offsetX) > 50 ) {
+  if (Math.abs(offsetX) > offsetY && Math.abs(offsetX) > 50) {
     touchInfo.value = null
 
-    if (offsetX < 0 && slideIndex.value > 0) slidesStore.updateSlideIndex(slideIndex.value - 1)
-    if (offsetX > 0 && slideIndex.value < slides.value.length - 1) slidesStore.updateSlideIndex(slideIndex.value + 1)
+    if (offsetX < 0 && slideIndex.value > 0) {
+      slidesStore.updateSlideIndex(slideIndex.value - 1)
+    }
+    if (offsetX > 0 && slideIndex.value < slides.value.length - 1) {
+      slidesStore.updateSlideIndex(slideIndex.value + 1)
+    }
   }
 }
 </script>
@@ -158,7 +165,7 @@ const touchEndListener = (e: TouchEvent) => {
     }
   }
   &.turning-mode-fade {
-    transition: opacity .75s;
+    transition: opacity 0.75s;
     &.before {
       pointer-events: none;
       opacity: 0;
@@ -169,7 +176,7 @@ const touchEndListener = (e: TouchEvent) => {
     }
   }
   &.turning-mode-slideX {
-    transition: transform .35s;
+    transition: transform 0.35s;
     &.before {
       transform: translateX(-100%);
     }
@@ -178,7 +185,7 @@ const touchEndListener = (e: TouchEvent) => {
     }
   }
   &.turning-mode-slideY {
-    transition: transform .35s;
+    transition: transform 0.35s;
     &.before {
       transform: translateY(-100%);
     }
@@ -207,11 +214,11 @@ const touchEndListener = (e: TouchEvent) => {
   top: 0;
   left: 0;
   z-index: 99;
-  background-color: rgba($color: #1d1d1d, $alpha: .7);
+  background-color: rgba($color: #1d1d1d, $alpha: 0.7);
   text-align: right;
   font-size: 13px;
   color: #fff;
-  animation: slideInDown .15s;
+  animation: slideInDown 0.15s;
 
   .back {
     height: 100%;
@@ -223,9 +230,9 @@ const touchEndListener = (e: TouchEvent) => {
   bottom: 0;
   left: 0;
   z-index: 99;
-  background-color: rgba($color: #1d1d1d, $alpha: .7);
+  background-color: rgba($color: #1d1d1d, $alpha: 0.7);
   overflow: auto !important;
-  animation: slideInUp .15s;
+  animation: slideInUp 0.15s;
 }
 
 @keyframes slideInUp {

@@ -1,51 +1,57 @@
 <template>
   <div class="ruler">
-    <div 
+    <div
       class="h"
       :style="{
         width: viewportStyles.width * canvasScale + 'px',
         left: viewportStyles.left + 'px',
       }"
     >
-      <div 
-        class="ruler-marker-100" 
-        :class="{ 'hide': markerSize < 36, 'omit': markerSize < 72 }"
-        v-for="marker in 20" 
+      <div
+        class="ruler-marker-100"
+        :class="{ hide: markerSize < 36, omit: markerSize < 72 }"
+        v-for="marker in 20"
         :key="`marker-100-${marker}`"
       >
         <span>{{ marker * 100 }}</span>
       </div>
 
-      <div class="range" 
+      <div
+        class="range"
         v-if="elementListRange"
         :style="{
           left: elementListRange.minX * canvasScale + 'px',
-          width: (elementListRange.maxX - elementListRange.minX) * canvasScale + 'px',
+          width:
+            (elementListRange.maxX - elementListRange.minX) * canvasScale +
+            'px',
         }"
       ></div>
     </div>
-    <div 
+    <div
       class="v"
       :style="{
         height: viewportStyles.height * canvasScale + 'px',
         top: viewportStyles.top + 'px',
       }"
     >
-      <div 
-        class="ruler-marker-100" 
-        :class="{ 'hide': markerSize < 36, 'omit': markerSize < 72 }"
-        v-for="marker in 20" 
-        :key="marker" 
+      <div
+        class="ruler-marker-100"
+        :class="{ hide: markerSize < 36, omit: markerSize < 72 }"
+        v-for="marker in 20"
+        :key="marker"
         :style="{ height: markerSize + 'px' }"
       >
         <span>{{ marker * 100 }}</span>
       </div>
 
-      <div class="range" 
+      <div
+        class="range"
         v-if="elementListRange"
         :style="{
           top: elementListRange.minY * canvasScale + 'px',
-          height: (elementListRange.maxY - elementListRange.minY) * canvasScale + 'px',
+          height:
+            (elementListRange.maxY - elementListRange.minY) * canvasScale +
+            'px',
         }"
       ></div>
     </div>
@@ -60,32 +66,35 @@ import { getElementListRange } from '@/utils/element'
 import type { PPTElement } from '@/types/slides'
 
 interface ViewportStyles {
-  top: number
-  left: number
-  width: number
-  height: number
+  top: number;
+  left: number;
+  width: number;
+  height: number;
 }
 
 const props = defineProps<{
-  viewportStyles: ViewportStyles
-  elementList: PPTElement[]
+  viewportStyles: ViewportStyles;
+  elementList: PPTElement[];
 }>()
 
 const { canvasScale, activeElementIdList } = storeToRefs(useMainStore())
 
-const elementListRange = ref<null | ReturnType<typeof getElementListRange>>(null)
+const elementListRange = ref<null | ReturnType<typeof getElementListRange>>(
+  null
+)
 
 watchEffect(() => {
-  const els = props.elementList.filter(el => activeElementIdList.value.includes(el.id))
-  if (!els.length) return elementListRange.value = null
+  const els = props.elementList.filter((el) =>
+    activeElementIdList.value.includes(el.id)
+  )
+  if (!els.length) return (elementListRange.value = null)
   elementListRange.value = getElementListRange(els)
 })
 
 const markerSize = computed(() => {
-  return props.viewportStyles.width * canvasScale.value / 10
+  return (props.viewportStyles.width * canvasScale.value) / 10
 })
 </script>
-
 
 <style lang="scss" scoped>
 .ruler {
@@ -106,7 +115,7 @@ const markerSize = computed(() => {
     position: absolute;
     top: 0;
     bottom: 0;
-    background-color: rgba($color: $themeColor, $alpha: .1);
+    background-color: rgba($color: $themeColor, $alpha: 0.1);
   }
 
   .ruler-marker-100 {
@@ -126,8 +135,8 @@ const markerSize = computed(() => {
     }
 
     &:not(:last-child)::after {
-      content: '';
-      width: .1px;
+      content: "";
+      width: 0.1px;
       height: 12px;
       position: absolute;
       right: 0;
@@ -135,8 +144,8 @@ const markerSize = computed(() => {
       background-color: #999;
     }
     &::before {
-      content: '';
-      width: .1px;
+      content: "";
+      width: 0.1px;
       height: 8px;
       position: absolute;
       right: 50%;
@@ -157,7 +166,7 @@ const markerSize = computed(() => {
     position: absolute;
     left: 0;
     right: 0;
-    background-color: rgba($color: $themeColor, $alpha: .1);
+    background-color: rgba($color: $themeColor, $alpha: 0.1);
   }
 
   .ruler-marker-100 {
@@ -176,8 +185,8 @@ const markerSize = computed(() => {
     }
 
     &:not(:last-child)::after {
-      content: '';
-      height: .1px;
+      content: "";
+      height: 0.1px;
       width: 12px;
       position: absolute;
       bottom: 0;
@@ -185,8 +194,8 @@ const markerSize = computed(() => {
       background-color: #999;
     }
     &::before {
-      content: '';
-      height: .1px;
+      content: "";
+      height: 0.1px;
       width: 8px;
       position: absolute;
       bottom: 50%;

@@ -29,7 +29,7 @@ export const isSupportFont = (fontName: string) => {
     ctx.font = `${size}px ${_fontFamily}, ${arial}`
     ctx.fillText(str, width / 2, height / 2)
     const imageData = ctx.getImageData(0, 0, width, height).data
-    return [].slice.call(imageData).filter(item => item !== 0)
+    return [].slice.call(imageData).filter((item) => item !== 0)
   }
 
   return getDotArray(arial).join('') !== getDotArray(fontName).join('')

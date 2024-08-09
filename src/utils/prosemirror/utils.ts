@@ -1,4 +1,11 @@
-import type { Node, NodeType, ResolvedPos, Mark, MarkType, Schema } from 'prosemirror-model'
+import type {
+  Node,
+  NodeType,
+  ResolvedPos,
+  Mark,
+  MarkType,
+  Schema,
+} from 'prosemirror-model'
 import type { EditorState, Selection } from 'prosemirror-state'
 import type { EditorView } from 'prosemirror-view'
 import { selectAll } from 'prosemirror-commands'
@@ -15,9 +22,15 @@ export const autoSelectAll = (view: EditorView) => {
   if (empty) selectAll(view.state, view.dispatch)
 }
 
-export const addMark = (editorView: EditorView, mark: Mark, selection?: { from: number; to: number; }) => {
+export const addMark = (
+  editorView: EditorView,
+  mark: Mark,
+  selection?: { from: number; to: number }
+) => {
   if (selection) {
-    editorView.dispatch(editorView.state.tr.addMark(selection.from, selection.to, mark))
+    editorView.dispatch(
+      editorView.state.tr.addMark(selection.from, selection.to, mark)
+    )
   }
   else {
     const { $from, $to } = editorView.state.selection
@@ -25,7 +38,12 @@ export const addMark = (editorView: EditorView, mark: Mark, selection?: { from: 
   }
 }
 
-export const findNodesWithSameMark = (doc: Node, from: number, to: number, markType: MarkType) => {
+export const findNodesWithSameMark = (
+  doc: Node,
+  from: number,
+  to: number,
+  markType: MarkType
+) => {
   let ii = from
   const finder = (mark: Mark) => mark.type === markType
   let firstMark = null
@@ -86,10 +104,16 @@ export const findNodesWithSameMark = (doc: Node, from: number, to: number, markT
 }
 
 const equalNodeType = (nodeType: NodeType, node: Node) => {
-  return Array.isArray(nodeType) && nodeType.indexOf(node.type) > -1 || node.type === nodeType
+  return (
+    (Array.isArray(nodeType) && nodeType.indexOf(node.type) > -1) ||
+    node.type === nodeType
+  )
 }
 
-const findParentNodeClosestToPos = ($pos: ResolvedPos, predicate: (node: Node) => boolean) => {
+const findParentNodeClosestToPos = (
+  $pos: ResolvedPos,
+  predicate: (node: Node) => boolean
+) => {
   for (let i = $pos.depth; i > 0; i--) {
     const node = $pos.node(i)
     if (predicate(node)) {
@@ -115,7 +139,10 @@ export const findParentNodeOfType = (nodeType: NodeType) => {
   }
 }
 
-export const isActiveOfParentNodeType = (nodeType: string, state: EditorState) => {
+export const isActiveOfParentNodeType = (
+  nodeType: string,
+  state: EditorState
+) => {
   const node = state.schema.nodes[nodeType]
   return !!findParentNodeOfType(node)(state.selection)
 }
@@ -138,9 +165,15 @@ export const getMarkAttrs = (view: EditorView) => {
   return node?.marks || []
 }
 
-export const getAttrValue = (marks: readonly Mark[], markType: string, attr: string): string | null => {
+export const getAttrValue = (
+  marks: readonly Mark[],
+  markType: string,
+  attr: string
+): string | null => {
   for (const mark of marks) {
-    if (mark.type.name === markType && mark.attrs[attr]) return mark.attrs[attr]
+    if (mark.type.name === markType && mark.attrs[attr]) {
+      return mark.attrs[attr]
+    }
   }
   return null
 }
@@ -164,7 +197,7 @@ export const getAttrValueInSelection = (view: EditorView, attr: string) => {
 
   let keepChecking = true
   let value = ''
-  doc.nodesBetween(from, to, node => {
+  doc.nodesBetween(from, to, (node) => {
     if (keepChecking && node.attrs[attr]) {
       keepChecking = false
       value = node.attrs[attr]
@@ -174,14 +207,14 @@ export const getAttrValueInSelection = (view: EditorView, attr: string) => {
   return value
 }
 
-type Align = 'left' | 'right' | 'center'
+type Align = 'left' | 'right' | 'center';
 
 interface DefaultAttrs {
-  color: string
-  backcolor: string
-  fontsize: string
-  fontname: string
-  align: Align
+  color: string;
+  backcolor: string;
+  fontsize: string;
+  fontname: string;
+  align: Align;
 }
 const _defaultAttrs: DefaultAttrs = {
   color: '#000',
@@ -190,7 +223,10 @@ const _defaultAttrs: DefaultAttrs = {
   fontname: '微软雅黑',
   align: 'left',
 }
-export const getTextAttrs = (view: EditorView, attrs: Partial<DefaultAttrs> = {}) => {
+export const getTextAttrs = (
+  view: EditorView,
+  attrs: Partial<DefaultAttrs> = {}
+) => {
   const defaultAttrs: DefaultAttrs = { ..._defaultAttrs, ...attrs }
 
   const marks = getMarkAttrs(view)
@@ -203,11 +239,15 @@ export const getTextAttrs = (view: EditorView, attrs: Partial<DefaultAttrs> = {}
   const isSubscript = isActiveMark(marks, 'subscript')
   const isCode = isActiveMark(marks, 'code')
   const color = getAttrValue(marks, 'forecolor', 'color') || defaultAttrs.color
-  const backcolor = getAttrValue(marks, 'backcolor', 'backcolor') || defaultAttrs.backcolor
-  const fontsize = getAttrValue(marks, 'fontsize', 'fontsize') || defaultAttrs.fontsize
-  const fontname = getAttrValue(marks, 'fontname', 'fontname') || defaultAttrs.fontname
+  const backcolor =
+    getAttrValue(marks, 'backcolor', 'backcolor') || defaultAttrs.backcolor
+  const fontsize =
+    getAttrValue(marks, 'fontsize', 'fontsize') || defaultAttrs.fontsize
+  const fontname =
+    getAttrValue(marks, 'fontname', 'fontname') || defaultAttrs.fontname
   const link = getAttrValue(marks, 'link', 'href') || ''
-  const align = (getAttrValueInSelection(view, 'align') || defaultAttrs.align) as Align
+  const align = (getAttrValueInSelection(view, 'align') ||
+    defaultAttrs.align) as Align
   const isBulletList = isActiveOfParentNodeType('bullet_list', view.state)
   const isOrderedList = isActiveOfParentNodeType('ordered_list', view.state)
   const isBlockquote = isActiveOfParentNodeType('blockquote', view.state)
@@ -232,11 +272,12 @@ export const getTextAttrs = (view: EditorView, attrs: Partial<DefaultAttrs> = {}
   }
 }
 
-export type TextAttrs = ReturnType<typeof getTextAttrs>
+export type TextAttrs = ReturnType<typeof getTextAttrs>;
 
 export const getFontsize = (view: EditorView) => {
   const marks = getMarkAttrs(view)
-  const fontsize = getAttrValue(marks, 'fontsize', 'fontsize') || _defaultAttrs.fontsize
+  const fontsize =
+    getAttrValue(marks, 'fontsize', 'fontsize') || _defaultAttrs.fontsize
   return parseInt(fontsize)
 }
 

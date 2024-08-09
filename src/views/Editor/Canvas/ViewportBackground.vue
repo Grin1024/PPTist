@@ -1,8 +1,5 @@
 <template>
-  <div 
-    class="viewport-background"
-    :style="backgroundStyle"
-  >
+  <div class="viewport-background" :style="backgroundStyle">
     <GridLines v-if="gridLineSize" />
   </div>
 </template>
@@ -17,7 +14,9 @@ import useSlideBackgroundStyle from '@/hooks/useSlideBackgroundStyle'
 
 const { gridLineSize } = storeToRefs(useMainStore())
 const { currentSlide } = storeToRefs(useSlidesStore())
-const background = computed<SlideBackground | undefined>(() => currentSlide.value?.background)
+const background = computed<SlideBackground | undefined>(
+  () => currentSlide.value?.background
+)
 
 const { backgroundStyle } = useSlideBackgroundStyle(background)
 </script>

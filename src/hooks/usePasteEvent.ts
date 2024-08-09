@@ -6,14 +6,16 @@ import usePasteTextClipboardData from './usePasteTextClipboardData'
 import useCreateElement from './useCreateElement'
 
 export default () => {
-  const { editorAreaFocus, thumbnailsFocus, disableHotkeys } = storeToRefs(useMainStore())
+  const { editorAreaFocus, thumbnailsFocus, disableHotkeys } = storeToRefs(
+    useMainStore()
+  )
 
   const { pasteTextClipboardData } = usePasteTextClipboardData()
   const { createImageElement } = useCreateElement()
 
   // 粘贴图片到幻灯片元素
   const pasteImageFile = (imageFile: File) => {
-    getImageDataURL(imageFile).then(dataURL => createImageElement(dataURL))
+    getImageDataURL(imageFile).then((dataURL) => createImageElement(dataURL))
   }
 
   /**
@@ -39,10 +41,15 @@ export default () => {
         return
       }
     }
-    
+
     // 如果剪贴板内没有图片，但有文字内容，尝试解析文字内容
-    if (clipboardDataFirstItem.kind === 'string' && clipboardDataFirstItem.type === 'text/plain') {
-      clipboardDataFirstItem.getAsString(text => pasteTextClipboardData(text))
+    if (
+      clipboardDataFirstItem.kind === 'string' &&
+      clipboardDataFirstItem.type === 'text/plain'
+    ) {
+      clipboardDataFirstItem.getAsString((text) =>
+        pasteTextClipboardData(text)
+      )
     }
   }
 

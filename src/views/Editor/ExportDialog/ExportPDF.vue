@@ -2,20 +2,20 @@
   <div class="export-pdf-dialog">
     <div class="thumbnails-view">
       <div class="thumbnails" ref="pdfThumbnailsRef">
-        <ThumbnailSlide 
-          class="thumbnail" 
-          :slide="currentSlide" 
-          :size="1600" 
+        <ThumbnailSlide
+          class="thumbnail"
+          :slide="currentSlide"
+          :size="1600"
           v-if="rangeType === 'current'"
         />
         <template v-else>
-          <ThumbnailSlide 
-            class="thumbnail" 
+          <ThumbnailSlide
+            class="thumbnail"
             :class="{ 'break-page': (index + 1) % count === 0 }"
-            v-for="(slide, index) in slides" 
-            :key="slide.id" 
-            :slide="slide" 
-            :size="1600" 
+            v-for="(slide, index) in slides"
+            :key="slide.id"
+            :slide="slide"
+            :size="1600"
           />
         </template>
       </div>
@@ -23,17 +23,14 @@
     <div class="configs">
       <div class="row">
         <div class="title">导出范围：</div>
-        <RadioGroup
-          class="config-item"
-          v-model:value="rangeType"
-        >
-          <RadioButton style="width: 50%;" value="all">全部</RadioButton>
-          <RadioButton style="width: 50%;" value="current">当前页</RadioButton>
+        <RadioGroup class="config-item" v-model:value="rangeType">
+          <RadioButton style="width: 50%" value="all">全部</RadioButton>
+          <RadioButton style="width: 50%" value="current">当前页</RadioButton>
         </RadioGroup>
       </div>
       <div class="row">
         <div class="title">每页数量：</div>
-        <Select 
+        <Select
           class="config-item"
           v-model:value="count"
           :options="[
@@ -55,7 +52,9 @@
     </div>
 
     <div class="btns">
-      <Button class="btn export" type="primary" @click="expPDF()">打印 / 导出 PDF</Button>
+      <Button class="btn export" type="primary" @click="expPDF()"
+        >打印 / 导出 PDF</Button
+      >
       <Button class="btn close" @click="emit('close')">关闭</Button>
     </div>
   </div>
@@ -75,7 +74,7 @@ import RadioGroup from '@/components/RadioGroup.vue'
 import Select from '@/components/Select.vue'
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const { slides, currentSlide, viewportRatio } = storeToRefs(useSlidesStore())
@@ -89,7 +88,10 @@ const expPDF = () => {
   if (!pdfThumbnailsRef.value) return
   const pageSize = {
     width: 1600,
-    height: rangeType.value === 'all' ? 1600 * viewportRatio.value * count.value : 1600 * viewportRatio.value,
+    height:
+      rangeType.value === 'all'
+        ? 1600 * viewportRatio.value * count.value
+        : 1600 * viewportRatio.value,
     margin: padding.value ? 50 : 0,
   }
   print(pdfThumbnailsRef.value, pageSize)
@@ -110,7 +112,7 @@ const expPDF = () => {
   @include absolute-0();
 
   &::after {
-    content: '';
+    content: "";
     background-color: #fff;
     @include absolute-0();
   }

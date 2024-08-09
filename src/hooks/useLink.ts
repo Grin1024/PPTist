@@ -9,7 +9,8 @@ export default () => {
   const { addHistorySnapshot } = useHistorySnapshot()
 
   const setLink = (handleElement: PPTElement, link: PPTElementLink) => {
-    const linkRegExp = /^(https?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/
+    const linkRegExp =
+      /^(https?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/
     if (link.type === 'web' && !linkRegExp.test(link.target)) {
       message.error('不是正确的网页链接地址')
       return false

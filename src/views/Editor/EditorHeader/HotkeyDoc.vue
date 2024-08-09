@@ -1,17 +1,21 @@
 <template>
   <div class="hotkey-doc">
     <template v-for="item in HOTKEY_DOC" :key="item.type">
-      <div class="title">{{item.type}}</div>
-      <div class="hotkey-item" v-for="hotkey in item.children" :key="hotkey.label">
-        <div class="label">{{hotkey.label}}</div>
-        <div class="value">{{hotkey.value}}</div>
+      <div class="title">{{ item.type }}</div>
+      <div
+        class="hotkey-item"
+        v-for="hotkey in item.children"
+        :key="hotkey.label"
+      >
+        <div class="label">{{ hotkey.label }}</div>
+        <div class="value">{{ hotkey.value }}</div>
       </div>
     </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { HOTKEY_DOC } from '@/configs/hotkey' 
+import { HOTKEY_DOC } from '@/configs/hotkey'
 </script>
 
 <style lang="scss" scoped>

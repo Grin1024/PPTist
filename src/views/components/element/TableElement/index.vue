@@ -1,8 +1,8 @@
 <template>
-  <div 
+  <div
     class="editable-element-table"
     ref="elementRef"
-    :class="{ 'lock': elementInfo.lock }"
+    :class="{ lock: elementInfo.lock }"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -13,11 +13,8 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
-        class="element-content" 
-        v-contextmenu="contextmenus"
-      >
-        <EditableTable 
+      <div class="element-content" v-contextmenu="contextmenus">
+        <EditableTable
           @mousedown.stop
           :data="elementInfo.data"
           :width="elementInfo.width"
@@ -26,19 +23,25 @@
           :outline="elementInfo.outline"
           :theme="elementInfo.theme"
           :editable="editable"
-          @change="data => updateTableCells(data)"
-          @changeColWidths="widths => updateColWidths(widths)"
-          @changeSelectedCells="cells => updateSelectedCells(cells)"
+          @change="(data) => updateTableCells(data)"
+          @changeColWidths="(widths) => updateColWidths(widths)"
+          @changeSelectedCells="(cells) => updateSelectedCells(cells)"
         />
-        <div 
-          class="table-mask" 
-          :class="{ 'lock': elementInfo.lock }"
+        <div
+          class="table-mask"
+          :class="{ lock: elementInfo.lock }"
           v-if="!editable || elementInfo.lock"
           @dblclick="startEdit()"
-          @mousedown="$event => handleSelectElement($event)"
-          @touchstart="$event => handleSelectElement($event)"
+          @mousedown="($event) => handleSelectElement($event)"
+          @touchstart="($event) => handleSelectElement($event)"
         >
-          <div class="mask-tip" v-if="handleElementId === elementInfo.id" :style="{ transform: `scale(${ 1 / canvasScale })` }">双击编辑</div>
+          <div
+            class="mask-tip"
+            v-if="handleElementId === elementInfo.id"
+            :style="{ transform: `scale(${1 / canvasScale})` }"
+          >
+            双击编辑
+          </div>
         </div>
       </div>
     </div>
@@ -56,9 +59,13 @@ import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import EditableTable from './EditableTable.vue'
 
 const props = defineProps<{
-  elementInfo: PPTTableElement
-  selectElement: (e: MouseEvent | TouchEvent, element: PPTTableElement, canMove?: boolean) => void
-  contextmenus: () => ContextmenuItem[] | null
+  elementInfo: PPTTableElement;
+  selectElement: (
+    e: MouseEvent | TouchEvent,
+    element: PPTTableElement,
+    canMove?: boolean
+  ) => void;
+  contextmenus: () => ContextmenuItem[] | null;
 }>()
 
 const mainStore = useMainStore()
@@ -138,7 +145,7 @@ onUnmounted(() => {
 // 更新表格内容数据
 const updateTableCells = (data: TableCell[][]) => {
   slidesStore.updateElement({
-    id: props.elementInfo.id, 
+    id: props.elementInfo.id,
     props: { data },
   })
   addHistorySnapshot()
@@ -147,10 +154,10 @@ const updateTableCells = (data: TableCell[][]) => {
 // 更新表格的列宽数据
 const updateColWidths = (widths: number[]) => {
   const width = widths.reduce((a, b) => a + b)
-  const colWidths = widths.map(item => item / width)
+  const colWidths = widths.map((item) => item / width)
 
   slidesStore.updateElement({
-    id: props.elementInfo.id, 
+    id: props.elementInfo.id,
     props: { width, colWidths },
   })
   addHistorySnapshot()
@@ -190,7 +197,7 @@ const updateSelectedCells = (cells: string[]) => {
     position: absolute;
     top: 5px;
     left: 5px;
-    background-color: rgba($color: #000, $alpha: .5);
+    background-color: rgba($color: #000, $alpha: 0.5);
     color: #fff;
     padding: 6px 12px;
     font-size: 12px;
@@ -198,7 +205,7 @@ const updateSelectedCells = (cells: string[]) => {
   }
 
   &:hover:not(.lock) {
-    opacity: .9;
+    opacity: 0.9;
   }
 }
 </style>

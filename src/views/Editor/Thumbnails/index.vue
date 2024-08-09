@@ -1,21 +1,35 @@
 <template>
-  <div 
+  <div
     class="thumbnails"
     @mousedown="() => setThumbnailsFocus(true)"
     v-click-outside="() => setThumbnailsFocus(false)"
     v-contextmenu="contextmenusThumbnails"
   >
     <div class="add-slide">
-      <div class="btn" @click="createSlide()"><IconPlus class="icon" />添加幻灯片</div>
-      <Popover trigger="click" placement="bottom-start" v-model:value="presetLayoutPopoverVisible" center>
+      <div class="btn" @click="createSlide()">
+        <IconPlus class="icon" />添加幻灯片
+      </div>
+      <Popover
+        trigger="click"
+        placement="bottom-start"
+        v-model:value="presetLayoutPopoverVisible"
+        center
+      >
         <template #content>
-          <LayoutPool @select="slide => { createSlideByTemplate(slide); presetLayoutPopoverVisible = false }" />
+          <LayoutPool
+            @select="
+              (slide) => {
+                createSlideByTemplate(slide);
+                presetLayoutPopoverVisible = false;
+              }
+            "
+          />
         </template>
         <div class="select-btn"><IconDown /></div>
       </Popover>
     </div>
 
-    <Draggable 
+    <Draggable
       class="thumbnail-list"
       ref="thumbnailsRef"
       :modelValue="slides"
@@ -28,44 +42,71 @@
     >
       <template #item="{ element, index }">
         <div class="thumbnail-container">
-          <div class="section-title"
+          <div
+            class="section-title"
             :data-section-id="element?.sectionTag?.id || ''"
-            v-if="element.sectionTag || (hasSection && index === 0)" 
+            v-if="element.sectionTag || (hasSection && index === 0)"
             v-contextmenu="contextmenusSection"
           >
-            <input 
-              :id="`section-title-input-${element?.sectionTag?.id || 'default'}`" 
+            <input
+              :id="`section-title-input-${
+                element?.sectionTag?.id || 'default'
+              }`"
               type="text"
               :value="element?.sectionTag?.title || ''"
               placeholder="输入节名称"
-              @blur="$event => saveSection($event)"
-              @keydown.enter.stop="$event => saveSection($event)"
-              v-if="editingSectionId === element?.sectionTag?.id || (index === 0 && editingSectionId === 'default')"
-            >
+              @blur="($event) => saveSection($event)"
+              @keydown.enter.stop="($event) => saveSection($event)"
+              v-if="
+                editingSectionId === element?.sectionTag?.id ||
+                (index === 0 && editingSectionId === 'default')
+              "
+            />
             <span class="text" v-else>
-              <div class="text-content">{{ element?.sectionTag ? (element?.sectionTag?.title || '无标题节') : '默认节' }}</div>
+              <div class="text-content">
+                {{
+                  element?.sectionTag
+                    ? element?.sectionTag?.title || "无标题节"
+                    : "默认节"
+                }}
+              </div>
             </span>
           </div>
           <div
             class="thumbnail-item"
             :class="{
-              'active': slideIndex === index,
-              'selected': selectedSlidesIndex.includes(index),
+              active: slideIndex === index,
+              selected: selectedSlidesIndex.includes(index),
             }"
-            @mousedown="$event => handleClickSlideThumbnail($event, index)"
+            @mousedown="($event) => handleClickSlideThumbnail($event, index)"
             @dblclick="enterScreening()"
             v-contextmenu="contextmenusThumbnailItem"
           >
-            <div class="label" :class="{ 'offset-left': index >= 99 }">{{ fillDigit(index + 1, 2) }}</div>
-            <ThumbnailSlide class="thumbnail" :slide="element" :size="120" :visible="index < slidesLoadLimit" />
-  
-            <div class="note-flag" v-if="element.notes && element.notes.length" @click="openNotesPanel()">{{ element.notes.length }}</div>
+            <div class="label" :class="{ 'offset-left': index >= 99 }">
+              {{ fillDigit(index + 1, 2) }}
+            </div>
+            <ThumbnailSlide
+              class="thumbnail"
+              :slide="element"
+              :size="120"
+              :visible="index < slidesLoadLimit"
+            />
+
+            <div
+              class="note-flag"
+              v-if="element.notes && element.notes.length"
+              @click="openNotesPanel()"
+            >
+              {{ element.notes.length }}
+            </div>
           </div>
         </div>
       </template>
     </Draggable>
 
-    <div class="page-number">幻灯片 {{slideIndex + 1}} / {{slides.length}}</div>
+    <div class="page-number">
+      幻灯片 {{ slideIndex + 1 }} / {{ slides.length }}
+    </div>
   </div>
 </template>
 
@@ -89,18 +130,22 @@ import Draggable from 'vuedraggable'
 const mainStore = useMainStore()
 const slidesStore = useSlidesStore()
 const keyboardStore = useKeyboardStore()
-const { selectedSlidesIndex: _selectedSlidesIndex, thumbnailsFocus } = storeToRefs(mainStore)
+const { selectedSlidesIndex: _selectedSlidesIndex, thumbnailsFocus } =
+  storeToRefs(mainStore)
 const { slides, slideIndex, currentSlide } = storeToRefs(slidesStore)
 const { ctrlKeyState, shiftKeyState } = storeToRefs(keyboardStore)
 
 const { slidesLoadLimit } = useLoadSlides()
 
-const selectedSlidesIndex = computed(() => [..._selectedSlidesIndex.value, slideIndex.value])
+const selectedSlidesIndex = computed(() => [
+  ..._selectedSlidesIndex.value,
+  slideIndex.value,
+])
 
 const presetLayoutPopoverVisible = ref(false)
 
 const hasSection = computed(() => {
-  return slides.value.some(item => item.sectionTag)
+  return slides.value.some((item) => item.sectionTag)
 })
 
 const {
@@ -125,23 +170,30 @@ const {
 
 // 页面被切换时
 const thumbnailsRef = ref<InstanceType<typeof Draggable>>()
-watch(() => slideIndex.value, () => {
-
-  // 清除多选状态的幻灯片
-  if (selectedSlidesIndex.value.length) {
-    mainStore.updateSelectedSlidesIndex([])
-  }
-
-  // 检查当前页缩略图是否在可视范围，不在的话需要滚动到对应的位置
-  nextTick(() => {
-    const activeThumbnailRef: HTMLElement = thumbnailsRef.value?.$el?.querySelector('.thumbnail-item.active')
-    if (thumbnailsRef.value && activeThumbnailRef && !isElementInViewport(activeThumbnailRef, thumbnailsRef.value.$el)) {
-      setTimeout(() => {
-        activeThumbnailRef.scrollIntoView({ behavior: 'smooth' })
-      }, 100)
+watch(
+  () => slideIndex.value,
+  () => {
+    // 清除多选状态的幻灯片
+    if (selectedSlidesIndex.value.length) {
+      mainStore.updateSelectedSlidesIndex([])
     }
-  })
-})
+
+    // 检查当前页缩略图是否在可视范围，不在的话需要滚动到对应的位置
+    nextTick(() => {
+      const activeThumbnailRef: HTMLElement =
+        thumbnailsRef.value?.$el?.querySelector('.thumbnail-item.active')
+      if (
+        thumbnailsRef.value &&
+        activeThumbnailRef &&
+        !isElementInViewport(activeThumbnailRef, thumbnailsRef.value.$el)
+      ) {
+        setTimeout(() => {
+          activeThumbnailRef.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      }
+    })
+  }
+)
 
 // 切换页面
 const changeSlideIndex = (index: number) => {
@@ -157,7 +209,13 @@ const handleClickSlideThumbnail = (e: MouseEvent, index: number) => {
 
   const isMultiSelected = selectedSlidesIndex.value.length > 1
 
-  if (isMultiSelected && selectedSlidesIndex.value.includes(index) && e.button !== 0) return
+  if (
+    isMultiSelected &&
+    selectedSlidesIndex.value.includes(index) &&
+    e.button !== 0
+  ) {
+    return
+  }
 
   // 按住Ctrl键，点选幻灯片，再次点击已选中的页面则取消选中
   // 如果被取消选中的页面刚好是当前激活页面，则需要从其他被选中的页面中选择第一个作为当前激活页面
@@ -165,13 +223,17 @@ const handleClickSlideThumbnail = (e: MouseEvent, index: number) => {
     if (slideIndex.value === index) {
       if (!isMultiSelected) return
 
-      const newSelectedSlidesIndex = selectedSlidesIndex.value.filter(item => item !== index)
+      const newSelectedSlidesIndex = selectedSlidesIndex.value.filter(
+        (item) => item !== index
+      )
       mainStore.updateSelectedSlidesIndex(newSelectedSlidesIndex)
       changeSlideIndex(selectedSlidesIndex.value[0])
     }
     else {
       if (selectedSlidesIndex.value.includes(index)) {
-        const newSelectedSlidesIndex = selectedSlidesIndex.value.filter(item => item !== index)
+        const newSelectedSlidesIndex = selectedSlidesIndex.value.filter(
+          (item) => item !== index
+        )
         mainStore.updateSelectedSlidesIndex(newSelectedSlidesIndex)
       }
       else {
@@ -214,7 +276,9 @@ const setThumbnailsFocus = (focus: boolean) => {
 // 拖拽调整顺序后进行数据的同步
 const handleDragEnd = (eventData: { newIndex: number; oldIndex: number }) => {
   const { newIndex, oldIndex } = eventData
-  if (newIndex === undefined || oldIndex === undefined || newIndex === oldIndex) return
+  if (newIndex === undefined || oldIndex === undefined || newIndex === oldIndex) {
+    return
+  }
   sortSlides(newIndex, oldIndex)
 }
 
@@ -230,7 +294,9 @@ const editSection = (id: string) => {
   editingSectionId.value = id || 'default'
 
   nextTick(() => {
-    const inputRef = document.querySelector(`#section-title-input-${id || 'default'}`) as HTMLInputElement
+    const inputRef = document.querySelector(
+      `#section-title-input-${id || 'default'}`
+    ) as HTMLInputElement
     inputRef.focus()
   })
 }
@@ -406,7 +472,7 @@ const contextmenusThumbnailItem = (): ContextmenuItem[] => {
   position: relative;
 
   .thumbnail {
-    outline: 2px solid rgba($color: $themeColor, $alpha: .15);
+    outline: 2px solid rgba($color: $themeColor, $alpha: 0.15);
   }
 
   &.active {
@@ -438,21 +504,21 @@ const contextmenusThumbnailItem = (): ContextmenuItem[] => {
     left: 8px;
     top: 13px;
     font-size: 8px;
-    background-color: rgba($color: $themeColor, $alpha: .75);
+    background-color: rgba($color: $themeColor, $alpha: 0.75);
     color: #fff;
     text-align: center;
     line-height: 12px;
     cursor: pointer;
 
     &::after {
-      content: '';
+      content: "";
       width: 0;
       height: 0;
       position: absolute;
       top: 10px;
       left: 4px;
       border: 4px solid transparent;
-      border-top-color: rgba($color: $themeColor, $alpha: .75);
+      border-top-color: rgba($color: $themeColor, $alpha: 0.75);
     }
   }
 }
@@ -500,7 +566,7 @@ const contextmenusThumbnailItem = (): ContextmenuItem[] => {
     position: relative;
 
     &::before {
-      content: '';
+      content: "";
       width: 0;
       height: 0;
       border-top: 3px solid transparent;

@@ -1,42 +1,46 @@
 <template>
   <div class="latex-style-panel">
     <div class="row">
-      <Button style="flex: 1;" @click="latexEditorVisible = true">编辑 LaTeX</Button>
+      <Button style="flex: 1" @click="latexEditorVisible = true"
+        >编辑 LaTeX</Button
+      >
     </div>
 
     <Divider />
 
     <div class="row">
-      <div style="width: 40%;">颜色：</div>
-      <Popover trigger="click" style="width: 60%;">
+      <div style="width: 40%">颜色：</div>
+      <Popover trigger="click" style="width: 60%">
         <template #content>
           <ColorPicker
             :modelValue="handleLatexElement.color"
-            @update:modelValue="value => updateLatex({ color: value })"
+            @update:modelValue="(value) => updateLatex({ color: value })"
           />
         </template>
         <ColorButton :color="handleLatexElement.color" />
       </Popover>
     </div>
     <div class="row">
-      <div style="width: 40%;">粗细：</div>
-      <NumberInput 
+      <div style="width: 40%">粗细：</div>
+      <NumberInput
         :min="1"
         :max="3"
-        :value="handleLatexElement.strokeWidth" 
-        @update:value="value => updateLatex({ strokeWidth: value })" 
-        style="width: 60%;" 
+        :value="handleLatexElement.strokeWidth"
+        @update:value="(value) => updateLatex({ strokeWidth: value })"
+        style="width: 60%"
       />
     </div>
 
-    <Modal
-      v-model:visible="latexEditorVisible" 
-      :width="880"
-    >
-      <LaTeXEditor 
+    <Modal v-model:visible="latexEditorVisible" :width="880">
+      <LaTeXEditor
         :value="handleLatexElement.latex"
         @close="latexEditorVisible = false"
-        @update="data => { updateLatexData(data); latexEditorVisible = false }"
+        @update="
+          (data) => {
+            updateLatexData(data);
+            latexEditorVisible = false;
+          }
+        "
       />
     </Modal>
   </div>
@@ -74,7 +78,12 @@ const updateLatex = (props: Partial<PPTLatexElement>) => {
   addHistorySnapshot()
 }
 
-const updateLatexData = (data: { path: string; latex: string; w: number; h: number; }) => {
+const updateLatexData = (data: {
+  path: string;
+  latex: string;
+  w: number;
+  h: number;
+}) => {
   updateLatex({
     path: data.path,
     latex: data.latex,
@@ -84,7 +93,7 @@ const updateLatexData = (data: { path: string; latex: string; w: number; h: numb
   })
 }
 
-const openLatexEditor = () => latexEditorVisible.value = true
+const openLatexEditor = () => (latexEditorVisible.value = true)
 
 emitter.on(EmitterEvents.OPEN_LATEX_EDITOR, openLatexEditor)
 onUnmounted(() => {

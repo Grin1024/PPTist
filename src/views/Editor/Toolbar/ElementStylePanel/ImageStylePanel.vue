@@ -1,6 +1,6 @@
 <template>
   <div class="image-style-panel">
-    <div 
+    <div
       class="origin-image"
       :style="{ backgroundImage: `url(${handleImageElement.src})` }"
     ></div>
@@ -8,15 +8,21 @@
     <ElementFlip />
 
     <ButtonGroup class="row" passive>
-      <Button first style="width: calc(100% / 6 * 5);" @click="clipImage()"><IconTailoring class="btn-icon" /> 裁剪图片</Button>
-      <Popover trigger="click" v-model:value="clipPanelVisible" style="width: calc(100% / 6);">
+      <Button first style="width: calc(100% / 6 * 5)" @click="clipImage()"
+        ><IconTailoring class="btn-icon" /> 裁剪图片</Button
+      >
+      <Popover
+        trigger="click"
+        v-model:value="clipPanelVisible"
+        style="width: calc(100% / 6)"
+      >
         <template #content>
           <div class="clip">
             <div class="title">按形状：</div>
             <div class="shape-clip">
-              <div 
-                class="shape-clip-item" 
-                v-for="(item, key) in shapeClipPathOptions" 
+              <div
+                class="shape-clip-item"
+                v-for="(item, key) in shapeClipPathOptions"
                 :key="key"
                 @click="presetImageClip(key as string)"
               >
@@ -24,20 +30,28 @@
               </div>
             </div>
 
-            <template v-for="typeItem in ratioClipOptions" :key="typeItem.label">
-              <div class="title" v-if="typeItem.label">按{{typeItem.label}}：</div>
+            <template
+              v-for="typeItem in ratioClipOptions"
+              :key="typeItem.label"
+            >
+              <div class="title" v-if="typeItem.label">
+                按{{ typeItem.label }}：
+              </div>
               <ButtonGroup class="row">
-                <Button 
-                  style="flex: 1;"
+                <Button
+                  style="flex: 1"
                   v-for="item in typeItem.children"
                   :key="item.key"
                   @click="presetImageClip('rect', item.ratio)"
-                >{{item.key}}</Button>
+                  >{{ item.key }}</Button
+                >
               </ButtonGroup>
             </template>
           </div>
         </template>
-        <Button last class="popover-btn" style="width: 100%;"><IconDown /></Button>
+        <Button last class="popover-btn" style="width: 100%"
+          ><IconDown
+        /></Button>
       </Popover>
     </ButtonGroup>
 
@@ -50,12 +64,18 @@
     <Divider />
     <ElementShadow />
     <Divider />
-    
-    <FileInput @change="files => replaceImage(files)">
-      <Button class="full-width-btn"><IconTransform class="btn-icon" /> 替换图片</Button>
+
+    <FileInput @change="(files) => replaceImage(files)">
+      <Button class="full-width-btn"
+        ><IconTransform class="btn-icon" /> 替换图片</Button
+      >
     </FileInput>
-    <Button class="full-width-btn" @click="resetImage()"><IconUndo class="btn-icon" /> 重置样式</Button>
-    <Button class="full-width-btn" @click="setBackgroundImage()"><IconTheme class="btn-icon" /> 设为背景</Button>
+    <Button class="full-width-btn" @click="resetImage()"
+      ><IconUndo class="btn-icon" /> 重置样式</Button
+    >
+    <Button class="full-width-btn" @click="setBackgroundImage()"
+      ><IconTheme class="btn-icon" /> 设为背景</Button
+    >
   </div>
 </template>
 
@@ -83,9 +103,7 @@ const shapeClipPathOptions = CLIPPATHS
 const ratioClipOptions = [
   {
     label: '纵横比（正方形）',
-    children: [
-      { key: '1:1', ratio: 1 / 1 },
-    ],
+    children: [{ key: '1:1', ratio: 1 / 1 }],
   },
   {
     label: '纵横比（纵向）',
@@ -139,10 +157,18 @@ const getImageElementDataBeforeClip = () => {
   const imgHeight = _handleElement.height
   const imgLeft = _handleElement.left
   const imgTop = _handleElement.top
-  const originClipRange: [[number, number], [number, number]] = _handleElement.clip ? _handleElement.clip.range : [[0, 0], [100, 100]]
+  const originClipRange: [[number, number], [number, number]] =
+    _handleElement.clip
+      ? _handleElement.clip.range
+      : [
+        [0, 0],
+        [100, 100],
+      ]
 
-  const originWidth = imgWidth / ((originClipRange[1][0] - originClipRange[0][0]) / 100)
-  const originHeight = imgHeight / ((originClipRange[1][1] - originClipRange[0][1]) / 100)
+  const originWidth =
+    imgWidth / ((originClipRange[1][0] - originClipRange[0][0]) / 100)
+  const originHeight =
+    imgHeight / ((originClipRange[1][1] - originClipRange[0][1]) / 100)
   const originLeft = imgLeft - originWidth * (originClipRange[0][0] / 100)
   const originTop = imgTop - originHeight * (originClipRange[0][1] / 100)
 
@@ -159,14 +185,9 @@ const getImageElementDataBeforeClip = () => {
 const presetImageClip = (shape: string, ratio = 0) => {
   const _handleElement = handleElement.value as PPTImageElement
 
-  const {
-    originClipRange,
-    originWidth,
-    originHeight,
-    originLeft,
-    originTop,
-  } = getImageElementDataBeforeClip()
-  
+  const { originClipRange, originWidth, originHeight, originLeft, originTop } =
+    getImageElementDataBeforeClip()
+
   // 纵横比裁剪（形状固定为矩形）
   if (ratio) {
     const imageRatio = originHeight / originWidth
@@ -177,11 +198,17 @@ const presetImageClip = (shape: string, ratio = 0) => {
 
     if (imageRatio > ratio) {
       const distance = ((1 - ratio / imageRatio) / 2) * 100
-      range = [[min, distance], [max, max - distance]]
+      range = [
+        [min, distance],
+        [max, max - distance],
+      ]
     }
     else {
       const distance = ((1 - imageRatio / ratio) / 2) * 100
-      range = [[distance, min], [max - distance, max]]
+      range = [
+        [distance, min],
+        [max - distance, max],
+      ]
     }
     slidesStore.updateElement({
       id: handleElementId.value,
@@ -189,8 +216,8 @@ const presetImageClip = (shape: string, ratio = 0) => {
         clip: { ..._handleElement.clip, shape, range },
         left: originLeft + originWidth * (range[0][0] / 100),
         top: originTop + originHeight * (range[0][1] / 100),
-        width: originWidth * (range[1][0] - range[0][0]) / 100,
-        height: originHeight * (range[1][1] - range[0][1]) / 100,
+        width: (originWidth * (range[1][0] - range[0][0])) / 100,
+        height: (originHeight * (range[1][1] - range[0][1])) / 100,
       },
     })
   }
@@ -199,7 +226,7 @@ const presetImageClip = (shape: string, ratio = 0) => {
     slidesStore.updateElement({
       id: handleElementId.value,
       props: {
-        clip: { ..._handleElement.clip, shape, range: originClipRange }
+        clip: { ..._handleElement.clip, shape, range: originClipRange },
       },
     })
   }
@@ -211,7 +238,7 @@ const presetImageClip = (shape: string, ratio = 0) => {
 const replaceImage = (files: FileList) => {
   const imageFile = files[0]
   if (!imageFile) return
-  getImageDataURL(imageFile).then(dataURL => {
+  getImageDataURL(imageFile).then((dataURL) => {
     const props = { src: dataURL }
     slidesStore.updateElement({ id: handleElementId.value, props })
   })
@@ -223,12 +250,8 @@ const resetImage = () => {
   const _handleElement = handleElement.value as PPTImageElement
 
   if (_handleElement.clip) {
-    const {
-      originWidth,
-      originHeight,
-      originLeft,
-      originTop,
-    } = getImageElementDataBeforeClip()
+    const { originWidth, originHeight, originLeft, originTop } =
+      getImageElementDataBeforeClip()
 
     slidesStore.updateElement({
       id: handleElementId.value,

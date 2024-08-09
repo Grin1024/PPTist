@@ -2,7 +2,10 @@
   <Button class="text-color-btn">
     <slot></slot>
     <div class="text-color-block">
-      <div class="text-color-block-content" :style="{ backgroundColor: color }"></div>
+      <div
+        class="text-color-block-content"
+        :style="{ backgroundColor: color }"
+      ></div>
     </div>
   </Button>
 </template>
@@ -11,7 +14,7 @@
 import Button from '@/components/Button.vue'
 
 defineProps<{
-  color: string
+  color: string;
 }>()
 </script>
 

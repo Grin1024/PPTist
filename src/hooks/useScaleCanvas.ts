@@ -4,9 +4,12 @@ import { useMainStore } from '@/store'
 
 export default () => {
   const mainStore = useMainStore()
-  const { canvasPercentage, canvasScale, canvasDragged } = storeToRefs(mainStore)
+  const { canvasPercentage, canvasScale, canvasDragged } =
+    storeToRefs(mainStore)
 
-  const canvasScalePercentage = computed(() => Math.round(canvasScale.value * 100) + '%')
+  const canvasScalePercentage = computed(
+    () => Math.round(canvasScale.value * 100) + '%'
+  )
 
   /**
    * 缩放画布百分比
@@ -29,7 +32,8 @@ export default () => {
    * @param value 目标画布缩放比例
    */
   const setCanvasScalePercentage = (value: number) => {
-    const percentage = Math.round(value / canvasScale.value * canvasPercentage.value) / 100
+    const percentage =
+      Math.round((value / canvasScale.value) * canvasPercentage.value) / 100
     mainStore.setCanvasPercentage(percentage)
   }
 

@@ -1,10 +1,10 @@
 <template>
-  <MoveablePanel 
-    class="notes-panel" 
-    :width="300" 
-    :height="560" 
-    :title="`幻灯片${slideIndex + 1}的批注`" 
-    :left="-270" 
+  <MoveablePanel
+    class="notes-panel"
+    :width="300"
+    :height="560"
+    :title="`幻灯片${slideIndex + 1}的批注`"
+    :left="-270"
     :top="90"
     :minWidth="300"
     :minHeight="400"
@@ -15,60 +15,110 @@
   >
     <div class="container">
       <div class="notes">
-        <div class="note" :class="{ 'active': activeNoteId === note.id }" v-for="note in notes" :key="note.id" @click="handleClickNote(note)">
+        <div
+          class="note"
+          :class="{ active: activeNoteId === note.id }"
+          v-for="note in notes"
+          :key="note.id"
+          @click="handleClickNote(note)"
+        >
           <div class="header note-header">
             <div class="user">
               <div class="avatar"><IconUser /></div>
               <div class="user-info">
                 <div class="username">{{ note.user }}</div>
-                <div class="time">{{ new Date(note.time).toLocaleString() }}</div>
+                <div class="time">
+                  {{ new Date(note.time).toLocaleString() }}
+                </div>
               </div>
             </div>
             <div class="btns">
               <div class="btn reply" @click="replyNoteId = note.id">回复</div>
-              <div class="btn delete" @click.stop="deleteNote(note.id)">删除</div>
+              <div class="btn delete" @click.stop="deleteNote(note.id)">
+                删除
+              </div>
             </div>
           </div>
           <div class="content">{{ note.content }}</div>
           <div class="replies" v-if="note.replies?.length">
-            <div class="reply-item" v-for="reply in note.replies" :key="reply.id">
+            <div
+              class="reply-item"
+              v-for="reply in note.replies"
+              :key="reply.id"
+            >
               <div class="header reply-header">
                 <div class="user">
                   <div class="avatar"><IconUser /></div>
                   <div class="user-info">
                     <div class="username">{{ reply.user }}</div>
-                    <div class="time">{{ new Date(reply.time).toLocaleString() }}</div>
+                    <div class="time">
+                      {{ new Date(reply.time).toLocaleString() }}
+                    </div>
                   </div>
                 </div>
                 <div class="btns">
-                  <div class="btn delete" @click.stop="deleteReply(note.id, reply.id)">删除</div>
+                  <div
+                    class="btn delete"
+                    @click.stop="deleteReply(note.id, reply.id)"
+                  >
+                    删除
+                  </div>
                 </div>
               </div>
               <div class="content">{{ reply.content }}</div>
             </div>
           </div>
           <div class="note-reply" v-if="replyNoteId === note.id">
-            <TextArea :padding="6" v-model:value="replyContent" placeholder="输入回复内容" :rows="1" />
+            <TextArea
+              :padding="6"
+              v-model:value="replyContent"
+              placeholder="输入回复内容"
+              :rows="1"
+            />
             <div class="reply-btns">
-              <Button class="btn" size="small" @click="replyNoteId = ''">取消</Button>
-              <Button class="btn" size="small" type="primary" @click="createNoteReply()">回复</Button>
+              <Button class="btn" size="small" @click="replyNoteId = ''"
+                >取消</Button
+              >
+              <Button
+                class="btn"
+                size="small"
+                type="primary"
+                @click="createNoteReply()"
+                >回复</Button
+              >
             </div>
           </div>
         </div>
         <div class="empty" v-if="!notes.length">本页暂无批注</div>
       </div>
       <div class="send">
-        <TextArea 
+        <TextArea
           ref="textAreaRef"
           v-model:value="content"
           :padding="6"
-          :placeholder="`输入批注（为${handleElementId ? '选中元素' : '当前页幻灯片' }）`"
+          :placeholder="`输入批注（为${
+            handleElementId ? '选中元素' : '当前页幻灯片'
+          }）`"
           :rows="2"
-          @focus="replyNoteId = ''; activeNoteId = ''"
+          @focus="
+            replyNoteId = '';
+            activeNoteId = '';
+          "
         />
         <div class="footer">
-          <IconDelete class="btn icon" v-tooltip="'清空本页批注'" style="flex: 1" @click="clear()" />
-          <Button type="primary" class="btn" style="flex: 12" @click="createNote()">添加批注</Button>
+          <IconDelete
+            class="btn icon"
+            v-tooltip="'清空本页批注'"
+            style="flex: 1"
+            @click="clear()"
+          />
+          <Button
+            type="primary"
+            class="btn"
+            style="flex: 12"
+            @click="createNote()"
+            >添加批注</Button
+          >
         </div>
       </div>
     </div>
@@ -117,28 +167,25 @@ const createNote = () => {
   }
   if (handleElementId.value) newNote.elId = handleElementId.value
 
-  const newNotes = [
-    ...notes.value,
-    newNote,
-  ]
+  const newNotes = [...notes.value, newNote]
   slidesStore.updateSlide({ notes: newNotes })
 
   content.value = ''
 }
 
 const deleteNote = (id: string) => {
-  const newNotes = notes.value.filter(note => note.id !== id)
+  const newNotes = notes.value.filter((note) => note.id !== id)
   slidesStore.updateSlide({ notes: newNotes })
 }
 
 const createNoteReply = () => {
   if (!replyContent.value) return
-  
-  const currentNote = notes.value.find(note => note.id === replyNoteId.value)
+
+  const currentNote = notes.value.find((note) => note.id === replyNoteId.value)
   if (!currentNote) return
 
   const newReplies = [
-    ...currentNote.replies || [],
+    ...(currentNote.replies || []),
     {
       id: nanoid(),
       content: replyContent.value,
@@ -150,7 +197,9 @@ const createNoteReply = () => {
     ...currentNote,
     replies: newReplies,
   }
-  const newNotes = notes.value.map(note => note.id === replyNoteId.value ? newNote : note)
+  const newNotes = notes.value.map((note) =>
+    note.id === replyNoteId.value ? newNote : note
+  )
   slidesStore.updateSlide({ notes: newNotes })
 
   replyContent.value = ''
@@ -158,15 +207,19 @@ const createNoteReply = () => {
 }
 
 const deleteReply = (noteId: string, replyId: string) => {
-  const currentNote = notes.value.find(note => note.id === noteId)
+  const currentNote = notes.value.find((note) => note.id === noteId)
   if (!currentNote || !currentNote.replies) return
-  
-  const newReplies = currentNote.replies.filter(reply => reply.id !== replyId)
+
+  const newReplies = currentNote.replies.filter(
+    (reply) => reply.id !== replyId
+  )
   const newNote: Note = {
     ...currentNote,
     replies: newReplies,
   }
-  const newNotes = notes.value.map(note => note.id === noteId ? newNote : note)
+  const newNotes = notes.value.map((note) =>
+    note.id === noteId ? newNote : note
+  )
   slidesStore.updateSlide({ notes: newNotes })
 }
 
@@ -174,7 +227,7 @@ const handleClickNote = (note: Note) => {
   activeNoteId.value = note.id
 
   if (note.elId) {
-    const elIds = currentSlide.value.elements.map(item => item.id)
+    const elIds = currentSlide.value.elements.map((item) => item.id)
     if (elIds.includes(note.elId)) {
       mainStore.setActiveElementIdList([note.elId])
     }
@@ -314,7 +367,6 @@ const close = () => {
   flex-direction: column;
   justify-content: flex-end;
 
-  
   .footer {
     margin-top: 10px;
     display: flex;
@@ -323,7 +375,7 @@ const close = () => {
       display: flex;
       justify-content: center;
       align-items: center;
-      
+
       &.icon {
         font-size: 18px;
         color: #666;

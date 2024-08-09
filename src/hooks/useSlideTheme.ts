@@ -6,8 +6,8 @@ import type { PresetTheme } from '@/configs/theme'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 interface ThemeValueWithArea {
-  area: number
-  value: string
+  area: number;
+  value: string;
 }
 
 export default () => {
@@ -28,15 +28,28 @@ export default () => {
     for (const slide of slides) {
       if (slide.background) {
         if (slide.background.type === 'solid' && slide.background.color) {
-          backgroundColorValues.push({ area: 1, value: slide.background.color })
-        }
-        else if (slide.background.type === 'gradient' && slide.background.gradientColor) {
-          backgroundColorValues.push(...slide.background.gradientColor.map(item => ({
+          backgroundColorValues.push({
             area: 1,
-            value: item,
-          })))
+            value: slide.background.color,
+          })
         }
-        else backgroundColorValues.push({ area: 1, value: theme.value.backgroundColor })
+        else if (
+          slide.background.type === 'gradient' &&
+          slide.background.gradientColor
+        ) {
+          backgroundColorValues.push(
+            ...slide.background.gradientColor.map((item) => ({
+              area: 1,
+              value: item,
+            }))
+          )
+        }
+        else {
+          backgroundColorValues.push({
+            area: 1,
+            value: theme.value.backgroundColor,
+          })
+        }
       }
       for (const el of slide.elements) {
         const elWidth = el.width
@@ -44,27 +57,31 @@ export default () => {
         if (el.type === 'line') {
           const [startX, startY] = el.start
           const [endX, endY] = el.end
-          elHeight = Math.sqrt(Math.pow(Math.abs(startX - endX), 2) + Math.pow(Math.abs(startY - endY), 2))
+          elHeight = Math.sqrt(
+            Math.pow(Math.abs(startX - endX), 2) +
+              Math.pow(Math.abs(startY - endY), 2)
+          )
         }
         else elHeight = el.height
-  
+
         const area = elWidth * elHeight
-  
+
         if (el.type === 'shape' || el.type === 'text') {
           if (el.fill) {
             themeColorValues.push({ area, value: el.fill })
           }
 
-          const text = (el.type === 'shape' ? el.text?.content : el.content) || ''
+          const text =
+            (el.type === 'shape' ? el.text?.content : el.content) || ''
           if (!text) continue
 
           const plainText = text.replace(/<[^>]+>/g, '').replace(/\s*/g, '')
           const matchForColor = text.match(/<[^>]+color: .+?<\/.+?>/g)
           const matchForFont = text.match(/<[^>]+font-family: .+?<\/.+?>/g)
-  
+
           let defaultColorPercent = 1
           let defaultFontPercent = 1
-  
+
           if (matchForColor) {
             for (const item of matchForColor) {
               const ret = item.match(/color: (.+?);/)
@@ -73,7 +90,7 @@ export default () => {
               const color = ret[1]
               const percentage = text.length / plainText.length
               defaultColorPercent = defaultColorPercent - percentage
-              
+
               fontColorValues.push({
                 area: area * percentage,
                 value: color,
@@ -88,16 +105,17 @@ export default () => {
               const font = ret[1]
               const percentage = text.length / plainText.length
               defaultFontPercent = defaultFontPercent - percentage
-              
+
               fontNameValues.push({
                 area: area * percentage,
                 value: font,
               })
             }
           }
-  
+
           if (defaultColorPercent) {
-            const _defaultColor = el.type === 'shape' ? el.text?.defaultColor : el.defaultColor
+            const _defaultColor =
+              el.type === 'shape' ? el.text?.defaultColor : el.defaultColor
             const defaultColor = _defaultColor || theme.value.fontColor
             fontColorValues.push({
               area: area * defaultColorPercent,
@@ -105,7 +123,10 @@ export default () => {
             })
           }
           if (defaultFontPercent) {
-            const _defaultFont = el.type === 'shape' ? el.text?.defaultFontName : el.defaultFontName
+            const _defaultFont =
+              el.type === 'shape'
+                ? el.text?.defaultFontName
+                : el.defaultFontName
             const defaultFont = _defaultFont || theme.value.fontName
             fontNameValues.push({
               area: area * defaultFontPercent,
@@ -120,22 +141,35 @@ export default () => {
             for (const cell of row) {
               if (cell.style?.backcolor) {
                 cellWithFillCount += 1
-                themeColorValues.push({ area: area / cellCount, value: cell.style?.backcolor })
+                themeColorValues.push({
+                  area: area / cellCount,
+                  value: cell.style?.backcolor,
+                })
               }
               if (cell.text) {
-                const percent = (cell.text.length >= 10) ? 1 : (cell.text.length / 10)
+                const percent =
+                  cell.text.length >= 10 ? 1 : cell.text.length / 10
                 if (cell.style?.color) {
-                  fontColorValues.push({ area: area / cellCount * percent, value: cell.style?.color })
+                  fontColorValues.push({
+                    area: (area / cellCount) * percent,
+                    value: cell.style?.color,
+                  })
                 }
                 if (cell.style?.fontname) {
-                  fontColorValues.push({ area: area / cellCount * percent, value: cell.style?.fontname })
+                  fontColorValues.push({
+                    area: (area / cellCount) * percent,
+                    value: cell.style?.fontname,
+                  })
                 }
               }
             }
           }
           if (el.theme) {
             const percent = 1 - cellWithFillCount / cellCount
-            themeColorValues.push({ area: area * percent, value: el.theme.color })
+            themeColorValues.push({
+              area: area * percent,
+              value: el.theme.color,
+            })
           }
         }
         else if (el.type === 'chart') {
@@ -155,7 +189,7 @@ export default () => {
         }
       }
     }
-    
+
     const backgroundColors: { [key: string]: number } = {}
     for (const item of backgroundColorValues) {
       const color = tinycolor(item.value).toRgbString()
@@ -179,7 +213,7 @@ export default () => {
       if (!fontColors[color]) fontColors[color] = item.area
       else fontColors[color] += item.area
     }
-  
+
     const fontNames: { [key: string]: number } = {}
     for (const item of fontNameValues) {
       if (!fontNames[item.value]) fontNames[item.value] = item.area
@@ -187,10 +221,18 @@ export default () => {
     }
 
     return {
-      backgroundColors: Object.keys(backgroundColors).sort((a, b) => backgroundColors[b] - backgroundColors[a]),
-      themeColors: Object.keys(themeColors).sort((a, b) => themeColors[b] - themeColors[a]),
-      fontColors: Object.keys(fontColors).sort((a, b) => fontColors[b] - fontColors[a]),
-      fontNames: Object.keys(fontNames).sort((a, b) => fontNames[b] - fontNames[a]),
+      backgroundColors: Object.keys(backgroundColors).sort(
+        (a, b) => backgroundColors[b] - backgroundColors[a]
+      ),
+      themeColors: Object.keys(themeColors).sort(
+        (a, b) => themeColors[b] - themeColors[a]
+      ),
+      fontColors: Object.keys(fontColors).sort(
+        (a, b) => fontColors[b] - fontColors[a]
+      ),
+      fontNames: Object.keys(fontNames).sort(
+        (a, b) => fontNames[b] - fontNames[a]
+      ),
     }
   }
 
@@ -202,15 +244,27 @@ export default () => {
         const color = tinycolor(el.fill).toRgbString()
         if (!colors.includes(color)) colors.push(color)
       }
-      if (el.type === 'text' && el.fill && tinycolor(el.fill).getAlpha() !== 0) {
+      if (
+        el.type === 'text' &&
+        el.fill &&
+        tinycolor(el.fill).getAlpha() !== 0
+      ) {
         const color = tinycolor(el.fill).toRgbString()
         if (!colors.includes(color)) colors.push(color)
       }
-      if (el.type === 'table' && el.theme && tinycolor(el.theme.color).getAlpha() !== 0) {
+      if (
+        el.type === 'table' &&
+        el.theme &&
+        tinycolor(el.theme.color).getAlpha() !== 0
+      ) {
         const color = tinycolor(el.theme.color).toRgbString()
         if (!colors.includes(color)) colors.push(color)
       }
-      if (el.type === 'chart' && el.fill && tinycolor(el.fill).getAlpha() !== 0) {
+      if (
+        el.type === 'chart' &&
+        el.fill &&
+        tinycolor(el.fill).getAlpha() !== 0
+      ) {
         const color = tinycolor(el.fill).toRgbString()
         if (!colors.includes(color)) colors.push(color)
       }
@@ -225,28 +279,33 @@ export default () => {
     }
     return colors
   }
-  
+
   // 创建原颜色与新颜色的对应关系表
-  const createSlideThemeColorMap = (slide: Slide, newColors: string[]): { [key: string]: string } => {
+  const createSlideThemeColorMap = (
+    slide: Slide,
+    newColors: string[]
+  ): { [key: string]: string } => {
     const oldColors = getSlideAllColors(slide)
     const themeColorMap: { [key: string]: string } = {}
-  
+
     if (oldColors.length > newColors.length) {
-      const analogous = tinycolor(newColors[0]).analogous(oldColors.length - newColors.length + 10)
-      const otherColors = analogous.map(item => item.toHexString()).slice(1)
+      const analogous = tinycolor(newColors[0]).analogous(
+        oldColors.length - newColors.length + 10
+      )
+      const otherColors = analogous.map((item) => item.toHexString()).slice(1)
       newColors.push(...otherColors)
     }
     for (let i = 0; i < oldColors.length; i++) {
       themeColorMap[oldColors[i]] = newColors[i]
     }
-  
+
     return themeColorMap
   }
-  
+
   // 设置幻灯片主题
   const setSlideTheme = (slide: Slide, theme: PresetTheme) => {
     const colorMap = createSlideThemeColorMap(slide, theme.colors)
-  
+
     if (!slide.background || slide.background.type !== 'image') {
       slide.background = {
         type: 'solid',
@@ -259,12 +318,17 @@ export default () => {
         if (el.gradient) delete el.gradient
       }
       if (el.type === 'text') {
-        if (el.fill) el.fill = colorMap[tinycolor(el.fill).toRgbString()] || el.fill
+        if (el.fill) {
+          el.fill = colorMap[tinycolor(el.fill).toRgbString()] || el.fill
+        }
         el.defaultColor = theme.fontColor
         el.defaultFontName = theme.fontname
       }
       if (el.type === 'table') {
-        if (el.theme) el.theme.color = colorMap[tinycolor(el.theme.color).toRgbString()] || el.theme.color
+        if (el.theme) {
+          el.theme.color =
+            colorMap[tinycolor(el.theme.color).toRgbString()] || el.theme.color
+        }
         for (const rowCells of el.data) {
           for (const cell of rowCells) {
             if (cell.style) {
@@ -275,15 +339,21 @@ export default () => {
         }
       }
       if (el.type === 'chart') {
-        el.themeColor = [colorMap[tinycolor(el.themeColor[0]).toRgbString()]] || el.themeColor
+        el.themeColor =
+          [colorMap[tinycolor(el.themeColor[0]).toRgbString()]] ||
+          el.themeColor
         el.gridColor = theme.fontColor
       }
-      if (el.type === 'line') el.color = colorMap[tinycolor(el.color).toRgbString()] || el.color
-      if (el.type === 'audio') el.color = colorMap[tinycolor(el.color).toRgbString()] || el.color
+      if (el.type === 'line') {
+        el.color = colorMap[tinycolor(el.color).toRgbString()] || el.color
+      }
+      if (el.type === 'audio') {
+        el.color = colorMap[tinycolor(el.color).toRgbString()] || el.color
+      }
       if (el.type === 'latex') el.color = theme.fontColor
     }
   }
-  
+
   // 应用预置主题（单页）
   const applyPresetThemeToSingleSlide = (theme: PresetTheme) => {
     const newSlide: Slide = JSON.parse(JSON.stringify(currentSlide.value))
@@ -294,7 +364,7 @@ export default () => {
     })
     addHistorySnapshot()
   }
-  
+
   // 应用预置主题（全部）
   const applyPresetThemeToAllSlides = (theme: PresetTheme) => {
     const newSlides: Slide[] = JSON.parse(JSON.stringify(slides.value))
@@ -310,20 +380,27 @@ export default () => {
     slidesStore.setSlides(newSlides)
     addHistorySnapshot()
   }
-  
+
   // 将当前主题配置应用到全部页面
   const applyThemeToAllSlides = (applyAll = false) => {
     const newSlides: Slide[] = JSON.parse(JSON.stringify(slides.value))
-    const { themeColor, backgroundColor, fontColor, fontName, outline, shadow } = theme.value
-  
+    const {
+      themeColor,
+      backgroundColor,
+      fontColor,
+      fontName,
+      outline,
+      shadow,
+    } = theme.value
+
     for (const slide of newSlides) {
       if (!slide.background || slide.background.type !== 'image') {
         slide.background = {
           type: 'solid',
-          color: backgroundColor
+          color: backgroundColor,
         }
       }
-  
+
       for (const el of slide.elements) {
         if (applyAll) {
           if ('outline' in el && el.outline) el.outline = outline

@@ -1,7 +1,7 @@
 <template>
-  <div 
-    class="editable-element-text" 
-    :class="{ 'lock': elementInfo.lock }"
+  <div
+    class="editable-element-text"
+    :class="{ lock: elementInfo.lock }"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -13,7 +13,7 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
+      <div
         class="element-content"
         ref="elementRef"
         :style="{
@@ -29,8 +29,8 @@
           writingMode: elementInfo.vertical ? 'vertical-rl' : 'horizontal-tb',
         }"
         v-contextmenu="contextmenus"
-        @mousedown="$event => handleSelectElement($event)"
-        @touchstart="$event => handleSelectElement($event)"
+        @mousedown="($event) => handleSelectElement($event)"
+        @touchstart="($event) => handleSelectElement($event)"
       >
         <ElementOutline
           :width="elementInfo.width"
@@ -45,10 +45,14 @@
           :editable="!elementInfo.lock"
           :value="elementInfo.content"
           :style="{
-            '--paragraphSpace': `${elementInfo.paragraphSpace === undefined ? 5 : elementInfo.paragraphSpace}px`,
+            '--paragraphSpace': `${
+              elementInfo.paragraphSpace === undefined
+                ? 5
+                : elementInfo.paragraphSpace
+            }px`,
           }"
-          @update="value => updateContent(value)"
-          @mousedown="$event => handleSelectElement($event, false)"
+          @update="(value) => updateContent(value)"
+          @mousedown="($event) => handleSelectElement($event, false)"
         />
 
         <!-- 当字号过大且行高较小时，会出现文字高度溢出的情况，导致拖拽区域无法被选中，因此添加了以下节点避免该情况 -->
@@ -73,9 +77,13 @@ import ElementOutline from '@/views/components/element/ElementOutline.vue'
 import ProsemirrorEditor from '@/views/components/element/ProsemirrorEditor.vue'
 
 const props = defineProps<{
-  elementInfo: PPTTextElement
-  selectElement: (e: MouseEvent | TouchEvent, element: PPTTextElement, canMove?: boolean) => void
-  contextmenus: () => ContextmenuItem[] | null
+  elementInfo: PPTTextElement;
+  selectElement: (
+    e: MouseEvent | TouchEvent,
+    element: PPTTextElement,
+    canMove?: boolean
+  ) => void;
+  contextmenus: () => ContextmenuItem[] | null;
 }>()
 
 const mainStore = useMainStore()
@@ -162,16 +170,22 @@ const updateContent = (content: string) => {
     id: props.elementInfo.id,
     props: { content },
   })
-  
+
   addHistorySnapshot()
 }
 
-const checkEmptyText = debounce(function() {
-  const pureText = props.elementInfo.content.replace(/<[^>]+>/g, '')
-  if (!pureText) slidesStore.deleteElement(props.elementInfo.id)
-}, 300, { trailing: true })
+const checkEmptyText = debounce(
+  function() {
+    const pureText = props.elementInfo.content.replace(/<[^>]+>/g, '')
+    if (!pureText) slidesStore.deleteElement(props.elementInfo.id)
+  },
+  300,
+  { trailing: true }
+)
 
-const isHandleElement = computed(() => handleElementId.value === props.elementInfo.id)
+const isHandleElement = computed(
+  () => handleElementId.value === props.elementInfo.id
+)
 watch(isHandleElement, () => {
   if (!isHandleElement.value) checkEmptyText()
 })

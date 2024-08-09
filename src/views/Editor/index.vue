@@ -5,10 +5,13 @@
       <Thumbnails class="layout-content-left" />
       <div class="layout-content-center">
         <CanvasTool class="center-top" />
-        <Canvas class="center-body" :style="{ height: `calc(100% - ${remarkHeight + 40}px)` }" />
+        <Canvas
+          class="center-body"
+          :style="{ height: `calc(100% - ${remarkHeight + 40}px)` }"
+        />
         <Remark
-          class="center-bottom" 
-          v-model:height="remarkHeight" 
+          class="center-bottom"
+          v-model:height="remarkHeight"
           :style="{ height: `${remarkHeight}px` }"
         />
       </div>
@@ -21,7 +24,7 @@
   <NotesPanel v-if="showNotesPanel" />
 
   <Modal
-    :visible="!!dialogForExport" 
+    :visible="!!dialogForExport"
     :width="680"
     @closed="closeExportDialog()"
   >
@@ -49,7 +52,8 @@ import NotesPanel from './NotesPanel.vue'
 import Modal from '@/components/Modal.vue'
 
 const mainStore = useMainStore()
-const { dialogForExport, showSelectPanel, showSearchPanel, showNotesPanel } = storeToRefs(mainStore)
+const { dialogForExport, showSelectPanel, showSearchPanel, showNotesPanel } =
+  storeToRefs(mainStore)
 const closeExportDialog = () => mainStore.setDialogForExport('')
 
 const remarkHeight = ref(40)

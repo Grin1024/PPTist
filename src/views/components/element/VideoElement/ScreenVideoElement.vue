@@ -1,5 +1,6 @@
 <template>
-  <div class="base-element-video screen-element-video"
+  <div
+    class="base-element-video screen-element-video"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -16,10 +17,10 @@
           v-if="inCurrentSlide"
           :width="elementInfo.width"
           :height="elementInfo.height"
-          :src="elementInfo.src" 
-          :poster="elementInfo.poster"  
+          :src="elementInfo.src"
+          :poster="elementInfo.poster"
           :autoplay="elementInfo.autoplay"
-          :scale="scale" 
+          :scale="scale"
         />
       </div>
     </div>
@@ -36,7 +37,7 @@ import { injectKeySlideId, injectKeySlideScale } from '@/types/injectKey'
 import VideoPlayer from './VideoPlayer/index.vue'
 
 defineProps<{
-  elementInfo: PPTVideoElement
+  elementInfo: PPTVideoElement;
 }>()
 
 const { currentSlide } = storeToRefs(useSlidesStore())

@@ -3,48 +3,49 @@
     <div class="container">
       <div class="left">
         <div class="input-area">
-          <TextArea v-model:value="latex" placeholder="输入 LaTeX 公式" ref="textAreaRef" />
+          <TextArea
+            v-model:value="latex"
+            placeholder="输入 LaTeX 公式"
+            ref="textAreaRef"
+          />
         </div>
         <div class="preview">
           <div class="placeholder" v-if="!latex">公式预览</div>
           <div class="preview-content" v-else>
-            <FormulaContent
-              :width="518"
-              :height="138"
-              :latex="latex"
-            />
+            <FormulaContent :width="518" :height="138" :latex="latex" />
           </div>
         </div>
       </div>
       <div class="right">
-        <Tabs 
-          :tabs="tabs" 
-          v-model:value="toolbarState" 
-          card
-        />
+        <Tabs :tabs="tabs" v-model:value="toolbarState" card />
         <div class="content">
           <div class="symbol" v-if="toolbarState === 'symbol'">
-            <Tabs 
-              :tabs="symbolTabs" 
-              v-model:value="selectedSymbolKey" 
-              spaceBetween 
-              :tabsStyle="{ margin: '10px 10px 0' }" 
+            <Tabs
+              :tabs="symbolTabs"
+              v-model:value="selectedSymbolKey"
+              spaceBetween
+              :tabsStyle="{ margin: '10px 10px 0' }"
             />
             <div class="symbol-pool">
-              <div class="symbol-item" v-for="item in symbolPool" :key="item.latex" @click="insertSymbol(item.latex)">
+              <div
+                class="symbol-item"
+                v-for="item in symbolPool"
+                :key="item.latex"
+                @click="insertSymbol(item.latex)"
+              >
                 <SymbolContent :latex="item.latex" />
               </div>
             </div>
           </div>
           <div class="formula" v-else>
-            <div class="formula-item" v-for="item in formulaList" :key="item.label">
-              <div class="formula-title">{{item.label}}</div>
+            <div
+              class="formula-item"
+              v-for="item in formulaList"
+              :key="item.label"
+            >
+              <div class="formula-title">{{ item.label }}</div>
               <div class="formula-item-content" @click="latex = item.latex">
-                <FormulaContent
-                  :width="236"
-                  :height="60"
-                  :latex="item.latex"
-                />
+                <FormulaContent :width="236" :height="60" :latex="item.latex" />
               </div>
             </div>
           </div>
@@ -71,8 +72,8 @@ import TextArea from '../TextArea.vue'
 import Tabs from '../Tabs.vue'
 
 interface TabItem {
-  key: 'symbol' | 'formula'
-  label: string
+  key: 'symbol' | 'formula';
+  label: string;
 }
 
 const tabs: TabItem[] = [
@@ -81,26 +82,29 @@ const tabs: TabItem[] = [
 ]
 
 interface LatexResult {
-  latex: string
-  path: string
-  w: number
-  h: number
+  latex: string;
+  path: string;
+  w: number;
+  h: number;
 }
 
-const props = withDefaults(defineProps<{
-  value?: string
-}>(), {
-  value: '',
-})
+const props = withDefaults(
+  defineProps<{
+    value?: string;
+  }>(),
+  {
+    value: '',
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update', payload: LatexResult): void
-  (event: 'close'): void
+  (event: 'update', payload: LatexResult): void;
+  (event: 'close'): void;
 }>()
 
 const formulaList = FORMULA_LIST
 
-const symbolTabs = SYMBOL_LIST.map(item => ({
+const symbolTabs = SYMBOL_LIST.map((item) => ({
   label: item.label,
   key: item.type,
 }))
@@ -111,7 +115,9 @@ const textAreaRef = ref<InstanceType<typeof TextArea>>()
 
 const selectedSymbolKey = ref(SYMBOL_LIST[0].type)
 const symbolPool = computed(() => {
-  const selectedSymbol = SYMBOL_LIST.find(item => item.type === selectedSymbolKey.value)
+  const selectedSymbol = SYMBOL_LIST.find(
+    (item) => item.type === selectedSymbolKey.value
+  )
   return selectedSymbol?.children || []
 })
 
@@ -125,7 +131,7 @@ const update = () => {
   const eq = new hfmath(latex.value)
   const pathd = eq.pathd({})
   const box = eq.box({})
-  
+
   emit('update', {
     latex: latex.value,
     path: pathd,

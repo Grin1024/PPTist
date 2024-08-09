@@ -2,23 +2,31 @@
   <div class="writing-board" ref="writingBoardRef">
     <div class="blackboard" v-if="blackboard"></div>
 
-    <canvas class="canvas" ref="canvasRef"
+    <canvas
+      class="canvas"
+      ref="canvasRef"
       :style="{
         width: canvasWidth + 'px',
         height: canvasHeight + 'px',
       }"
-      @mousedown="$event => handleMousedown($event)"
-      @mousemove="$event => handleMousemove($event)"
+      @mousedown="($event) => handleMousedown($event)"
+      @mousemove="($event) => handleMousemove($event)"
       @mouseup="handleMouseup()"
-      @touchstart="$event => handleMousedown($event)"
-      @touchmove="$event => handleMousemove($event)"
-      @touchend="handleMouseup(); mouseInCanvas = false"
-      @mouseleave="handleMouseup(); mouseInCanvas = false"
+      @touchstart="($event) => handleMousedown($event)"
+      @touchmove="($event) => handleMousemove($event)"
+      @touchend="
+        handleMouseup();
+        mouseInCanvas = false;
+      "
+      @mouseleave="
+        handleMouseup();
+        mouseInCanvas = false;
+      "
       @mouseenter="mouseInCanvas = true"
     ></canvas>
 
     <template v-if="mouseInCanvas">
-      <div 
+      <div
         class="eraser"
         :style="{
           left: mouse.x - rubberSize / 2 + 'px',
@@ -28,7 +36,7 @@
         }"
         v-if="model === 'eraser'"
       ></div>
-      <div 
+      <div
         class="pen"
         :style="{
           left: mouse.x - penSize / 2 + 'px',
@@ -39,7 +47,7 @@
       >
         <IconWrite class="icon" :size="penSize * 6" v-if="model === 'pen'" />
       </div>
-      <div 
+      <div
         class="pen"
         :style="{
           left: mouse.x - markSize / 2 + 'px',
@@ -48,7 +56,11 @@
         }"
         v-if="model === 'mark'"
       >
-        <IconHighLight class="icon" :size="markSize * 1.5" v-if="model === 'mark'" />
+        <IconHighLight
+          class="icon"
+          :size="markSize * 1.5"
+          v-if="model === 'mark'"
+        />
       </div>
     </template>
   </div>
@@ -57,24 +69,27 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
-const props = withDefaults(defineProps<{
-  color?: string
-  model?: 'pen' | 'eraser' | 'mark'
-  blackboard?: boolean
-  penSize?: number
-  markSize?: number
-  rubberSize?: number
-}>(), {
-  color: '#ffcc00',
-  model: 'pen',
-  blackboard: false,
-  penSize: 6,
-  markSize: 24,
-  rubberSize: 80,
-})
+const props = withDefaults(
+  defineProps<{
+    color?: string;
+    model?: 'pen' | 'eraser' | 'mark';
+    blackboard?: boolean;
+    penSize?: number;
+    markSize?: number;
+    rubberSize?: number;
+  }>(),
+  {
+    color: '#ffcc00',
+    model: 'pen',
+    blackboard: false,
+    penSize: 6,
+    markSize: 24,
+    rubberSize: 80,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'end'): void
+  (event: 'end'): void;
 }>()
 
 let ctx: CanvasRenderingContext2D | null = null
@@ -102,8 +117,12 @@ const mouseInCanvas = ref(false)
 const canvasWidth = ref(0)
 const canvasHeight = ref(0)
 
-const widthScale = computed(() => canvasRef.value ? canvasWidth.value / canvasRef.value.width : 1)
-const heightScale = computed(() => canvasRef.value ? canvasHeight.value / canvasRef.value.height : 1)
+const widthScale = computed(() =>
+  canvasRef.value ? canvasWidth.value / canvasRef.value.width : 1
+)
+const heightScale = computed(() =>
+  canvasRef.value ? canvasHeight.value / canvasRef.value.height : 1
+)
 
 const updateCanvasSize = () => {
   if (!writingBoardRef.value) return
@@ -171,10 +190,18 @@ const erase = (posX: number, posY: number) => {
 
   const radius = props.rubberSize / 2
 
-  const sinRadius = radius * Math.sin(Math.atan((posY - lastPosY) / (posX - lastPosX)))
-  const cosRadius = radius * Math.cos(Math.atan((posY - lastPosY) / (posX - lastPosX)))
-  const rectPoint1: [number, number] = [lastPosX + sinRadius, lastPosY - cosRadius]
-  const rectPoint2: [number, number] = [lastPosX - sinRadius, lastPosY + cosRadius]
+  const sinRadius =
+    radius * Math.sin(Math.atan((posY - lastPosY) / (posX - lastPosX)))
+  const cosRadius =
+    radius * Math.cos(Math.atan((posY - lastPosY) / (posX - lastPosX)))
+  const rectPoint1: [number, number] = [
+    lastPosX + sinRadius,
+    lastPosY - cosRadius,
+  ]
+  const rectPoint2: [number, number] = [
+    lastPosX - sinRadius,
+    lastPosY + cosRadius,
+  ]
   const rectPoint3: [number, number] = [posX + sinRadius, posY - cosRadius]
   const rectPoint4: [number, number] = [posX - sinRadius, posY + cosRadius]
 
@@ -201,7 +228,10 @@ const erase = (posX: number, posY: number) => {
 const getDistance = (posX: number, posY: number) => {
   const lastPosX = lastPos.x
   const lastPosY = lastPos.y
-  return Math.sqrt((posX - lastPosX) * (posX - lastPosX) + (posY - lastPosY) * (posY - lastPosY))
+  return Math.sqrt(
+    (posX - lastPosX) * (posX - lastPosX) +
+      (posY - lastPosY) * (posY - lastPosY)
+  )
 }
 
 // 根据鼠标两次移动之间的距离s和时间t计算绘制速度，速度越快，墨迹越细
@@ -215,10 +245,10 @@ const getLineWidth = (s: number, t: number) => {
 
   if (v <= minV) lineWidth = maxWidth
   else if (v >= maxV) lineWidth = minWidth
-  else lineWidth = maxWidth - v / maxV * maxWidth
+  else lineWidth = maxWidth - (v / maxV) * maxWidth
 
   if (lastLineWidth === -1) return lineWidth
-  return lineWidth * 1 / 3 + lastLineWidth * 2 / 3
+  return (lineWidth * 1) / 3 + (lastLineWidth * 2) / 3
 }
 
 // 路径操作
@@ -300,7 +330,7 @@ const getImageDataURL = () => {
 // 设置 DataURL（绘制图片到 canvas）
 const setImageDataURL = (imageDataURL: string) => {
   if (!ctx || !canvasRef.value) return
-  
+
   ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
 
   if (imageDataURL) {
@@ -339,7 +369,8 @@ defineExpose({
   top: 0;
   left: 0;
 }
-.eraser, .pen {
+.eraser,
+.pen {
   pointer-events: none;
   position: absolute;
   z-index: 9;
@@ -353,7 +384,7 @@ defineExpose({
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  border: 4px solid rgba($color: #555, $alpha: .15);
-  color: rgba($color: #555, $alpha: .75);
+  border: 4px solid rgba($color: #555, $alpha: 0.15);
+  color: rgba($color: #555, $alpha: 0.75);
 }
 </style>

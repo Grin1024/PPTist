@@ -3,9 +3,9 @@ import type { Token } from './types'
 import { childlessTags } from './tags'
 
 interface State {
-  str: string
-  position: number
-  tokens: Token[]
+  str: string;
+  position: number;
+  tokens: Token[];
 }
 
 const jumpPosition = (state: State, end: number) => {
@@ -45,8 +45,8 @@ const lexText = (state: State) => {
   jumpPosition(state, textEnd)
 
   state.tokens.push({
-    type: 'text', 
-    content, 
+    type: 'text',
+    content,
   })
 }
 
@@ -93,7 +93,7 @@ const lexTagName = (state: State) => {
   const tagName = str.slice(start, end)
   state.tokens.push({
     type: 'tag',
-    content: tagName
+    content: tagName,
   })
   return tagName
 }
@@ -128,7 +128,7 @@ const lexTagAttributes = (state: State) => {
       continue
     }
 
-    const isQuoteStart = char === '\'' || char === '"'
+    const isQuoteStart = char === "'" || char === '"'
     if (isQuoteStart) {
       quote = char
       cursor++
@@ -186,7 +186,7 @@ const lexSkipTag = (tagName: string, state: State) => {
   const safeTagName = tagName.toLowerCase()
   const len = str.length
   let index = state.position
-  
+
   while (index < len) {
     const nextTag = str.indexOf('</', index)
     if (nextTag === -1) {

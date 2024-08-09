@@ -1,4 +1,4 @@
-.tippy-box[data-theme~='tooltip'] {
+.tippy-box[data-theme~="tooltip"] {
   background-color: #262626;
   color: #fff;
   border-radius: $borderRadius;
@@ -12,14 +12,14 @@
     color: #262626;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       border-color: transparent;
       border-style: solid;
     }
   }
 
-  &[data-placement^='top'] > .tippy-arrow {
+  &[data-placement^="top"] > .tippy-arrow {
     bottom: 0;
 
     &::before {
@@ -31,7 +31,7 @@
     }
   }
 
-  &[data-placement^='bottom'] > .tippy-arrow {
+  &[data-placement^="bottom"] > .tippy-arrow {
     top: 0;
 
     &::before {
@@ -43,7 +43,7 @@
     }
   }
 
-  &[data-placement^='left'] > .tippy-arrow {
+  &[data-placement^="left"] > .tippy-arrow {
     right: 0;
 
     &::before {
@@ -54,7 +54,7 @@
     }
   }
 
-  &[data-placement^='right'] > .tippy-arrow {
+  &[data-placement^="right"] > .tippy-arrow {
     left: 0;
 
     &::before {

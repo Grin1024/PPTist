@@ -4,14 +4,18 @@
       <IconArrowCircleLeft class="icon" @click="emit('close')" />
     </div>
     <div class="slide-thumbnails-content">
-      <div 
+      <div
         class="thumbnail"
-        :class="{ 'active': index === slideIndex }"
-        v-for="(slide, index) in slides" 
+        :class="{ active: index === slideIndex }"
+        v-for="(slide, index) in slides"
         :key="slide.id"
         @click="turnSlide(index)"
       >
-        <ThumbnailSlide :slide="slide" :size="150" :visible="index < slidesLoadLimit" />
+        <ThumbnailSlide
+          :slide="slide"
+          :size="150"
+          :visible="index < slidesLoadLimit"
+        />
       </div>
     </div>
   </div>
@@ -25,11 +29,11 @@ import useLoadSlides from '@/hooks/useLoadSlides'
 import ThumbnailSlide from '@/views/components/ThumbnailSlide/index.vue'
 
 const props = defineProps<{
-  turnSlideToIndex: (index: number) => void
+  turnSlideToIndex: (index: number) => void;
 }>()
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const { slides, slideIndex } = storeToRefs(useSlidesStore())

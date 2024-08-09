@@ -1,8 +1,5 @@
 <template>
-  <div 
-    class="audio-player"
-    :style="{ transform: `scale(${1 / scale})` }"
-  >
+  <div class="audio-player" :style="{ transform: `scale(${1 / scale})` }">
     <audio
       class="audio"
       ref="audioRef"
@@ -36,7 +33,7 @@
             class="volume-bar-wrap"
             @mousedown="handleMousedownVolumeBar()"
             @touchstart="handleMousedownVolumeBar()"
-            @click="$event => handleClickVolumeBar($event)"
+            @click="($event) => handleClickVolumeBar($event)"
           >
             <div class="volume-bar" ref="volumeBarRef">
               <div class="volume-bar-inner" :style="{ width: volumeBarWidth }">
@@ -48,19 +45,26 @@
       </div>
 
       <span class="time">
-        <span class="ptime">{{ptime}}</span> / <span class="dtime">{{dtime}}</span>
+        <span class="ptime">{{ ptime }}</span> /
+        <span class="dtime">{{ dtime }}</span>
       </span>
 
-      <div 
+      <div
         class="bar-wrap"
         ref="playBarWrap"
         @mousedown="handleMousedownPlayBar()"
         @touchstart="handleMousedownPlayBar()"
-        @mousemove="$event => handleMousemovePlayBar($event)"
+        @mousemove="($event) => handleMousemovePlayBar($event)"
         @mouseenter="playBarTimeVisible = true"
         @mouseleave="playBarTimeVisible = false"
       >
-        <div class="bar-time" :class="{ 'hidden': !playBarTimeVisible }" :style="{ left: playBarTimeLeft }">{{playBarTime}}</div>
+        <div
+          class="bar-time"
+          :class="{ hidden: !playBarTimeVisible }"
+          :style="{ left: playBarTimeLeft }"
+        >
+          {{ playBarTime }}
+        </div>
         <div class="bar">
           <div class="loaded" :style="{ width: loadedBarWidth }"></div>
           <div class="played" :style="{ width: playedBarWidth }">
@@ -76,15 +80,18 @@
 import { computed, ref } from 'vue'
 import message from '@/utils/message'
 
-const props = withDefaults(defineProps<{
-  src: string
-  loop: boolean
-  autoplay?: boolean
-  scale?: number
-}>(), {
-  autoplay: false,
-  scale: 1,
-})
+const props = withDefaults(
+  defineProps<{
+    src: string;
+    loop: boolean;
+    autoplay?: boolean;
+    scale?: number;
+  }>(),
+  {
+    autoplay: false,
+    scale: 1,
+  }
+)
 
 const secondToTime = (second = 0) => {
   if (second === 0 || isNaN(second)) return '00:00'
@@ -116,8 +123,12 @@ const playBarTimeLeft = ref('0')
 
 const ptime = computed(() => secondToTime(currentTime.value))
 const dtime = computed(() => secondToTime(duration.value))
-const playedBarWidth = computed(() => currentTime.value / duration.value * 100 + '%')
-const loadedBarWidth = computed(() => loaded.value / duration.value * 100 + '%')
+const playedBarWidth = computed(
+  () => (currentTime.value / duration.value) * 100 + '%'
+)
+const loadedBarWidth = computed(
+  () => (loaded.value / duration.value) * 100 + '%'
+)
 const volumeBarWidth = computed(() => volume.value * 100 + '%')
 
 const seek = (time: number) => {
@@ -145,7 +156,7 @@ const pause = () => {
 }
 
 const toggle = () => {
-  if (paused.value) play() 
+  if (paused.value) play()
   else pause()
 }
 
@@ -181,7 +192,9 @@ const handleEnded = () => {
 }
 
 const handleProgress = () => {
-  loaded.value = audioRef.value?.buffered.length ? audioRef.value.buffered.end(audioRef.value.buffered.length - 1) : 0
+  loaded.value = audioRef.value?.buffered.length
+    ? audioRef.value.buffered.end(audioRef.value.buffered.length - 1)
+    : 0
 }
 
 const handleError = () => message.error('视频加载失败')
@@ -189,7 +202,9 @@ const handleError = () => message.error('视频加载失败')
 const thumbMove = (e: MouseEvent | TouchEvent) => {
   if (!audioRef.value || !playBarWrap.value) return
   const clientX = 'clientX' in e ? e.clientX : e.changedTouches[0].clientX
-  let percentage = (clientX - getBoundingClientRectViewLeft(playBarWrap.value)) / playBarWrap.value.clientWidth
+  let percentage =
+    (clientX - getBoundingClientRectViewLeft(playBarWrap.value)) /
+    playBarWrap.value.clientWidth
   percentage = Math.max(percentage, 0)
   percentage = Math.min(percentage, 1)
   const time = percentage * duration.value
@@ -202,7 +217,9 @@ const thumbUp = (e: MouseEvent | TouchEvent) => {
   if (!audioRef.value || !playBarWrap.value) return
 
   const clientX = 'clientX' in e ? e.clientX : e.changedTouches[0].clientX
-  let percentage = (clientX - getBoundingClientRectViewLeft(playBarWrap.value)) / playBarWrap.value.clientWidth
+  let percentage =
+    (clientX - getBoundingClientRectViewLeft(playBarWrap.value)) /
+    playBarWrap.value.clientWidth
   percentage = Math.max(percentage, 0)
   percentage = Math.min(percentage, 1)
   const time = percentage * duration.value
@@ -226,7 +243,8 @@ const handleMousedownPlayBar = () => {
 const volumeMove = (e: MouseEvent | TouchEvent) => {
   if (!volumeBarRef.value) return
   const clientX = 'clientX' in e ? e.clientX : e.changedTouches[0].clientX
-  const percentage = (clientX - getBoundingClientRectViewLeft(volumeBarRef.value)) / 45
+  const percentage =
+    (clientX - getBoundingClientRectViewLeft(volumeBarRef.value)) / 45
   setVolume(percentage)
 }
 
@@ -246,7 +264,8 @@ const handleMousedownVolumeBar = () => {
 
 const handleClickVolumeBar = (e: MouseEvent) => {
   if (!volumeBarRef.value) return
-  const percentage = (e.clientX - getBoundingClientRectViewLeft(volumeBarRef.value)) / 45
+  const percentage =
+    (e.clientX - getBoundingClientRectViewLeft(volumeBarRef.value)) / 45
   setVolume(percentage)
 }
 
@@ -282,7 +301,6 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
-
 .audio-player {
   width: 280px;
   height: 50px;
@@ -401,7 +419,7 @@ defineExpose({
       }
 
       .icon-content {
-        transition: all .2s ease-in-out;
+        transition: all 0.2s ease-in-out;
         opacity: 0.8;
         color: #fff;
       }

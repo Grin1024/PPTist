@@ -1,25 +1,25 @@
 <template>
-  <svg 
-    class="image-rect-outline" 
+  <svg
+    class="image-rect-outline"
     v-if="outline"
-    overflow="visible" 
+    overflow="visible"
     :width="width"
     :height="height"
   >
-    <rect 
-      vector-effect="non-scaling-stroke" 
-      stroke-linecap="butt" 
+    <rect
+      vector-effect="non-scaling-stroke"
+      stroke-linecap="butt"
       stroke-miterlimit="8"
       fill="transparent"
-      :rx="radius" 
+      :rx="radius"
       :ry="radius"
       :width="width"
       :height="height"
       :stroke="outlineColor"
-      :stroke-width="outlineWidth" 
-      :stroke-dasharray="strokeDashArray" 
+      :stroke-width="outlineWidth"
+      :stroke-dasharray="strokeDashArray"
     ></rect>
-	</svg>
+  </svg>
 </template>
 
 <script lang="ts" setup>
@@ -27,20 +27,21 @@ import { toRef } from 'vue'
 import type { PPTElementOutline } from '@/types/slides'
 import useElementOutline from '@/views/components/element/hooks/useElementOutline'
 
-const props = withDefaults(defineProps<{
-  width: number
-  height: number
-  outline?: PPTElementOutline
-  radius?: string
-}>(), {
-  radius: '0',
-})
+const props = withDefaults(
+  defineProps<{
+    width: number;
+    height: number;
+    outline?: PPTElementOutline;
+    radius?: string;
+  }>(),
+  {
+    radius: '0',
+  }
+)
 
-const {
-  outlineWidth,
-  outlineColor,
-  strokeDashArray,
-} = useElementOutline(toRef(props, 'outline'))
+const { outlineWidth, outlineColor, strokeDashArray } = useElementOutline(
+  toRef(props, 'outline')
+)
 </script>
 
 <style lang="scss" scoped>

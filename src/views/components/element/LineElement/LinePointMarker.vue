@@ -1,30 +1,30 @@
 <template>
-  <marker 
-    :id="`${id}-${type}-${position}`" 
-    markerUnits="userSpaceOnUse" 
-    orient="auto" 
-    :markerWidth="size * 3" 
-    :markerHeight="size * 3" 
-    :refX="size * 1.5" 
+  <marker
+    :id="`${id}-${type}-${position}`"
+    markerUnits="userSpaceOnUse"
+    orient="auto"
+    :markerWidth="size * 3"
+    :markerHeight="size * 3"
+    :refX="size * 1.5"
     :refY="size * 1.5"
   >
-		<path 
-      :d="path" 
+    <path
+      :d="path"
       :fill="color"
       :transform="`scale(${size * 0.3}, ${size * 0.3}) rotate(${rotate}, 5, 5)`"
     ></path>
-	</marker>
+  </marker>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
 
 const props = defineProps<{
-  id: string
-  position: 'start' | 'end'
-  type: 'dot' | 'arrow'
-  baseSize: number
-  color?: string
+  id: string;
+  position: 'start' | 'end';
+  type: 'dot' | 'arrow';
+  baseSize: number;
+  color?: string;
 }>()
 
 const pathMap = {
@@ -37,6 +37,8 @@ const rotateMap: { [key: string]: number } = {
 }
 
 const path = computed(() => pathMap[props.type])
-const rotate = computed(() => rotateMap[`${props.type}-${props.position}`] || 0)
-const size = computed(() => props.baseSize < 2 ? 2 : props.baseSize)
+const rotate = computed(
+  () => rotateMap[`${props.type}-${props.position}`] || 0
+)
+const size = computed(() => (props.baseSize < 2 ? 2 : props.baseSize))
 </script>

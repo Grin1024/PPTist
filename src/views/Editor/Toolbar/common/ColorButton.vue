@@ -11,7 +11,7 @@
 import Button from '@/components/Button.vue'
 
 defineProps<{
-  color: string
+  color: string;
 }>()
 </script>
 
@@ -27,7 +27,7 @@ defineProps<{
   height: 20px;
   margin-left: 8px;
   flex: 1;
-  outline: 1px dashed rgba($color: #666, $alpha: .12);
+  outline: 1px dashed rgba($color: #666, $alpha: 0.12);
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAEBJREFUOE9jfPbs2X8GIoCkpCQRqhgYGEcNxBlOo2GIM2iGQLL5//8/UTnl+fPnxOWUUQNxhtNoGOLOKYM+2QAAh2Nq10DwkukAAAAASUVORK5CYII=);
 }
 .content {

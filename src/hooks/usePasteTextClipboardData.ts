@@ -4,8 +4,8 @@ import useCreateElement from '@/hooks/useCreateElement'
 import useAddSlidesOrElements from '@/hooks/useAddSlidesOrElements'
 
 interface PasteTextClipboardDataOptions {
-  onlySlide?: boolean
-  onlyElements?: boolean
+  onlySlide?: boolean;
+  onlyElements?: boolean;
 }
 
 export default () => {
@@ -17,12 +17,15 @@ export default () => {
    * @param text 文本
    */
   const createTextElementFromClipboard = (text: string) => {
-    createTextElement({
-      left: 0,
-      top: 0,
-      width: 600,
-      height: 50,
-    }, { content: text })
+    createTextElement(
+      {
+        left: 0,
+        top: 0,
+        width: 600,
+        height: 50,
+      },
+      { content: text }
+    )
   }
 
   /**
@@ -30,7 +33,10 @@ export default () => {
    * @param text 剪贴板内容
    * @param options 配置项：onlySlide -- 仅处理页面粘贴；onlyElements -- 仅处理元素粘贴；
    */
-  const pasteTextClipboardData = (text: string, options?: PasteTextClipboardDataOptions) => {
+  const pasteTextClipboardData = (
+    text: string,
+    options?: PasteTextClipboardDataOptions
+  ) => {
     const onlySlide = options?.onlySlide || false
     const onlyElements = options?.onlyElements || false
 

@@ -1,13 +1,15 @@
 <template>
   <div class="text-style-panel">
     <div class="preset-style">
-      <div 
+      <div
         class="preset-style-item"
         v-for="item in presetStyles"
         :key="item.label"
         :style="item.style"
         @click="emitBatchRichTextCommand(item.cmd)"
-      >{{item.label}}</div>
+      >
+        {{ item.label }}
+      </div>
     </div>
 
     <Divider />
@@ -15,13 +17,17 @@
     <Divider />
 
     <div class="row">
-      <div style="width: 40%;">行间距：</div>
-      <Select style="width: 60%;"
+      <div style="width: 40%">行间距：</div>
+      <Select
+        style="width: 60%"
         :value="lineHeight || 1"
         @update:value="value => updateLineHeight(value as number)"
-        :options="lineHeightOptions.map(item => ({
-          label: item + '倍', value: item
-        }))"
+        :options="
+          lineHeightOptions.map((item) => ({
+            label: item + '倍',
+            value: item,
+          }))
+        "
       >
         <template #icon>
           <IconRowHeight />
@@ -29,13 +35,17 @@
       </Select>
     </div>
     <div class="row">
-      <div style="width: 40%;">段间距：</div>
-      <Select style="width: 60%;"
+      <div style="width: 40%">段间距：</div>
+      <Select
+        style="width: 60%"
         :value="paragraphSpace || 0"
         @update:value="value => updateParagraphSpace(value as number)"
-        :options="paragraphSpaceOptions.map(item => ({
-          label: item + 'px', value: item
-        }))"
+        :options="
+          paragraphSpaceOptions.map((item) => ({
+            label: item + 'px',
+            value: item,
+          }))
+        "
       >
         <template #icon>
           <IconVerticalSpacingBetweenItems />
@@ -43,13 +53,17 @@
       </Select>
     </div>
     <div class="row">
-      <div style="width: 40%;">字间距：</div>
-      <Select style="width: 60%;"
+      <div style="width: 40%">字间距：</div>
+      <Select
+        style="width: 60%"
         :value="wordSpace || 0"
         @update:value="value => updateWordSpace(value as number)"
-        :options="wordSpaceOptions.map(item => ({
-          label: item + 'px', value: item
-        }))"
+        :options="
+          wordSpaceOptions.map((item) => ({
+            label: item + 'px',
+            value: item,
+          }))
+        "
       >
         <template #icon>
           <IconFullwidth />
@@ -57,12 +71,12 @@
       </Select>
     </div>
     <div class="row">
-      <div style="width: 40%;">文本框填充：</div>
-      <Popover trigger="click" style="width: 60%;">
+      <div style="width: 40%">文本框填充：</div>
+      <Popover trigger="click" style="width: 60%">
         <template #content>
           <ColorPicker
             :modelValue="fill"
-            @update:modelValue="value => updateFill(value)"
+            @update:modelValue="(value) => updateFill(value)"
           />
         </template>
         <ColorButton :color="fill" />
@@ -130,20 +144,14 @@ const presetStyles = [
     style: {
       fontSize: '20px',
     },
-    cmd: [
-      { command: 'clear' },
-      { command: 'fontsize', value: '20px' },
-    ],
+    cmd: [{ command: 'clear' }, { command: 'fontsize', value: '20px' }],
   },
   {
     label: '正文[小]',
     style: {
       fontSize: '18px',
     },
-    cmd: [
-      { command: 'clear' },
-      { command: 'fontsize', value: '18px' },
-    ],
+    cmd: [{ command: 'clear' }, { command: 'fontsize', value: '18px' }],
   },
   {
     label: '注释 1',
@@ -187,15 +195,22 @@ const lineHeight = ref<number>()
 const wordSpace = ref<number>()
 const paragraphSpace = ref<number>()
 
-watch(handleElement, () => {
-  if (!handleElement.value || handleElement.value.type !== 'text') return
+watch(
+  handleElement,
+  () => {
+    if (!handleElement.value || handleElement.value.type !== 'text') return
 
-  fill.value = handleElement.value.fill || '#fff'
-  lineHeight.value = handleElement.value.lineHeight || 1.5
-  wordSpace.value = handleElement.value.wordSpace || 0
-  paragraphSpace.value = handleElement.value.paragraphSpace === undefined ? 5 : handleElement.value.paragraphSpace
-  emitter.emit(EmitterEvents.SYNC_RICH_TEXT_ATTRS_TO_STORE)
-}, { deep: true, immediate: true })
+    fill.value = handleElement.value.fill || '#fff'
+    lineHeight.value = handleElement.value.lineHeight || 1.5
+    wordSpace.value = handleElement.value.wordSpace || 0
+    paragraphSpace.value =
+      handleElement.value.paragraphSpace === undefined
+        ? 5
+        : handleElement.value.paragraphSpace
+    emitter.emit(EmitterEvents.SYNC_RICH_TEXT_ATTRS_TO_STORE)
+  },
+  { deep: true, immediate: true }
+)
 
 const lineHeightOptions = [0.9, 1.0, 1.15, 1.2, 1.4, 1.5, 1.8, 2.0, 2.5, 3.0]
 const wordSpaceOptions = [0, 1, 2, 3, 4, 5, 6, 8, 10]
@@ -263,7 +278,7 @@ const emitBatchRichTextCommand = (action: RichTextAction[]) => {
   &:nth-child(2n) {
     margin-left: -1px;
   }
-  &:nth-child(n+3) {
+  &:nth-child(n + 3) {
     margin-top: -1px;
   }
 }

@@ -1,13 +1,13 @@
 <template>
   <svg class="grid-lines">
-    <path 
+    <path
       :style="{
         transform: `scale(${canvasScale})`,
-      }" 
-      :d="path" 
-      fill="none" 
-      :stroke="gridColor" 
-      stroke-width="0.3" 
+      }"
+      :d="path"
+      fill="none"
+      :stroke="gridColor"
+      stroke-width="0.3"
       stroke-dasharray="5"
     ></path>
   </svg>
@@ -24,13 +24,18 @@ import type { SlideBackground } from '@/types/slides'
 const { canvasScale, gridLineSize } = storeToRefs(useMainStore())
 const { currentSlide, viewportRatio } = storeToRefs(useSlidesStore())
 
-const background = computed<SlideBackground | undefined>(() => currentSlide.value?.background)
+const background = computed<SlideBackground | undefined>(
+  () => currentSlide.value?.background
+)
 
 // 计算网格线的颜色，避免与背景的颜色太接近
 const gridColor = computed(() => {
   const bgColor = background.value?.color || '#fff'
   const colorList = ['#000', '#fff']
-  return tinycolor.mostReadable(bgColor, colorList, { includeFallbackColors: true }).setAlpha(.5).toRgbString()
+  return tinycolor
+    .mostReadable(bgColor, colorList, { includeFallbackColors: true })
+    .setAlpha(0.5)
+    .toRgbString()
 })
 
 // 网格路径

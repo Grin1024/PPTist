@@ -1,7 +1,7 @@
 <template>
-  <div 
+  <div
     class="video-player"
-    :class="{ 'hide-controller': hideController }" 
+    :class="{ 'hide-controller': hideController }"
     :style="{
       width: width * scale + 'px',
       height: height * scale + 'px',
@@ -25,12 +25,19 @@
         @timeupdate="handleTimeupdate()"
         @ended="handleEnded()"
         @progress="handleProgress()"
-        @play="autoHideController(); paused = false"
+        @play="
+          autoHideController();
+          paused = false;
+        "
         @pause="autoHideController()"
         @error="handleError()"
       ></video>
       <div class="bezel">
-        <span class="bezel-icon" :class="{ 'bezel-transition': bezelTransition }" @animationend="bezelTransition = false">
+        <span
+          class="bezel-icon"
+          :class="{ 'bezel-transition': bezelTransition }"
+          @animationend="bezelTransition = false"
+        >
           <IconPause v-if="paused" />
           <IconPlayOne v-else />
         </span>
@@ -58,7 +65,7 @@
             class="volume-bar-wrap"
             @mousedown="handleMousedownVolumeBar()"
             @touchstart="handleMousedownVolumeBar()"
-            @click="$event => handleClickVolumeBar($event)"
+            @click="($event) => handleClickVolumeBar($event)"
           >
             <div class="volume-bar" ref="volumeBarRef">
               <div class="volume-bar-inner" :style="{ width: volumeBarWidth }">
@@ -68,42 +75,59 @@
           </div>
         </div>
         <span class="time">
-          <span class="ptime">{{ptime}}</span> / <span class="dtime">{{dtime}}</span>
+          <span class="ptime">{{ ptime }}</span> /
+          <span class="dtime">{{ dtime }}</span>
         </span>
       </div>
 
       <div class="icons icons-right">
         <div class="speed">
           <div class="icon speed-icon">
-            <span class="icon-content" @click="speedMenuVisible = !speedMenuVisible">{{playbackRate === 1 ? '倍速' : (playbackRate + 'x')}}</span>
-            <div class="speed-menu" v-if="speedMenuVisible" @mouseleave="speedMenuVisible = false">
-              <div 
-                class="speed-menu-item" 
-                :class="{ 'active': item.value === playbackRate }"
-                v-for="item in speedOptions" 
-                :key="item.label" 
+            <span
+              class="icon-content"
+              @click="speedMenuVisible = !speedMenuVisible"
+              >{{ playbackRate === 1 ? "倍速" : playbackRate + "x" }}</span
+            >
+            <div
+              class="speed-menu"
+              v-if="speedMenuVisible"
+              @mouseleave="speedMenuVisible = false"
+            >
+              <div
+                class="speed-menu-item"
+                :class="{ active: item.value === playbackRate }"
+                v-for="item in speedOptions"
+                :key="item.label"
                 @click="speed(item.value)"
-              >{{item.label}}</div>
+              >
+                {{ item.label }}
+              </div>
             </div>
           </div>
         </div>
         <div class="loop" @click="toggleLoop()">
-          <div class="icon loop-icon" :class="{ 'active': loop }">
-            <span class="icon-content">循环{{loop ? '开' : '关'}}</span>
+          <div class="icon loop-icon" :class="{ active: loop }">
+            <span class="icon-content">循环{{ loop ? "开" : "关" }}</span>
           </div>
         </div>
       </div>
 
-      <div 
+      <div
         class="bar-wrap"
         ref="playBarWrap"
         @mousedown="handleMousedownPlayBar()"
         @touchstart="handleMousedownPlayBar()"
-        @mousemove="$event => handleMousemovePlayBar($event)"
+        @mousemove="($event) => handleMousemovePlayBar($event)"
         @mouseenter="playBarTimeVisible = true"
         @mouseleave="playBarTimeVisible = false"
       >
-        <div class="bar-time" :class="{ 'hidden': !playBarTimeVisible }" :style="{ left: playBarTimeLeft }">{{playBarTime}}</div>
+        <div
+          class="bar-time"
+          :class="{ hidden: !playBarTimeVisible }"
+          :style="{ left: playBarTimeLeft }"
+        >
+          {{ playBarTime }}
+        </div>
         <div class="bar">
           <div class="loaded" :style="{ width: loadedBarWidth }"></div>
           <div class="played" :style="{ width: playedBarWidth }">
@@ -119,18 +143,21 @@
 import { computed, ref } from 'vue'
 import useMSE from './useMSE'
 
-const props = withDefaults(defineProps<{
-  width: number
-  height: number
-  src: string
-  poster?: string
-  autoplay?: boolean
-  scale?: number
-}>(), {
-  poster: '',
-  autoplay: false,
-  scale: 1,
-})
+const props = withDefaults(
+  defineProps<{
+    width: number;
+    height: number;
+    src: string;
+    poster?: string;
+    autoplay?: boolean;
+    scale?: number;
+  }>(),
+  {
+    poster: '',
+    autoplay: false,
+    scale: 1,
+  }
+)
 
 const secondToTime = (second = 0) => {
   if (second === 0 || isNaN(second)) return '00:00'
@@ -165,8 +192,12 @@ const playBarTimeLeft = ref('0')
 
 const ptime = computed(() => secondToTime(currentTime.value))
 const dtime = computed(() => secondToTime(duration.value))
-const playedBarWidth = computed(() => currentTime.value / duration.value * 100 + '%')
-const loadedBarWidth = computed(() => loaded.value / duration.value * 100 + '%')
+const playedBarWidth = computed(
+  () => (currentTime.value / duration.value) * 100 + '%'
+)
+const loadedBarWidth = computed(
+  () => (loaded.value / duration.value) * 100 + '%'
+)
 const volumeBarWidth = computed(() => volume.value * 100 + '%')
 
 const speedMenuVisible = ref(false)
@@ -206,7 +237,7 @@ const pause = () => {
 }
 
 const toggle = () => {
-  if (paused.value) play() 
+  if (paused.value) play()
   else pause()
 }
 
@@ -243,16 +274,20 @@ const handleEnded = () => {
 }
 
 const handleProgress = () => {
-  loaded.value = videoRef.value?.buffered.length ? videoRef.value.buffered.end(videoRef.value.buffered.length - 1) : 0
+  loaded.value = videoRef.value?.buffered.length
+    ? videoRef.value.buffered.end(videoRef.value.buffered.length - 1)
+    : 0
 }
 
 const loadError = ref(false)
-const handleError = () => loadError.value = true
+const handleError = () => (loadError.value = true)
 
 const thumbMove = (e: MouseEvent | TouchEvent) => {
   if (!videoRef.value || !playBarWrap.value) return
   const clientX = 'clientX' in e ? e.clientX : e.changedTouches[0].clientX
-  let percentage = (clientX - getBoundingClientRectViewLeft(playBarWrap.value)) / playBarWrap.value.clientWidth
+  let percentage =
+    (clientX - getBoundingClientRectViewLeft(playBarWrap.value)) /
+    playBarWrap.value.clientWidth
   percentage = Math.max(percentage, 0)
   percentage = Math.min(percentage, 1)
   const time = percentage * duration.value
@@ -265,7 +300,9 @@ const thumbUp = (e: MouseEvent | TouchEvent) => {
   if (!videoRef.value || !playBarWrap.value) return
 
   const clientX = 'clientX' in e ? e.clientX : e.changedTouches[0].clientX
-  let percentage = (clientX - getBoundingClientRectViewLeft(playBarWrap.value)) / playBarWrap.value.clientWidth
+  let percentage =
+    (clientX - getBoundingClientRectViewLeft(playBarWrap.value)) /
+    playBarWrap.value.clientWidth
   percentage = Math.max(percentage, 0)
   percentage = Math.min(percentage, 1)
   const time = percentage * duration.value
@@ -289,7 +326,8 @@ const handleMousedownPlayBar = () => {
 const volumeMove = (e: MouseEvent | TouchEvent) => {
   if (!volumeBarRef.value) return
   const clientX = 'clientX' in e ? e.clientX : e.changedTouches[0].clientX
-  const percentage = (clientX - getBoundingClientRectViewLeft(volumeBarRef.value)) / 45
+  const percentage =
+    (clientX - getBoundingClientRectViewLeft(volumeBarRef.value)) / 45
   setVolume(percentage)
 }
 
@@ -309,7 +347,8 @@ const handleMousedownVolumeBar = () => {
 
 const handleClickVolumeBar = (e: MouseEvent) => {
   if (!volumeBarRef.value) return
-  const percentage = (e.clientX - getBoundingClientRectViewLeft(volumeBarRef.value)) / 45
+  const percentage =
+    (e.clientX - getBoundingClientRectViewLeft(volumeBarRef.value)) / 45
   setVolume(percentage)
 }
 
@@ -392,7 +431,8 @@ useMSE(props.src, videoRef)
 }
 
 .controller-mask {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==) repeat-x bottom;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==)
+    repeat-x bottom;
   height: 98px;
   width: 100%;
   position: absolute;
@@ -517,7 +557,7 @@ useMSE(props.src, videoRef)
       }
 
       .icon-content {
-        transition: all .2s ease-in-out;
+        transition: all 0.2s ease-in-out;
         opacity: 0.8;
         color: #fff;
       }

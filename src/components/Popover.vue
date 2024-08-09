@@ -1,5 +1,5 @@
 <template>
-  <div class="popover" :class="{ 'center': center }" ref="triggerRef">
+  <div class="popover" :class="{ center: center }" ref="triggerRef">
     <div class="popover-content" :style="contentStyle" ref="contentRef">
       <slot name="content" v-if="contentVisible"></slot>
     </div>
@@ -8,29 +8,39 @@
 </template>
 
 <script lang="ts" setup>
-import { type CSSProperties, onMounted, onUnmounted, ref, watch, computed } from 'vue'
+import {
+  type CSSProperties,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+  computed,
+} from 'vue'
 import tippy, { type Instance, type Placement } from 'tippy.js'
 
 import 'tippy.js/animations/scale.css'
 
-const props = withDefaults(defineProps<{
-  value?: boolean
-  trigger?: 'click' | 'mouseenter' | 'manual'
-  placement?: Placement
-  appendTo?: HTMLElement | 'parent'
-  contentStyle?: CSSProperties
-  center?: boolean
-  offset?: number
-}>(), {
-  value: false,
-  trigger: 'click',
-  placement: 'bottom',
-  center: false,
-  offset: 8,
-})
+const props = withDefaults(
+  defineProps<{
+    value?: boolean;
+    trigger?: 'click' | 'mouseenter' | 'manual';
+    placement?: Placement;
+    appendTo?: HTMLElement | 'parent';
+    contentStyle?: CSSProperties;
+    center?: boolean;
+    offset?: number;
+  }>(),
+  {
+    value: false,
+    trigger: 'click',
+    placement: 'bottom',
+    center: false,
+    offset: 8,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:value', payload: boolean): void
+  (event: 'update:value', payload: boolean): void;
 }>()
 
 const instance = ref<Instance>()
@@ -42,11 +52,14 @@ const contentStyle = computed(() => {
   return props.contentStyle || {}
 })
 
-watch(() => props.value, () => {
-  if (!instance.value) return
-  if (props.value) instance.value.show()
-  else instance.value.hide()
-})
+watch(
+  () => props.value,
+  () => {
+    if (!instance.value) return
+    if (props.value) instance.value.show()
+    else instance.value.hide()
+  }
+)
 
 onUnmounted(() => {
   if (instance.value) instance.value.destroy()
@@ -96,7 +109,7 @@ onMounted(() => {
 </style>
 
 <style lang="scss">
-.tippy-box[data-theme~='popover'] {
+.tippy-box[data-theme~="popover"] {
   border: 0;
   outline: 0;
 }

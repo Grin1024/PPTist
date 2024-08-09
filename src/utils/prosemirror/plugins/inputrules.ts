@@ -8,22 +8,23 @@ import {
   InputRule,
 } from 'prosemirror-inputrules'
 
-const blockQuoteRule = (nodeType: NodeType) => wrappingInputRule(/^\s*>\s$/, nodeType)
+const blockQuoteRule = (nodeType: NodeType) =>
+  wrappingInputRule(/^\s*>\s$/, nodeType)
 
-const orderedListRule = (nodeType: NodeType) => (
+const orderedListRule = (nodeType: NodeType) =>
   wrappingInputRule(
-    /^(\d+)\.\s$/, 
-    nodeType, 
-    match => ({order: +match[1]}),
-    (match, node) => node.childCount + node.attrs.order === +match[1],
+    /^(\d+)\.\s$/,
+    nodeType,
+    (match) => ({ order: +match[1] }),
+    (match, node) => node.childCount + node.attrs.order === +match[1]
   )
-)
 
-const bulletListRule = (nodeType: NodeType) => wrappingInputRule(/^\s*([-+*])\s$/, nodeType)
+const bulletListRule = (nodeType: NodeType) =>
+  wrappingInputRule(/^\s*([-+*])\s$/, nodeType)
 
 const codeRule = () => {
   const inputRegex = /(?:^|\s)((?:`)((?:[^`]+))(?:`))$/
-  
+
   return new InputRule(inputRegex, (state, match, start, end) => {
     const { schema } = state
 
@@ -36,7 +37,7 @@ const codeRule = () => {
 
 const linkRule = () => {
   const urlRegEx = /(?:https?:\/\/)?[\w-]+(?:\.[\w-]+)+\.?(?:\d+)?(?:\/\S*)?$/
-  
+
   return new InputRule(urlRegEx, (state, match, start, end) => {
     const { schema } = state
 
@@ -48,11 +49,7 @@ const linkRule = () => {
 }
 
 export const buildInputRules = (schema: Schema) => {
-  const rules = [
-    ...smartQuotes,
-    ellipsis,
-    emDash,
-  ]
+  const rules = [...smartQuotes, ellipsis, emDash]
   rules.push(blockQuoteRule(schema.nodes.blockquote))
   rules.push(orderedListRule(schema.nodes.ordered_list))
   rules.push(bulletListRule(schema.nodes.bullet_list))

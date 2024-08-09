@@ -1,7 +1,7 @@
 <template>
-  <div 
+  <div
     class="editable-element-latex"
-    :class="{ 'lock': elementInfo.lock }"
+    :class="{ lock: elementInfo.lock }"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -13,25 +13,27 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
-        class="element-content" 
+      <div
+        class="element-content"
         v-contextmenu="contextmenus"
-        @mousedown="$event => handleSelectElement($event)"
-        @touchstart="$event => handleSelectElement($event)"
+        @mousedown="($event) => handleSelectElement($event)"
+        @touchstart="($event) => handleSelectElement($event)"
         @dblclick="openLatexEditor()"
       >
-        <svg 
-          overflow="visible" 
+        <svg
+          overflow="visible"
           :width="elementInfo.width"
           :height="elementInfo.height"
-          :stroke="elementInfo.color" 
-          :stroke-width="elementInfo.strokeWidth" 
-          fill="none" 
+          :stroke="elementInfo.color"
+          :stroke-width="elementInfo.strokeWidth"
+          fill="none"
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <g 
-            :transform="`scale(${elementInfo.width / elementInfo.viewBox[0]}, ${elementInfo.height / elementInfo.viewBox[1]}) translate(0,0) matrix(1,0,0,1,0,0)`"
+          <g
+            :transform="`scale(${elementInfo.width / elementInfo.viewBox[0]}, ${
+              elementInfo.height / elementInfo.viewBox[1]
+            }) translate(0,0) matrix(1,0,0,1,0,0)`"
           >
             <path :d="elementInfo.path"></path>
           </g>
@@ -47,9 +49,13 @@ import type { ContextmenuItem } from '@/components/Contextmenu/types'
 import emitter, { EmitterEvents } from '@/utils/emitter'
 
 const props = defineProps<{
-  elementInfo: PPTLatexElement
-  selectElement: (e: MouseEvent | TouchEvent, element: PPTLatexElement, canMove?: boolean) => void
-  contextmenus: () => ContextmenuItem[] | null
+  elementInfo: PPTLatexElement;
+  selectElement: (
+    e: MouseEvent | TouchEvent,
+    element: PPTLatexElement,
+    canMove?: boolean
+  ) => void;
+  contextmenus: () => ContextmenuItem[] | null;
 }>()
 
 const handleSelectElement = (e: MouseEvent | TouchEvent) => {

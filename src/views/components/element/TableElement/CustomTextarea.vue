@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="custom-textarea"
     ref="textareaRef"
     :contenteditable="true"
@@ -12,17 +12,23 @@
 
 <script lang="ts" setup>
 import { onBeforeUnmount, ref, watch } from 'vue'
-import { pasteCustomClipboardString, pasteExcelClipboardString } from '@/utils/clipboard'
+import {
+  pasteCustomClipboardString,
+  pasteExcelClipboardString,
+} from '@/utils/clipboard'
 
-const props = withDefaults(defineProps<{
-  value?: string
-}>(), {
-  value: '',
-})
+const props = withDefaults(
+  defineProps<{
+    value?: string;
+  }>(),
+  {
+    value: '',
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'updateValue', payload: string): void
-  (event: 'insertExcelData', payload: string[][]): void
+  (event: 'updateValue', payload: string): void;
+  (event: 'insertExcelData', payload: string[][]): void;
 }>()
 
 const textareaRef = ref<HTMLElement>()
@@ -31,11 +37,15 @@ const isFocus = ref(false)
 
 // 自定义v-modal，同步数据
 // 当文本框聚焦时，不执行数据同步
-watch(() => props.value, () => {
-  if (isFocus.value) return
-  text.value = props.value
-  if (textareaRef.value) textareaRef.value.innerHTML = props.value
-}, { immediate: true })
+watch(
+  () => props.value,
+  () => {
+    if (isFocus.value) return
+    text.value = props.value
+    if (textareaRef.value) textareaRef.value.innerHTML = props.value
+  },
+  { immediate: true }
+)
 
 const handleInput = () => {
   if (!textareaRef.value) return
@@ -54,11 +64,15 @@ const handleFocus = () => {
 
     const clipboardDataFirstItem = e.clipboardData.items[0]
 
-    if (clipboardDataFirstItem && clipboardDataFirstItem.kind === 'string' && clipboardDataFirstItem.type === 'text/plain') {
-      clipboardDataFirstItem.getAsString(text => {
+    if (
+      clipboardDataFirstItem &&
+      clipboardDataFirstItem.kind === 'string' &&
+      clipboardDataFirstItem.type === 'text/plain'
+    ) {
+      clipboardDataFirstItem.getAsString((text) => {
         const clipboardData = pasteCustomClipboardString(text)
         if (typeof clipboardData === 'object') return
- 
+
         const excelData = pasteExcelClipboardString(text)
         if (excelData) {
           emit('insertExcelData', excelData)

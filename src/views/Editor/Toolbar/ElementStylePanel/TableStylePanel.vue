@@ -2,25 +2,25 @@
   <div class="table-style-panel">
     <SelectGroup class="row">
       <Select
-        style="width: 50%;"
+        style="width: 50%"
         :value="textAttrs.fontname"
         @update:value="value => updateTextAttrs({ fontname: value as string })"
-        :options="[
-          ...availableFonts,
-          ...WEB_FONTS
-        ]"
+        :options="[...availableFonts, ...WEB_FONTS]"
       >
         <template #icon>
           <IconFontSize />
         </template>
       </Select>
       <Select
-        style="width: 50%;"
+        style="width: 50%"
         :value="textAttrs.fontsize"
         @update:value="value => updateTextAttrs({ fontsize: value as string })"
-        :options="fontSizeOptions.map(item => ({
-          label: item, value: item
-        }))"
+        :options="
+          fontSizeOptions.map((item) => ({
+            label: item,
+            value: item,
+          }))
+        "
       >
         <template #icon>
           <IconAddText />
@@ -29,67 +29,85 @@
     </SelectGroup>
 
     <ButtonGroup class="row" passive>
-      <Popover trigger="click" style="width: 50%;">
+      <Popover trigger="click" style="width: 50%">
         <template #content>
           <ColorPicker
             :modelValue="textAttrs.color"
-            @update:modelValue="value => updateTextAttrs({ color: value })"
+            @update:modelValue="(value) => updateTextAttrs({ color: value })"
           />
         </template>
         <TextColorButton first v-tooltip="'文字颜色'" :color="textAttrs.color">
           <IconText />
         </TextColorButton>
       </Popover>
-      <Popover trigger="click" style="width: 50%;">
+      <Popover trigger="click" style="width: 50%">
         <template #content>
           <ColorPicker
             :modelValue="textAttrs.backcolor"
-            @update:modelValue="value => updateTextAttrs({ backcolor: value })"
+            @update:modelValue="
+              (value) => updateTextAttrs({ backcolor: value })
+            "
           />
         </template>
-        <TextColorButton last v-tooltip="'单元格填充'" :color="textAttrs.backcolor">
+        <TextColorButton
+          last
+          v-tooltip="'单元格填充'"
+          :color="textAttrs.backcolor"
+        >
           <IconFill />
         </TextColorButton>
       </Popover>
     </ButtonGroup>
 
     <ButtonGroup class="row">
-      <CheckboxButton 
-        style="flex: 1;"
+      <CheckboxButton
+        style="flex: 1"
         :checked="textAttrs.bold"
         v-tooltip="'加粗'"
         @click="updateTextAttrs({ bold: !textAttrs.bold })"
-      ><IconTextBold /></CheckboxButton>
-      <CheckboxButton 
-        style="flex: 1;"
+        ><IconTextBold
+      /></CheckboxButton>
+      <CheckboxButton
+        style="flex: 1"
         :checked="textAttrs.em"
         v-tooltip="'斜体'"
         @click="updateTextAttrs({ em: !textAttrs.em })"
-      ><IconTextItalic /></CheckboxButton>
-      <CheckboxButton 
-        style="flex: 1;"
+        ><IconTextItalic
+      /></CheckboxButton>
+      <CheckboxButton
+        style="flex: 1"
         :checked="textAttrs.underline"
         v-tooltip="'下划线'"
         @click="updateTextAttrs({ underline: !textAttrs.underline })"
-      ><IconTextUnderline /></CheckboxButton>
-      <CheckboxButton 
-        style="flex: 1;"
+        ><IconTextUnderline
+      /></CheckboxButton>
+      <CheckboxButton
+        style="flex: 1"
         :checked="textAttrs.strikethrough"
         v-tooltip="'删除线'"
         @click="updateTextAttrs({ strikethrough: !textAttrs.strikethrough })"
-      ><IconStrikethrough /></CheckboxButton>
+        ><IconStrikethrough
+      /></CheckboxButton>
     </ButtonGroup>
 
-    <RadioGroup 
-      class="row" 
-      button-style="solid" 
+    <RadioGroup
+      class="row"
+      button-style="solid"
       :value="textAttrs.align"
       @update:value="value => updateTextAttrs({ align: value as 'left' | 'center' | 'right' | 'justify' })"
     >
-      <RadioButton value="left" v-tooltip="'左对齐'" style="flex: 1;"><IconAlignTextLeft /></RadioButton>
-      <RadioButton value="center" v-tooltip="'居中'" style="flex: 1;"><IconAlignTextCenter /></RadioButton>
-      <RadioButton value="right" v-tooltip="'右对齐'" style="flex: 1;"><IconAlignTextRight /></RadioButton>
-      <RadioButton value="justify" v-tooltip="'两端对齐'" style="flex: 1;"><IconAlignTextBoth /></RadioButton>
+      <RadioButton value="left" v-tooltip="'左对齐'" style="flex: 1"
+        ><IconAlignTextLeft
+      /></RadioButton>
+      <RadioButton value="center" v-tooltip="'居中'" style="flex: 1"
+        ><IconAlignTextCenter
+      /></RadioButton>
+      <RadioButton value="right" v-tooltip="'右对齐'" style="flex: 1"
+        ><IconAlignTextRight
+      /></RadioButton>
+      <RadioButton value="justify" v-tooltip="'两端对齐'" style="flex: 1"
+        ><IconAlignTextBoth
+      /></RadioButton>
     </RadioGroup>
 
     <Divider />
@@ -99,66 +117,90 @@
     <Divider />
 
     <div class="row">
-      <div style="width: 40%;">行数：</div>
-      <div class="set-count" style="width: 60%;">
-        <Button class="btn" :disabled="rowCount <= 1" @click="setTableRow(rowCount - 1)"><IconMinus /></Button>
-        <div class="count-text">{{rowCount}}</div>
-        <Button class="btn" :disabled="rowCount >= 30" @click="setTableRow(rowCount + 1)"><IconPlus /></Button>
+      <div style="width: 40%">行数：</div>
+      <div class="set-count" style="width: 60%">
+        <Button
+          class="btn"
+          :disabled="rowCount <= 1"
+          @click="setTableRow(rowCount - 1)"
+          ><IconMinus
+        /></Button>
+        <div class="count-text">{{ rowCount }}</div>
+        <Button
+          class="btn"
+          :disabled="rowCount >= 30"
+          @click="setTableRow(rowCount + 1)"
+          ><IconPlus
+        /></Button>
       </div>
     </div>
     <div class="row">
-      <div style="width: 40%;">列数：</div>
-      <div class="set-count" style="width: 60%;">
-        <Button class="btn" :disabled="colCount <= 1" @click="setTableCol(colCount - 1)"><IconMinus /></Button>
-        <div class="count-text">{{colCount}}</div>
-        <Button class="btn" :disabled="colCount >= 30" @click="setTableCol(colCount + 1)"><IconPlus /></Button>
+      <div style="width: 40%">列数：</div>
+      <div class="set-count" style="width: 60%">
+        <Button
+          class="btn"
+          :disabled="colCount <= 1"
+          @click="setTableCol(colCount - 1)"
+          ><IconMinus
+        /></Button>
+        <div class="count-text">{{ colCount }}</div>
+        <Button
+          class="btn"
+          :disabled="colCount >= 30"
+          @click="setTableCol(colCount + 1)"
+          ><IconPlus
+        /></Button>
       </div>
     </div>
 
     <Divider />
 
     <div class="row theme-switch">
-      <div style="width: 40%;">启用主题表格：</div>
-      <div class="switch-wrapper" style="width: 60%;">
-        <Switch 
-          :value="hasTheme" 
-          @update:value="value => toggleTheme(value)" 
+      <div style="width: 40%">启用主题表格：</div>
+      <div class="switch-wrapper" style="width: 60%">
+        <Switch
+          :value="hasTheme"
+          @update:value="(value) => toggleTheme(value)"
         />
       </div>
     </div>
 
     <template v-if="theme">
       <div class="row">
-        <Checkbox 
-          @update:value="value => updateTheme({ rowHeader: value })" 
-          :value="theme.rowHeader" 
-          style="flex: 1;"
-        >标题行</Checkbox>
-        <Checkbox 
-          @update:value="value => updateTheme({ rowFooter: value })" 
-          :value="theme.rowFooter" 
-          style="flex: 1;"
-        >汇总行</Checkbox>
+        <Checkbox
+          @update:value="(value) => updateTheme({ rowHeader: value })"
+          :value="theme.rowHeader"
+          style="flex: 1"
+          >标题行</Checkbox
+        >
+        <Checkbox
+          @update:value="(value) => updateTheme({ rowFooter: value })"
+          :value="theme.rowFooter"
+          style="flex: 1"
+          >汇总行</Checkbox
+        >
       </div>
       <div class="row">
-        <Checkbox 
-          @update:value="value => updateTheme({ colHeader: value })" 
-          :value="theme.colHeader" 
-          style="flex: 1;"
-        >第一列</Checkbox>
-        <Checkbox 
-          @update:value="value => updateTheme({ colFooter: value })" 
-          :value="theme.colFooter" 
-          style="flex: 1;"
-        >最后一列</Checkbox>
+        <Checkbox
+          @update:value="(value) => updateTheme({ colHeader: value })"
+          :value="theme.colHeader"
+          style="flex: 1"
+          >第一列</Checkbox
+        >
+        <Checkbox
+          @update:value="(value) => updateTheme({ colFooter: value })"
+          :value="theme.colFooter"
+          style="flex: 1"
+          >最后一列</Checkbox
+        >
       </div>
       <div class="row">
-        <div style="width: 40%;">主题颜色：</div>
-        <Popover trigger="click" style="width: 60%;">
+        <div style="width: 40%">主题颜色：</div>
+        <Popover trigger="click" style="width: 60%">
           <template #content>
             <ColorPicker
               :modelValue="theme.color"
-              @update:modelValue="value => updateTheme({ color: value })"
+              @update:modelValue="(value) => updateTheme({ color: value })"
             />
           </template>
           <ColorButton :color="theme.color" />
@@ -173,7 +215,12 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { nanoid } from 'nanoid'
 import { useMainStore, useSlidesStore } from '@/store'
-import type { PPTTableElement, TableCell, TableCellStyle, TableTheme } from '@/types/slides'
+import type {
+  PPTTableElement,
+  TableCell,
+  TableCellStyle,
+  TableTheme,
+} from '@/types/slides'
 import { WEB_FONTS } from '@/configs/font'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
@@ -194,11 +241,24 @@ import SelectGroup from '@/components/SelectGroup.vue'
 import Popover from '@/components/Popover.vue'
 
 const slidesStore = useSlidesStore()
-const { handleElement, handleElementId, selectedTableCells: selectedCells, availableFonts } = storeToRefs(useMainStore())
+const {
+  handleElement,
+  handleElementId,
+  selectedTableCells: selectedCells,
+  availableFonts,
+} = storeToRefs(useMainStore())
 const themeColor = computed(() => slidesStore.theme.themeColor)
 
 const fontSizeOptions = [
-  '12px', '14px', '16px', '18px', '20px', '22px', '24px', '28px', '32px',
+  '12px',
+  '14px',
+  '16px',
+  '18px',
+  '20px',
+  '22px',
+  '24px',
+  '28px',
+  '32px',
 ]
 
 const textAttrs = ref({
@@ -220,18 +280,22 @@ const colCount = ref(0)
 const minRowCount = ref(0)
 const minColCount = ref(0)
 
-watch(handleElement, () => {
-  if (!handleElement.value || handleElement.value.type !== 'table') return
-  
-  theme.value = handleElement.value.theme
-  hasTheme.value = !!theme.value
+watch(
+  handleElement,
+  () => {
+    if (!handleElement.value || handleElement.value.type !== 'table') return
 
-  rowCount.value = handleElement.value.data.length
-  colCount.value = handleElement.value.data[0].length
+    theme.value = handleElement.value.theme
+    hasTheme.value = !!theme.value
 
-  minRowCount.value = handleElement.value.data.length
-  minColCount.value = handleElement.value.data[0].length
-}, { deep: true, immediate: true })
+    rowCount.value = handleElement.value.data.length
+    colCount.value = handleElement.value.data[0].length
+
+    minRowCount.value = handleElement.value.data.length
+    minColCount.value = handleElement.value.data[0].length
+  },
+  { deep: true, immediate: true }
+)
 
 const { addHistorySnapshot } = useHistorySnapshot()
 
@@ -295,7 +359,10 @@ const updateTextAttrs = (textAttrProp: Partial<TableCellStyle>) => {
 
   for (let i = 0; i < data.length; i++) {
     for (let j = 0; j < data[i].length; j++) {
-      if (!selectedCells.value.length || selectedCells.value.includes(`${i}_${j}`)) {
+      if (
+        !selectedCells.value.length ||
+        selectedCells.value.includes(`${i}_${j}`)
+      ) {
         const style = data[i][j].style || {}
         data[i][j].style = { ...style, ...textAttrProp }
       }
@@ -322,12 +389,15 @@ const toggleTheme = (checked: boolean) => {
         rowFooter: false,
         colHeader: false,
         colFooter: false,
-      }
+      },
     }
     updateElement(props)
   }
   else {
-    slidesStore.removeElementProps({ id: handleElementId.value, propName: 'theme' })
+    slidesStore.removeElementProps({
+      id: handleElementId.value,
+      propName: 'theme',
+    })
     addHistorySnapshot()
   }
 }
@@ -338,12 +408,21 @@ const setTableRow = (value: number) => {
   const rowCount = _handleElement.data.length
 
   if (value > rowCount) {
-    const rowCells: TableCell[] = new Array(colCount.value).fill({ id: nanoid(10), colspan: 1, rowspan: 1, text: '' })
-    const newTableCells: TableCell[][] = new Array(value - rowCount).fill(rowCells)
-  
-    const tableCells: TableCell[][] = JSON.parse(JSON.stringify(_handleElement.data))
+    const rowCells: TableCell[] = new Array(colCount.value).fill({
+      id: nanoid(10),
+      colspan: 1,
+      rowspan: 1,
+      text: '',
+    })
+    const newTableCells: TableCell[][] = new Array(value - rowCount).fill(
+      rowCells
+    )
+
+    const tableCells: TableCell[][] = JSON.parse(
+      JSON.stringify(_handleElement.data)
+    )
     tableCells.push(...newTableCells)
-  
+
     updateElement({ data: tableCells })
   }
   else {
@@ -358,25 +437,32 @@ const setTableCol = (value: number) => {
   const colCount = _handleElement.data[0].length
 
   let tableCells = _handleElement.data
-  let colSizeList = _handleElement.colWidths.map(item => item * _handleElement.width)
+  let colSizeList = _handleElement.colWidths.map(
+    (item) => item * _handleElement.width
+  )
 
   if (value > colCount) {
-    tableCells = tableCells.map(item => {
-      const cells: TableCell[] = new Array(value - colCount).fill({ id: nanoid(10), colspan: 1, rowspan: 1, text: '' })
+    tableCells = tableCells.map((item) => {
+      const cells: TableCell[] = new Array(value - colCount).fill({
+        id: nanoid(10),
+        colspan: 1,
+        rowspan: 1,
+        text: '',
+      })
       item.push(...cells)
       return item
     })
-  
+
     const newColSizeList: number[] = new Array(value - colCount).fill(100)
     colSizeList.push(...newColSizeList)
   }
   else {
-    tableCells = tableCells.map(item => item.slice(0, value))
+    tableCells = tableCells.map((item) => item.slice(0, value))
     colSizeList = colSizeList.slice(0, value)
   }
 
   const width = colSizeList.reduce((a, b) => a + b)
-  const colWidths = colSizeList.map(item => item / width)
+  const colWidths = colSizeList.map((item) => item / width)
 
   const props = {
     width,

@@ -126,7 +126,7 @@ import {
 } from '@icon-park/vue-next'
 
 export interface Icons {
-  [key: string]: typeof PlayOne
+  [key: string]: typeof PlayOne;
 }
 
 export const icons: Icons = {
@@ -258,5 +258,5 @@ export default {
     for (const key of Object.keys(icons)) {
       app.component(key, icons[key])
     }
-  }
+  },
 }

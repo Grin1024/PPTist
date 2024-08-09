@@ -3,29 +3,38 @@ import { nanoid } from 'nanoid'
 import { useMainStore, useSlidesStore } from '@/store'
 import { getImageSize } from '@/utils/image'
 import { VIEWPORT_SIZE } from '@/configs/canvas'
-import type { PPTLineElement, PPTElement, TableCell, TableCellStyle, PPTShapeElement, PPTChartElement, ChartOptions, PresetChartType } from '@/types/slides'
+import type {
+  PPTLineElement,
+  PPTElement,
+  TableCell,
+  TableCellStyle,
+  PPTShapeElement,
+  PPTChartElement,
+  ChartOptions,
+  PresetChartType,
+} from '@/types/slides'
 import { type ShapePoolItem, SHAPE_PATH_FORMULAS } from '@/configs/shapes'
 import type { LinePoolItem } from '@/configs/lines'
 import { CHART_TYPES } from '@/configs/chartTypes'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 interface CommonElementPosition {
-  top: number
-  left: number
-  width: number
-  height: number
+  top: number;
+  left: number;
+  width: number;
+  height: number;
 }
 
 interface LineElementPosition {
-  top: number
-  left: number
-  start: [number, number]
-  end: [number, number]
+  top: number;
+  left: number;
+  start: [number, number];
+  end: [number, number];
 }
 
 interface CreateTextData {
-  content?: string
-  vertical?: boolean
+  content?: string;
+  vertical?: boolean;
 }
 
 export default () => {
@@ -59,7 +68,7 @@ export default () => {
   const createImageElement = (src: string) => {
     getImageSize(src).then(({ width, height }) => {
       const scale = height / width
-  
+
       if (scale < viewportRatio.value && width > VIEWPORT_SIZE) {
         width = VIEWPORT_SIZE
         height = width * scale
@@ -82,7 +91,7 @@ export default () => {
       })
     })
   }
-  
+
   /**
    * 创建图表元素
    * @param chartType 图表类型
@@ -102,18 +111,24 @@ export default () => {
       data: {
         labels: ['类别1', '类别2', '类别3', '类别4', '类别5'],
         legends: ['系列1'],
-        series: [
-          [12, 19, 5, 2, 18],
-        ],
+        series: [[12, 19, 5, 2, 18]],
       },
     }
 
     const options: ChartOptions = {
       ...(type === 'bar' ? { horizontalBars: false, stackBars: false } : {}),
-      ...(type === 'horizontalBar' ? { horizontalBars: true, stackBars: false } : {}),
-      ...(type === 'line' ? { showLine: true, lineSmooth: true, showArea: false } : {}),
-      ...(type === 'area' ? { showLine: true, lineSmooth: true, showArea: true } : {}),
-      ...(type === 'scatter' ? { showLine: false, lineSmooth: true, showArea: false } : {}),
+      ...(type === 'horizontalBar'
+        ? { horizontalBars: true, stackBars: false }
+        : {}),
+      ...(type === 'line'
+        ? { showLine: true, lineSmooth: true, showArea: false }
+        : {}),
+      ...(type === 'area'
+        ? { showLine: true, lineSmooth: true, showArea: true }
+        : {}),
+      ...(type === 'scatter'
+        ? { showLine: false, lineSmooth: true, showArea: false }
+        : {}),
       ...(type === 'pie' ? { donut: false } : {}),
       ...(type === 'ring' ? { donut: true } : {}),
     }
@@ -123,7 +138,7 @@ export default () => {
       options,
     })
   }
-  
+
   /**
    * 创建表格元素
    * @param row 行数
@@ -138,7 +153,13 @@ export default () => {
     for (let i = 0; i < row; i++) {
       const rowCells: TableCell[] = []
       for (let j = 0; j < col; j++) {
-        rowCells.push({ id: nanoid(10), colspan: 1, rowspan: 1, text: '', style })
+        rowCells.push({
+          id: nanoid(10),
+          colspan: 1,
+          rowspan: 1,
+          text: '',
+          style,
+        })
       }
       data.push(rowCells)
     }
@@ -176,51 +197,63 @@ export default () => {
       cellMinHeight: 36,
     })
   }
-  
+
   /**
    * 创建文本元素
    * @param position 位置大小信息
    * @param content 文本内容
    */
-  const createTextElement = (position: CommonElementPosition, data?: CreateTextData) => {
+  const createTextElement = (
+    position: CommonElementPosition,
+    data?: CreateTextData
+  ) => {
     const { left, top, width, height } = position
     const content = data?.content || ''
     const vertical = data?.vertical || false
 
     const id = nanoid(10)
-    createElement({
-      type: 'text',
-      id,
-      left, 
-      top, 
-      width, 
-      height,
-      content,
-      rotate: 0,
-      defaultFontName: theme.value.fontName,
-      defaultColor: theme.value.fontColor,
-      vertical,
-    }, () => {
-      setTimeout(() => {
-        const editorRef: HTMLElement | null = document.querySelector(`#editable-element-${id} .ProseMirror`)
-        if (editorRef) editorRef.focus()
-      }, 0)
-    })
+    createElement(
+      {
+        type: 'text',
+        id,
+        left,
+        top,
+        width,
+        height,
+        content,
+        rotate: 0,
+        defaultFontName: theme.value.fontName,
+        defaultColor: theme.value.fontColor,
+        vertical,
+      },
+      () => {
+        setTimeout(() => {
+          const editorRef: HTMLElement | null = document.querySelector(
+            `#editable-element-${id} .ProseMirror`
+          )
+          if (editorRef) editorRef.focus()
+        }, 0)
+      }
+    )
   }
-  
+
   /**
    * 创建形状元素
    * @param position 位置大小信息
    * @param data 形状路径信息
    */
-  const createShapeElement = (position: CommonElementPosition, data: ShapePoolItem, supplement: Partial<PPTShapeElement> = {}) => {
+  const createShapeElement = (
+    position: CommonElementPosition,
+    data: ShapePoolItem,
+    supplement: Partial<PPTShapeElement> = {}
+  ) => {
     const { left, top, width, height } = position
     const newElement: PPTShapeElement = {
       type: 'shape',
       id: nanoid(10),
-      left, 
-      top, 
-      width, 
+      left,
+      top,
+      width,
       height,
       viewBox: data.viewBox,
       path: data.path,
@@ -236,27 +269,34 @@ export default () => {
 
       const pathFormula = SHAPE_PATH_FORMULAS[data.pathFormula]
       if ('editable' in pathFormula && pathFormula.editable) {
-        newElement.path = pathFormula.formula(width, height, pathFormula.defaultValue!)
+        newElement.path = pathFormula.formula(
+          width,
+          height,
+          pathFormula.defaultValue!
+        )
         newElement.keypoints = pathFormula.defaultValue
       }
       else newElement.path = pathFormula.formula(width, height)
     }
     createElement(newElement)
   }
-  
+
   /**
    * 创建线条元素
    * @param position 位置大小信息
    * @param data 线条的路径和样式
    */
-  const createLineElement = (position: LineElementPosition, data: LinePoolItem) => {
+  const createLineElement = (
+    position: LineElementPosition,
+    data: LinePoolItem
+  ) => {
     const { left, top, start, end } = position
 
     const newElement: PPTLineElement = {
       type: 'line',
       id: nanoid(10),
-      left, 
-      top, 
+      left,
+      top,
       start,
       end,
       points: data.points,
@@ -264,18 +304,34 @@ export default () => {
       style: data.style,
       width: 2,
     }
-    if (data.isBroken) newElement.broken = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]
-    if (data.isBroken2) newElement.broken2 = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]
-    if (data.isCurve) newElement.curve = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]
-    if (data.isCubic) newElement.cubic = [[(start[0] + end[0]) / 2, (start[1] + end[1]) / 2], [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]]
+    if (data.isBroken) {
+      newElement.broken = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]
+    }
+    if (data.isBroken2) {
+      newElement.broken2 = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]
+    }
+    if (data.isCurve) {
+      newElement.curve = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]
+    }
+    if (data.isCubic) {
+      newElement.cubic = [
+        [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2],
+        [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2],
+      ]
+    }
     createElement(newElement)
   }
-  
+
   /**
    * 创建LaTeX元素
    * @param svg SVG代码
    */
-  const createLatexElement = (data: { path: string; latex: string; w: number; h: number; }) => {
+  const createLatexElement = (data: {
+    path: string;
+    latex: string;
+    w: number;
+    h: number;
+  }) => {
     createElement({
       type: 'latex',
       id: nanoid(10),
@@ -292,7 +348,7 @@ export default () => {
       fixedRatio: true,
     })
   }
-  
+
   /**
    * 创建视频元素
    * @param src 视频地址
@@ -310,7 +366,7 @@ export default () => {
       autoplay: false,
     })
   }
-  
+
   /**
    * 创建音频元素
    * @param src 音频地址

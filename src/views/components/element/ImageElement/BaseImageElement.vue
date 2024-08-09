@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="base-element-image"
     :style="{
       top: elementInfo.top + 'px',
@@ -12,7 +12,7 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
+      <div
         class="element-content"
         :style="{
           filter: shadowStyle ? `drop-shadow(${shadowStyle})` : '',
@@ -22,19 +22,20 @@
         <ImageOutline :elementInfo="elementInfo" />
 
         <div class="image-content" :style="{ clipPath: clipShape.style }">
-          <img 
-            :src="elementInfo.src" 
-            :draggable="false" 
+          <img
+            :src="elementInfo.src"
+            :draggable="false"
             :style="{
               top: imgPosition.top,
               left: imgPosition.left,
               width: imgPosition.width,
               height: imgPosition.height,
               filter: filter,
-            }" 
+            }"
             alt=""
           />
-          <div class="color-mask"
+          <div
+            class="color-mask"
             v-if="elementInfo.colorMask"
             :style="{
               backgroundColor: elementInfo.colorMask,
@@ -57,7 +58,7 @@ import useFilter from './useFilter'
 import ImageOutline from './ImageOutline/index.vue'
 
 const props = defineProps<{
-  elementInfo: PPTImageElement
+  elementInfo: PPTImageElement;
 }>()
 
 const shadow = computed(() => props.elementInfo.shadow)

@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="base-element"
     :class="`base-element-${elementInfo.id}`"
     :style="{
@@ -29,8 +29,8 @@ import BaseVideoElement from '@/views/components/element/VideoElement/BaseVideoE
 import BaseAudioElement from '@/views/components/element/AudioElement/BaseAudioElement.vue'
 
 const props = defineProps<{
-  elementInfo: PPTElement
-  elementIndex: number
+  elementInfo: PPTElement;
+  elementIndex: number;
 }>()
 
 const currentElementComponent = computed<unknown>(() => {

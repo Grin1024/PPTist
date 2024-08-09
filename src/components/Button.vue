@@ -1,16 +1,16 @@
 <template>
-  <button 
+  <button
     class="button"
     :class="{
-      'disabled': disabled,
-      'checked': !disabled && checked,
-      'default': !disabled && type === 'default',
-      'primary': !disabled && type === 'primary',
-      'checkbox': !disabled && type === 'checkbox',
-      'radio': !disabled && type === 'radio',
-      'small': size === 'small',
-      'first': first,
-      'last': last,
+      disabled: disabled,
+      checked: !disabled && checked,
+      default: !disabled && type === 'default',
+      primary: !disabled && type === 'primary',
+      checkbox: !disabled && type === 'checkbox',
+      radio: !disabled && type === 'radio',
+      small: size === 'small',
+      first: first,
+      last: last,
     }"
     @click="handleClick()"
   >
@@ -19,24 +19,27 @@
 </template>
 
 <script lang="ts" setup>
-const props = withDefaults(defineProps<{
-  checked?: boolean
-  disabled?: boolean
-  type?: 'default' | 'primary' | 'checkbox' | 'radio'
-  size?: 'small' | 'normal'
-  first?: boolean
-  last?: boolean
-}>(), {
-  checked: false,
-  disabled: false,
-  type: 'default',
-  size: 'normal',
-  first: false,
-  last: false,
-})
+const props = withDefaults(
+  defineProps<{
+    checked?: boolean;
+    disabled?: boolean;
+    type?: 'default' | 'primary' | 'checkbox' | 'radio';
+    size?: 'small' | 'normal';
+    first?: boolean;
+    last?: boolean;
+  }>(),
+  {
+    checked: false,
+    disabled: false,
+    type: 'default',
+    size: 'normal',
+    first: false,
+    last: false,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'click'): void
+  (event: 'click'): void;
 }>()
 
 const handleClick = () => {
@@ -87,7 +90,8 @@ const handleClick = () => {
       border-color: $themeHoverColor;
     }
   }
-  &.checkbox, &.radio {
+  &.checkbox,
+  &.radio {
     background-color: #fff;
     border: 1px solid #d9d9d9;
     color: $textColor;

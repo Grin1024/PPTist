@@ -1,7 +1,7 @@
 <template>
-  <div 
+  <div
     class="editable-element-image"
-    :class="{ 'lock': elementInfo.lock }"
+    :class="{ lock: elementInfo.lock }"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -23,9 +23,9 @@
         :left="elementInfo.left"
         :rotate="elementInfo.rotate"
         :clipPath="clipShape.style"
-        @clip="range => handleClip(range)"
+        @clip="(range) => handleClip(range)"
       />
-      <div 
+      <div
         class="element-content"
         v-else
         :style="{
@@ -33,26 +33,27 @@
           transform: flipStyle,
         }"
         v-contextmenu="contextmenus"
-        @mousedown="$event => handleSelectElement($event)" 
-        @touchstart="$event => handleSelectElement($event)" 
+        @mousedown="($event) => handleSelectElement($event)"
+        @touchstart="($event) => handleSelectElement($event)"
       >
         <ImageOutline :elementInfo="elementInfo" />
 
         <div class="image-content" :style="{ clipPath: clipShape.style }">
-          <img 
-            :src="elementInfo.src" 
-            :draggable="false" 
+          <img
+            :src="elementInfo.src"
+            :draggable="false"
             :style="{
               top: imgPosition.top,
               left: imgPosition.left,
               width: imgPosition.width,
               height: imgPosition.height,
               filter: filter,
-            }" 
+            }"
             @dragstart.prevent
             alt=""
           />
-          <div class="color-mask"
+          <div
+            class="color-mask"
             v-if="elementInfo.colorMask"
             :style="{
               backgroundColor: elementInfo.colorMask,
@@ -81,16 +82,22 @@ import ImageOutline from './ImageOutline/index.vue'
 import ImageClipHandler from './ImageClipHandler.vue'
 
 const props = defineProps<{
-  elementInfo: PPTImageElement
-  selectElement: (e: MouseEvent | TouchEvent, element: PPTImageElement, canMove?: boolean) => void
-  contextmenus: () => ContextmenuItem[] | null
+  elementInfo: PPTImageElement;
+  selectElement: (
+    e: MouseEvent | TouchEvent,
+    element: PPTImageElement,
+    canMove?: boolean
+  ) => void;
+  contextmenus: () => ContextmenuItem[] | null;
 }>()
 
 const mainStore = useMainStore()
 const slidesStore = useSlidesStore()
 const { clipingImageElementId } = storeToRefs(mainStore)
 
-const isCliping = computed(() => clipingImageElementId.value === props.elementInfo.id)
+const isCliping = computed(
+  () => clipingImageElementId.value === props.elementInfo.id
+)
 
 const { addHistorySnapshot } = useHistorySnapshot()
 
@@ -115,11 +122,17 @@ const handleSelectElement = (e: MouseEvent | TouchEvent) => {
 
 const handleClip = (data: ImageClipedEmitData | null) => {
   mainStore.setClipingImageElementId('')
-  
+
   if (!data) return
 
   const { range, position } = data
-  const originClip: ImageElementClip = props.elementInfo.clip || { shape: 'rect', range: [[0, 0], [100, 100]] }
+  const originClip: ImageElementClip = props.elementInfo.clip || {
+    shape: 'rect',
+    range: [
+      [0, 0],
+      [100, 100],
+    ],
+  }
 
   const left = props.elementInfo.left + position.left
   const top = props.elementInfo.top + position.top
@@ -130,13 +143,20 @@ const handleClip = (data: ImageClipedEmitData | null) => {
   let centerOffsetY = 0
 
   if (props.elementInfo.rotate) {
-    const centerX = (left + width / 2) - (props.elementInfo.left + props.elementInfo.width / 2)
-    const centerY = -((top + height / 2) - (props.elementInfo.top + props.elementInfo.height / 2))
+    const centerX =
+      left + width / 2 - (props.elementInfo.left + props.elementInfo.width / 2)
+    const centerY = -(
+      top +
+      height / 2 -
+      (props.elementInfo.top + props.elementInfo.height / 2)
+    )
 
-    const radian = -props.elementInfo.rotate * Math.PI / 180
+    const radian = (-props.elementInfo.rotate * Math.PI) / 180
 
-    const rotatedCenterX = centerX * Math.cos(radian) - centerY * Math.sin(radian)
-    const rotatedCenterY = centerX * Math.sin(radian) + centerY * Math.cos(radian)
+    const rotatedCenterX =
+      centerX * Math.cos(radian) - centerY * Math.sin(radian)
+    const rotatedCenterY =
+      centerX * Math.sin(radian) + centerY * Math.cos(radian)
 
     centerOffsetX = rotatedCenterX - centerX
     centerOffsetY = -(rotatedCenterY - centerY)
@@ -150,7 +170,7 @@ const handleClip = (data: ImageClipedEmitData | null) => {
     height,
   }
   slidesStore.updateElement({ id: props.elementInfo.id, props: _props })
-  
+
   addHistorySnapshot()
 }
 </script>

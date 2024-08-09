@@ -7,7 +7,7 @@
     <div class="shape-pool">
       <div class="category" v-for="item in SHAPE_LIST" :key="item.type">
         <div class="shape-list">
-          <ShapeItemThumbnail 
+          <ShapeItemThumbnail
             class="shape-item"
             v-for="(shape, index) in item.children"
             :key="index"
@@ -19,28 +19,28 @@
     </div>
 
     <div class="row">
-      <Select 
-        style="flex: 1;" 
-        :value="fillType" 
+      <Select
+        style="flex: 1"
+        :value="fillType"
         @update:value="value => updateFillType(value as 'fill' | 'gradient')"
         :options="[
           { label: '纯色填充', value: 'fill' },
           { label: '渐变填充', value: 'gradient' },
         ]"
       />
-      <div style="width: 10px;"></div>
-      <Popover trigger="click" v-if="fillType === 'fill'" style="flex: 1;">
+      <div style="width: 10px"></div>
+      <Popover trigger="click" v-if="fillType === 'fill'" style="flex: 1">
         <template #content>
           <ColorPicker
             :modelValue="fill"
-            @update:modelValue="value => updateFill(value)"
+            @update:modelValue="(value) => updateFill(value)"
           />
         </template>
         <ColorButton :color="fill" />
       </Popover>
-      <Select 
-        style="flex: 1;" 
-        :value="gradient.type" 
+      <Select
+        style="flex: 1"
+        :value="gradient.type"
         @update:value="value => updateGradient({ type: value as 'linear' | 'radial' })"
         v-else
         :options="[
@@ -49,41 +49,45 @@
         ]"
       />
     </div>
-    
+
     <template v-if="fillType === 'gradient'">
       <div class="row">
-        <div style="width: 40%;">起点颜色：</div>
-        <Popover trigger="click" style="width: 60%;">
+        <div style="width: 40%">起点颜色：</div>
+        <Popover trigger="click" style="width: 60%">
           <template #content>
             <ColorPicker
               :modelValue="gradient.color[0]"
-              @update:modelValue="value => updateGradient({ color: [value, gradient.color[1]] })"
+              @update:modelValue="
+                (value) => updateGradient({ color: [value, gradient.color[1]] })
+              "
             />
           </template>
           <ColorButton :color="gradient.color[0]" />
         </Popover>
       </div>
       <div class="row">
-        <div style="width: 40%;">终点颜色：</div>
-        <Popover trigger="click" style="width: 60%;">
+        <div style="width: 40%">终点颜色：</div>
+        <Popover trigger="click" style="width: 60%">
           <template #content>
             <ColorPicker
               :modelValue="gradient.color[1]"
-              @update:modelValue="value => updateGradient({ color: [gradient.color[0], value] })"
+              @update:modelValue="
+                (value) => updateGradient({ color: [gradient.color[0], value] })
+              "
             />
           </template>
           <ColorButton :color="gradient.color[1]" />
         </Popover>
       </div>
       <div class="row" v-if="gradient.type === 'linear'">
-        <div style="width: 40%;">渐变角度：</div>
+        <div style="width: 40%">渐变角度：</div>
         <Slider
-          style="width: 60%;"
+          style="width: 60%"
           :min="0"
           :max="360"
           :step="15"
           :value="gradient.rotate"
-          @update:value="value => updateGradient({ rotate: value as number })" 
+          @update:value="value => updateGradient({ rotate: value as number })"
         />
       </div>
     </template>
@@ -96,15 +100,21 @@
       <RichTextBase />
       <Divider />
 
-      <RadioGroup 
-        class="row" 
-        button-style="solid" 
+      <RadioGroup
+        class="row"
+        button-style="solid"
         :value="textAlign"
         @update:value="value => updateTextAlign(value as 'top' | 'middle' | 'bottom')"
       >
-        <RadioButton value="top" v-tooltip="'顶对齐'" style="flex: 1;"><IconAlignTextTopOne /></RadioButton>
-        <RadioButton value="middle" v-tooltip="'居中'" style="flex: 1;"><IconAlignTextMiddleOne /></RadioButton>
-        <RadioButton value="bottom" v-tooltip="'底对齐'" style="flex: 1;"><IconAlignTextBottomOne /></RadioButton>
+        <RadioButton value="top" v-tooltip="'顶对齐'" style="flex: 1"
+          ><IconAlignTextTopOne
+        /></RadioButton>
+        <RadioButton value="middle" v-tooltip="'居中'" style="flex: 1"
+          ><IconAlignTextMiddleOne
+        /></RadioButton>
+        <RadioButton value="bottom" v-tooltip="'底对齐'" style="flex: 1"
+          ><IconAlignTextBottomOne
+        /></RadioButton>
       </RadioGroup>
 
       <Divider />
@@ -120,11 +130,12 @@
     <div class="row">
       <CheckboxButton
         v-tooltip="'双击连续使用'"
-        style="flex: 1;"
+        style="flex: 1"
         :checked="!!shapeFormatPainter"
         @click="toggleShapeFormatPainter()"
         @dblclick="toggleShapeFormatPainter(true)"
-      ><IconFormatBrush /> 形状格式刷</CheckboxButton>
+        ><IconFormatBrush /> 形状格式刷</CheckboxButton
+      >
     </div>
   </div>
 </template>
@@ -134,7 +145,11 @@ import { type Ref, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useSlidesStore } from '@/store'
 import type { PPTShapeElement, ShapeGradient, ShapeText } from '@/types/slides'
-import { type ShapePoolItem, SHAPE_LIST, SHAPE_PATH_FORMULAS } from '@/configs/shapes'
+import {
+  type ShapePoolItem,
+  SHAPE_LIST,
+  SHAPE_PATH_FORMULAS,
+} from '@/configs/shapes'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import useShapeFormatPainter from '@/hooks/useShapeFormatPainter'
 
@@ -156,27 +171,36 @@ import Popover from '@/components/Popover.vue'
 
 const mainStore = useMainStore()
 const slidesStore = useSlidesStore()
-const { handleElement, handleElementId, shapeFormatPainter } = storeToRefs(mainStore)
+const { handleElement, handleElementId, shapeFormatPainter } =
+  storeToRefs(mainStore)
 
 const handleShapeElement = handleElement as Ref<PPTShapeElement>
 
 const fill = ref<string>('#000')
 const gradient = ref<ShapeGradient>({
-  type: 'linear', 
+  type: 'linear',
   rotate: 0,
   color: ['#fff', '#fff'],
 })
 const fillType = ref('fill')
 const textAlign = ref('middle')
 
-watch(handleElement, () => {
-  if (!handleElement.value || handleElement.value.type !== 'shape') return
+watch(
+  handleElement,
+  () => {
+    if (!handleElement.value || handleElement.value.type !== 'shape') return
 
-  fill.value = handleElement.value.fill || '#fff'
-  gradient.value = handleElement.value.gradient || { type: 'linear', rotate: 0, color: [fill.value, '#fff'] }
-  fillType.value = handleElement.value.gradient ? 'gradient' : 'fill'
-  textAlign.value = handleElement.value?.text?.align || 'middle'
-}, { deep: true, immediate: true })
+    fill.value = handleElement.value.fill || '#fff'
+    gradient.value = handleElement.value.gradient || {
+      type: 'linear',
+      rotate: 0,
+      color: [fill.value, '#fff'],
+    }
+    fillType.value = handleElement.value.gradient ? 'gradient' : 'fill'
+    textAlign.value = handleElement.value?.text?.align || 'middle'
+  },
+  { deep: true, immediate: true }
+)
 
 const { addHistorySnapshot } = useHistorySnapshot()
 const { toggleShapeFormatPainter } = useShapeFormatPainter()
@@ -189,7 +213,10 @@ const updateElement = (props: Partial<PPTShapeElement>) => {
 // 设置填充类型：渐变、纯色
 const updateFillType = (type: 'gradient' | 'fill') => {
   if (type === 'fill') {
-    slidesStore.removeElementProps({ id: handleElementId.value, propName: 'gradient' })
+    slidesStore.removeElementProps({
+      id: handleElementId.value,
+      propName: 'gradient',
+    })
     addHistorySnapshot()
   }
   else updateElement({ gradient: gradient.value })
@@ -235,7 +262,7 @@ const changeShape = (shape: ShapePoolItem) => {
 
 const updateTextAlign = (align: 'top' | 'middle' | 'bottom') => {
   const _handleElement = handleElement.value as PPTShapeElement
-  
+
   const defaultText: ShapeText = {
     content: '',
     defaultFontName: '微软雅黑',

@@ -3,8 +3,8 @@
     <input
       class="input-content"
       :value="val"
-      @input="$event => handleInput($event)"
-    >
+      @input="($event) => handleInput($event)"
+    />
   </div>
 </template>
 
@@ -13,16 +13,18 @@ import { computed } from 'vue'
 import tinycolor, { type ColorFormats } from 'tinycolor2'
 
 const props = defineProps<{
-  value: ColorFormats.RGBA
+  value: ColorFormats.RGBA;
 }>()
 
 const emit = defineEmits<{
-  (event: 'colorChange', payload: ColorFormats.RGBA): void
+  (event: 'colorChange', payload: ColorFormats.RGBA): void;
 }>()
 
 const val = computed(() => {
   let _hex = ''
-  if (props.value.a < 1) _hex = tinycolor(props.value).toHex8String().toUpperCase()
+  if (props.value.a < 1) {
+    _hex = tinycolor(props.value).toHex8String().toUpperCase()
+  }
   else _hex = tinycolor(props.value).toHexString().toUpperCase()
   return _hex.replace('#', '')
 })
@@ -47,7 +49,7 @@ const handleInput = (e: Event) => {
   font-size: 14px;
 
   &::after {
-    content: '#';
+    content: "#";
     position: absolute;
     left: 0;
     top: 50%;

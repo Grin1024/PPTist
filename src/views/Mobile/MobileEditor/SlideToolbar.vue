@@ -4,24 +4,36 @@
       <textarea
         :value="remark"
         placeholder="点击输入演讲者备注"
-        @input="$event => handleInputMark($event)"
+        @input="($event) => handleInputMark($event)"
       ></textarea>
     </div>
     <div class="toolbar">
       <ButtonGroup class="row">
-        <Button style="flex: 1;" @click="createSlide()"><IconPlus class="icon" /> 新幻灯片</Button>
-        <Button style="flex: 1;" @click="copyAndPasteSlide()"><IconCopy class="icon" /> 复制</Button>
-        <Button style="flex: 1;" @click="deleteSlide()"><IconDelete class="icon" /> 删除</Button>
+        <Button style="flex: 1" @click="createSlide()"
+          ><IconPlus class="icon" /> 新幻灯片</Button
+        >
+        <Button style="flex: 1" @click="copyAndPasteSlide()"
+          ><IconCopy class="icon" /> 复制</Button
+        >
+        <Button style="flex: 1" @click="deleteSlide()"
+          ><IconDelete class="icon" /> 删除</Button
+        >
       </ButtonGroup>
       <ButtonGroup class="row">
-        <Button style="flex: 1;" @click="insertTextElement()"><IconFontSize class="icon" /> 文字</Button>
-        <Button style="flex: 1;">
-          <FileInput @change="files => insertImageElement(files)">
+        <Button style="flex: 1" @click="insertTextElement()"
+          ><IconFontSize class="icon" /> 文字</Button
+        >
+        <Button style="flex: 1">
+          <FileInput @change="(files) => insertImageElement(files)">
             <IconPicture class="icon" />图片
           </FileInput>
         </Button>
-        <Button style="flex: 1;" @click="insertShapeElement('square')"><IconSquare class="icon" /> 矩形</Button>
-        <Button style="flex: 1;" @click="insertShapeElement('round')"><IconRound class="icon" /> 圆形</Button>
+        <Button style="flex: 1" @click="insertShapeElement('square')"
+          ><IconSquare class="icon" /> 矩形</Button
+        >
+        <Button style="flex: 1" @click="insertShapeElement('round')"
+          ><IconRound class="icon" /> 圆形</Button
+        >
       </ButtonGroup>
     </div>
 
@@ -47,24 +59,28 @@ import ButtonGroup from '@/components/ButtonGroup.vue'
 const slidesStore = useSlidesStore()
 const { viewportRatio, currentSlide } = storeToRefs(slidesStore)
 
-const { createSlide, copyAndPasteSlide, deleteSlide, } = useSlideHandler()
-const { createTextElement, createImageElement, createShapeElement } = useCreateElement()
+const { createSlide, copyAndPasteSlide, deleteSlide } = useSlideHandler()
+const { createTextElement, createImageElement, createShapeElement } =
+  useCreateElement()
 
 const insertTextElement = () => {
   const width = 400
   const height = 56
 
-  createTextElement({
-    left: (VIEWPORT_SIZE - width) / 2,
-    top: (VIEWPORT_SIZE * viewportRatio.value - height) / 2,
-    width,
-    height,
-  }, { content: '<p>新添加文本</p>' })
+  createTextElement(
+    {
+      left: (VIEWPORT_SIZE - width) / 2,
+      top: (VIEWPORT_SIZE * viewportRatio.value - height) / 2,
+      width,
+      height,
+    },
+    { content: '<p>新添加文本</p>' }
+  )
 }
 
 const insertImageElement = (files: FileList) => {
   if (!files || !files[0]) return
-  getImageDataURL(files[0]).then(dataURL => createImageElement(dataURL))
+  getImageDataURL(files[0]).then((dataURL) => createImageElement(dataURL))
 }
 
 const insertShapeElement = (type: 'square' | 'round') => {
@@ -80,12 +96,15 @@ const insertShapeElement = (type: 'square' | 'round') => {
 
   const size = 200
 
-  createShapeElement({
-    left: (VIEWPORT_SIZE - size) / 2,
-    top: (VIEWPORT_SIZE * viewportRatio.value - size) / 2,
-    width: size,
-    height: size,
-  }, shape[type])
+  createShapeElement(
+    {
+      left: (VIEWPORT_SIZE - size) / 2,
+      top: (VIEWPORT_SIZE * viewportRatio.value - size) / 2,
+      width: size,
+      height: size,
+    },
+    shape[type]
+  )
 }
 
 const remark = computed(() => currentSlide.value?.remark || '')

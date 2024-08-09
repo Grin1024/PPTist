@@ -9,10 +9,10 @@ import { computed } from 'vue'
 import type { AlignmentLineAxis } from '@/types/edit'
 
 const props = defineProps<{
-  type: 'vertical' | 'horizontal'
-  axis: AlignmentLineAxis
-  length: number
-  canvasScale: number
+  type: 'vertical' | 'horizontal';
+  axis: AlignmentLineAxis;
+  length: number;
+  canvasScale: number;
 }>()
 
 // 吸附对齐线的位置
@@ -21,7 +21,9 @@ const top = computed(() => props.axis.y * props.canvasScale + 'px')
 
 // 吸附对齐线的长度
 const sizeStyle = computed(() => {
-  if (props.type === 'vertical') return { height: props.length * props.canvasScale + 'px' }
+  if (props.type === 'vertical') {
+    return { height: props.length * props.canvasScale + 'px' }
+  }
   return { width: props.length * props.canvasScale + 'px' }
 })
 </script>

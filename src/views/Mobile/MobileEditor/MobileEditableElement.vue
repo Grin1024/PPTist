@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="mobile-editable-element"
     :style="{
       zIndex: elementIndex,
@@ -29,9 +29,13 @@ import VideoElement from '@/views/components/element/VideoElement/index.vue'
 import AudioElement from '@/views/components/element/AudioElement/index.vue'
 
 const props = defineProps<{
-  elementInfo: PPTElement
-  elementIndex: number
-  selectElement: (e: TouchEvent, element: PPTElement, canMove?: boolean) => void
+  elementInfo: PPTElement;
+  elementIndex: number;
+  selectElement: (
+    e: TouchEvent,
+    element: PPTElement,
+    canMove?: boolean
+  ) => void;
 }>()
 
 const currentElementComponent = computed<unknown>(() => {

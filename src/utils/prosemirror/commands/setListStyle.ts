@@ -2,14 +2,14 @@ import type { EditorView } from 'prosemirror-view'
 import { isList } from '../utils'
 
 interface Style {
-  [key: string]: string
+  [key: string]: string;
 }
 
 export const setListStyle = (view: EditorView, style: Style | Style[]) => {
   const { state } = view
   const { schema, selection } = state
   const tr = state.tr.setSelection(selection)
-  
+
   const { doc } = tr
   if (!doc) return tr
 

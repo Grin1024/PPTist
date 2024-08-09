@@ -6,32 +6,44 @@
       top: elementInfo.top * canvasScale + 'px',
       left: elementInfo.left * canvasScale + 'px',
       transform: `rotate(${rotate}deg)`,
-      transformOrigin: `${elementInfo.width * canvasScale / 2}px ${height * canvasScale / 2}px`,
+      transformOrigin: `${(elementInfo.width * canvasScale) / 2}px ${
+        (height * canvasScale) / 2
+      }px`,
     }"
   >
     <component
       v-if="isSelected"
       :is="currentOperateComponent"
       :elementInfo="elementInfo"
-      :handlerVisible="!elementInfo.lock && (isActiveGroupElement || !isMultiSelect)"
+      :handlerVisible="
+        !elementInfo.lock && (isActiveGroupElement || !isMultiSelect)
+      "
       :rotateElement="rotateElement"
       :scaleElement="scaleElement"
       :dragLineElement="dragLineElement"
       :moveShapeKeypoint="moveShapeKeypoint"
     ></component>
 
-    <div 
+    <div
       class="animation-index"
-      v-if="toolbarState === 'elAnimation' && elementIndexListInAnimation.length"
+      v-if="
+        toolbarState === 'elAnimation' && elementIndexListInAnimation.length
+      "
     >
-      <div class="index-item" v-for="index in elementIndexListInAnimation" :key="index">{{index + 1}}</div>
+      <div
+        class="index-item"
+        v-for="index in elementIndexListInAnimation"
+        :key="index"
+      >
+        {{ index + 1 }}
+      </div>
     </div>
 
-    <LinkHandler 
-      :elementInfo="elementInfo" 
+    <LinkHandler
+      :elementInfo="elementInfo"
       :link="elementInfo.link"
-      :openLinkDialog="openLinkDialog" 
-      v-if="isActive && elementInfo.link" 
+      :openLinkDialog="openLinkDialog"
+      v-if="isActive && elementInfo.link"
       @mousedown.stop=""
     />
   </div>
@@ -61,16 +73,34 @@ import CommonElementOperate from './CommonElementOperate.vue'
 import LinkHandler from './LinkHandler.vue'
 
 const props = defineProps<{
-  elementInfo: PPTElement
-  isSelected: boolean
-  isActive: boolean
-  isActiveGroupElement: boolean
-  isMultiSelect: boolean
-  rotateElement: (e: MouseEvent, element: Exclude<PPTElement, PPTChartElement | PPTLineElement | PPTVideoElement | PPTAudioElement>) => void
-  scaleElement: (e: MouseEvent, element: Exclude<PPTElement, PPTLineElement>, command: OperateResizeHandlers) => void
-  dragLineElement: (e: MouseEvent, element: PPTLineElement, command: OperateLineHandlers) => void
-  moveShapeKeypoint: (e: MouseEvent, element: PPTShapeElement, index: number) => void
-  openLinkDialog: () => void
+  elementInfo: PPTElement;
+  isSelected: boolean;
+  isActive: boolean;
+  isActiveGroupElement: boolean;
+  isMultiSelect: boolean;
+  rotateElement: (
+    e: MouseEvent,
+    element: Exclude<
+      PPTElement,
+      PPTChartElement | PPTLineElement | PPTVideoElement | PPTAudioElement
+    >
+  ) => void;
+  scaleElement: (
+    e: MouseEvent,
+    element: Exclude<PPTElement, PPTLineElement>,
+    command: OperateResizeHandlers
+  ) => void;
+  dragLineElement: (
+    e: MouseEvent,
+    element: PPTLineElement,
+    command: OperateLineHandlers
+  ) => void;
+  moveShapeKeypoint: (
+    e: MouseEvent,
+    element: PPTShapeElement,
+    index: number
+  ) => void;
+  openLinkDialog: () => void;
 }>()
 
 const { canvasScale, toolbarState } = storeToRefs(useMainStore())
@@ -94,14 +124,20 @@ const currentOperateComponent = computed<unknown>(() => {
 const elementIndexListInAnimation = computed(() => {
   const indexList = []
   for (let i = 0; i < formatedAnimations.value.length; i++) {
-    const elIds = formatedAnimations.value[i].animations.map(item => item.elId)
+    const elIds = formatedAnimations.value[i].animations.map(
+      (item) => item.elId
+    )
     if (elIds.includes(props.elementInfo.id)) indexList.push(i)
   }
   return indexList
 })
 
-const rotate = computed(() => 'rotate' in props.elementInfo ? props.elementInfo.rotate : 0)
-const height = computed(() => 'height' in props.elementInfo ? props.elementInfo.height : 0)
+const rotate = computed(() =>
+  'rotate' in props.elementInfo ? props.elementInfo.rotate : 0
+)
+const height = computed(() =>
+  'height' in props.elementInfo ? props.elementInfo.height : 0
+)
 </script>
 
 <style lang="scss" scoped>

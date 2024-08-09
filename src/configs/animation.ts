@@ -214,8 +214,8 @@ export const ATTENTION_ANIMATIONS = [
 ]
 
 interface SlideAnimation {
-  label: string
-  value: TurningMode
+  label: string;
+  value: TurningMode;
 }
 
 export const SLIDE_ANIMATIONS: SlideAnimation[] = [

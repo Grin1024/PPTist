@@ -1,9 +1,6 @@
 <template>
   <div class="mobile">
-    <component 
-      :is="currentComponent" 
-      :changeMode="changeMode"
-    ></component>
+    <component :is="currentComponent" :changeMode="changeMode"></component>
   </div>
 </template>
 
@@ -16,14 +13,14 @@ import MobilePlayer from './MobilePlayer.vue'
 import MobilePreview from './MobilePreview.vue'
 
 const mode = ref<Mode>('preview')
-    
-const changeMode = (_mode: Mode) => mode.value = _mode
+
+const changeMode = (_mode: Mode) => (mode.value = _mode)
 
 const currentComponent = computed(() => {
   const componentMap = {
-    'editor': MobileEditor,
-    'player': MobilePlayer,
-    'preview': MobilePreview,
+    editor: MobileEditor,
+    player: MobilePlayer,
+    preview: MobilePreview,
   }
   return componentMap[mode.value] || null
 })

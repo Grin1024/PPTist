@@ -1,14 +1,14 @@
 <template>
   <div class="element-opacity">
     <div class="row">
-      <div style="width: 40%;">不透明度：</div>
+      <div style="width: 40%">不透明度：</div>
       <Slider
         :min="0"
         :max="1"
         :step="0.1"
         :value="opacity"
-        @update:value="value => updateOpacity(value as number)" 
-        style="width: 60%;"
+        @update:value="value => updateOpacity(value as number)"
+        style="width: 60%"
       />
     </div>
   </div>
@@ -26,10 +26,18 @@ const { handleElement } = storeToRefs(useMainStore())
 
 const opacity = ref<number>(1)
 
-watch(handleElement, () => {
-  if (!handleElement.value) return
-  opacity.value = 'opacity' in handleElement.value && handleElement.value.opacity !== undefined ? handleElement.value.opacity : 1
-}, { deep: true, immediate: true })
+watch(
+  handleElement,
+  () => {
+    if (!handleElement.value) return
+    opacity.value =
+      'opacity' in handleElement.value &&
+      handleElement.value.opacity !== undefined
+        ? handleElement.value.opacity
+        : 1
+  },
+  { deep: true, immediate: true }
+)
 
 const { addHistorySnapshot } = useHistorySnapshot()
 

@@ -3,17 +3,18 @@
     <div class="configs">
       <div class="row">
         <div class="title">导出范围：</div>
-        <RadioGroup
-          class="config-item"
-          v-model:value="rangeType"
-        >
-          <RadioButton style="width: 33.33%;" value="all">全部</RadioButton>
-          <RadioButton style="width: 33.33%;" value="current">当前页</RadioButton>
-          <RadioButton style="width: 33.33%;" value="custom">自定义</RadioButton>
+        <RadioGroup class="config-item" v-model:value="rangeType">
+          <RadioButton style="width: 33.33%" value="all">全部</RadioButton>
+          <RadioButton style="width: 33.33%" value="current"
+            >当前页</RadioButton
+          >
+          <RadioButton style="width: 33.33%" value="custom">自定义</RadioButton>
         </RadioGroup>
       </div>
       <div class="row" v-if="rangeType === 'custom'">
-        <div class="title" :data-range="`（${range[0]} ~ ${range[1]}）`">自定义范围：</div>
+        <div class="title" :data-range="`（${range[0]} ~ ${range[1]}）`">
+          自定义范围：
+        </div>
         <Slider
           class="config-item"
           range
@@ -28,7 +29,12 @@
       </div>
     </div>
     <div class="btns">
-      <Button class="btn export" type="primary" @click="exportSpecificFile(selectedSlides)">导出 .pptist 文件</Button>
+      <Button
+        class="btn export"
+        type="primary"
+        @click="exportSpecificFile(selectedSlides)"
+        >导出 .pptist 文件</Button
+      >
       <Button class="btn close" @click="emit('close')">关闭</Button>
     </div>
   </div>
@@ -46,7 +52,7 @@ import RadioButton from '@/components/RadioButton.vue'
 import RadioGroup from '@/components/RadioGroup.vue'
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const { slides, currentSlide } = storeToRefs(useSlidesStore())

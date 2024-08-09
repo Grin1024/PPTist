@@ -4,13 +4,13 @@ import type { Slide } from '@/types/slides'
 import { LOCALSTORAGE_KEY_DISCARDED_DB } from '@/configs/storage'
 
 export interface writingBoardImg {
-  id: string
-  dataURL: string
+  id: string;
+  dataURL: string;
 }
 
 export interface Snapshot {
-  index: number
-  slides: Slide[]
+  index: number;
+  slides: Slide[];
 }
 
 const databaseNamePrefix = 'PPTist'
@@ -22,17 +22,21 @@ const databaseNamePrefix = 'PPTist'
 export const deleteDiscardedDB = async () => {
   const now = new Date().getTime()
 
-  const localStorageDiscardedDB = localStorage.getItem(LOCALSTORAGE_KEY_DISCARDED_DB)
-  const localStorageDiscardedDBList: string[] = localStorageDiscardedDB ? JSON.parse(localStorageDiscardedDB) : []
+  const localStorageDiscardedDB = localStorage.getItem(
+    LOCALSTORAGE_KEY_DISCARDED_DB
+  )
+  const localStorageDiscardedDBList: string[] = localStorageDiscardedDB
+    ? JSON.parse(localStorageDiscardedDB)
+    : []
 
   const databaseNames = await Dexie.getDatabaseNames()
-  const discardedDBNames = databaseNames.filter(name => {
+  const discardedDBNames = databaseNames.filter((name) => {
     if (name.indexOf(databaseNamePrefix) === -1) return false
-    
+
     const [prefix, id, time] = name.split('_')
     if (prefix !== databaseNamePrefix || !id || !time) return true
     if (localStorageDiscardedDBList.includes(id)) return true
-    if (now - (+time) >= 1000 * 60 * 60 * 12) return true
+    if (now - +time >= 1000 * 60 * 60 * 12) return true
 
     return false
   })

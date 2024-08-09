@@ -1,29 +1,31 @@
 <template>
   <div class="screen-slide-list">
-    <div 
+    <div
       :class="[
-        'slide-item', 
+        'slide-item',
         `turning-mode-${slide.turningMode}`,
         {
-          'current': index === slideIndex,
-          'before': index < slideIndex,
-          'after': index > slideIndex,
-          'hide': (index === slideIndex - 1 || index === slideIndex + 1) && slide.turningMode !== slidesWithTurningMode[slideIndex].turningMode,
-        }
+          current: index === slideIndex,
+          before: index < slideIndex,
+          after: index > slideIndex,
+          hide:
+            (index === slideIndex - 1 || index === slideIndex + 1) &&
+            slide.turningMode !== slidesWithTurningMode[slideIndex].turningMode,
+        },
       ]"
-      v-for="(slide, index) in slidesWithTurningMode" 
+      v-for="(slide, index) in slidesWithTurningMode"
       :key="slide.id"
     >
-      <div 
-        class="slide-content" 
+      <div
+        class="slide-content"
         :style="{
           width: slideWidth + 'px',
           height: slideHeight + 'px',
         }"
         v-if="Math.abs(slideIndex - index) < 2 || slide.animations?.length"
       >
-        <ScreenSlide 
-          :slide="slide" 
+        <ScreenSlide
+          :slide="slide"
           :scale="scale"
           :animationIndex="animationIndex"
           :turnSlideToId="turnSlideToId"
@@ -45,22 +47,25 @@ import { SLIDE_ANIMATIONS } from '@/configs/animation'
 import ScreenSlide from './ScreenSlide.vue'
 
 const props = defineProps<{
-  slideWidth: number
-  slideHeight: number
-  animationIndex: number
-  turnSlideToId: (id: string) => void
-  manualExitFullscreen: () => void
+  slideWidth: number;
+  slideHeight: number;
+  animationIndex: number;
+  turnSlideToId: (id: string) => void;
+  manualExitFullscreen: () => void;
 }>()
 
 const { slides, slideIndex } = storeToRefs(useSlidesStore())
 
 const slidesWithTurningMode = computed(() => {
-  return slides.value.map(slide => {
+  return slides.value.map((slide) => {
     let turningMode = slide.turningMode
     if (!turningMode) turningMode = 'slideY'
     if (turningMode === 'random') {
-      const turningModeKeys = SLIDE_ANIMATIONS.filter(item => !['random', 'no'].includes(item.value)).map(item => item.value)
-      turningMode = turningModeKeys[Math.floor(Math.random() * turningModeKeys.length)]
+      const turningModeKeys = SLIDE_ANIMATIONS.filter(
+        (item) => !['random', 'no'].includes(item.value)
+      ).map((item) => item.value)
+      turningMode =
+        turningModeKeys[Math.floor(Math.random() * turningModeKeys.length)]
     }
     return {
       ...slide,
@@ -104,7 +109,7 @@ provide(injectKeySlideScale, scale)
     }
   }
   &.turning-mode-fade {
-    transition: opacity .75s;
+    transition: opacity 0.75s;
     &.before {
       pointer-events: none;
       opacity: 0;
@@ -115,7 +120,7 @@ provide(injectKeySlideScale, scale)
     }
   }
   &.turning-mode-slideX {
-    transition: transform .35s;
+    transition: transform 0.35s;
     &.before {
       transform: translateX(-100%);
     }
@@ -124,7 +129,7 @@ provide(injectKeySlideScale, scale)
     }
   }
   &.turning-mode-slideY {
-    transition: transform .35s;
+    transition: transform 0.35s;
     &.before {
       transform: translateY(-100%);
     }
@@ -133,25 +138,25 @@ provide(injectKeySlideScale, scale)
     }
   }
   &.turning-mode-slideX3D {
-    transition: transform .5s;
+    transition: transform 0.5s;
     &.before {
-      transform: translateX(-100%) scale(.5);
+      transform: translateX(-100%) scale(0.5);
     }
     &.after {
-      transform: translateX(100%) scale(.5);
+      transform: translateX(100%) scale(0.5);
     }
   }
   &.turning-mode-slideY3D {
-    transition: transform .5s;
+    transition: transform 0.5s;
     &.before {
-      transform: translateY(-100%) scale(.5);
+      transform: translateY(-100%) scale(0.5);
     }
     &.after {
-      transform: translateY(100%) scale(.5);
+      transform: translateY(100%) scale(0.5);
     }
   }
   &.turning-mode-rotate {
-    transition: transform .5s;
+    transition: transform 0.5s;
     transform-origin: 0 0;
     &.before {
       transform: rotate(90deg);
@@ -161,34 +166,34 @@ provide(injectKeySlideScale, scale)
     }
   }
   &.turning-mode-scaleY {
-    transition: transform .5s;
+    transition: transform 0.5s;
     &.before {
-      transform: scaleY(.1);
+      transform: scaleY(0.1);
     }
     &.after {
-      transform: scaleY(.1);
+      transform: scaleY(0.1);
     }
   }
   &.turning-mode-scaleX {
-    transition: transform .5s;
+    transition: transform 0.5s;
     &.before {
-      transform: scaleX(.1);
+      transform: scaleX(0.1);
     }
     &.after {
-      transform: scaleX(.1);
+      transform: scaleX(0.1);
     }
   }
   &.turning-mode-scale {
-    transition: transform .5s;
+    transition: transform 0.5s;
     &.before {
-      transform: scale(.25);
+      transform: scale(0.25);
     }
     &.after {
-      transform: scale(.25);
+      transform: scale(0.25);
     }
   }
   &.turning-mode-scaleReverse {
-    transition: transform .5s;
+    transition: transform 0.5s;
     &.before {
       transform: scale(2);
     }

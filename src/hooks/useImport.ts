@@ -4,7 +4,11 @@ import { parse, type Shape, type Element, type ChartItem } from 'pptxtojson'
 import { nanoid } from 'nanoid'
 import { useSlidesStore } from '@/store'
 import { decrypt } from '@/utils/crypto'
-import { type ShapePoolItem, SHAPE_LIST, SHAPE_PATH_FORMULAS } from '@/configs/shapes'
+import {
+  type ShapePoolItem,
+  SHAPE_LIST,
+  SHAPE_PATH_FORMULAS,
+} from '@/configs/shapes'
 import { VIEWPORT_SIZE } from '@/configs/canvas'
 import useAddSlidesOrElements from '@/hooks/useAddSlidesOrElements'
 import useSlideHandler from '@/hooks/useSlideHandler'
@@ -54,19 +58,23 @@ export default () => {
     let start: [number, number] = [0, 0]
     let end: [number, number] = [0, 0]
 
-    if (!el.isFlipV && !el.isFlipH) { // 右下
+    if (!el.isFlipV && !el.isFlipH) {
+      // 右下
       start = [0, 0]
       end = [el.width, el.height]
     }
-    else if (el.isFlipV && el.isFlipH) { // 左上
+    else if (el.isFlipV && el.isFlipH) {
+      // 左上
       start = [el.width, el.height]
       end = [0, 0]
     }
-    else if (el.isFlipV && !el.isFlipH) { // 右上
+    else if (el.isFlipV && !el.isFlipH) {
+      // 右上
       start = [0, el.height]
       end = [el.width, 0]
     }
-    else { // 左下
+    else {
+      // 左下
       start = [el.width, 0]
       end = [0, el.height]
     }
@@ -80,7 +88,7 @@ export default () => {
       end,
       style: el.borderType === 'solid' ? 'solid' : 'dashed',
       color: el.borderColor,
-      points: ['', el.shapType === 'straightConnector1' ? 'arrow' : '']
+      points: ['', el.shapType === 'straightConnector1' ? 'arrow' : ''],
     }
   }
 
@@ -95,9 +103,9 @@ export default () => {
     for (const item of SHAPE_LIST) {
       shapeList.push(...item.children)
     }
-    
+
     const reader = new FileReader()
-    reader.onload = async e => {
+    reader.onload = async (e) => {
       const json = await parse(e.target!.result as ArrayBuffer, {
         slideFactor: 75 / 914400,
         fontsizeFactor: 100 / 98,
@@ -121,7 +129,10 @@ export default () => {
           background = {
             type: 'gradient',
             gradientType: 'linear',
-            gradientColor: [value.colors[0].color, value.colors[value.colors.length - 1].color],
+            gradientColor: [
+              value.colors[0].color,
+              value.colors[value.colors.length - 1].color,
+            ],
             gradientRotate: value.rot,
           }
         }
@@ -149,7 +160,7 @@ export default () => {
             el.height = el.height * scale
             el.left = el.left * scale
             el.top = el.top * scale
-  
+
             if (el.type === 'text') {
               const textEl: PPTTextElement = {
                 type: 'text',
@@ -224,14 +235,16 @@ export default () => {
                 slide.elements.push(lineElement)
               }
               else {
-                const shape = shapeList.find(item => item.pptxShapeType === el.shapType)
+                const shape = shapeList.find(
+                  (item) => item.pptxShapeType === el.shapType
+                )
 
                 const vAlignMap: { [key: string]: ShapeTextAlign } = {
-                  'mid': 'middle',
-                  'down': 'bottom',
-                  'up': 'top',
+                  mid: 'middle',
+                  down: 'bottom',
+                  up: 'top',
                 }
-                
+
                 const element: PPTShapeElement = {
                   type: 'shape',
                   id: nanoid(10),
@@ -259,21 +272,27 @@ export default () => {
                   flipV: el.isFlipV,
                 }
                 if (el.shadow) element.shadow = el.shadow
-    
+
                 if (shape) {
                   element.path = shape.path
                   element.viewBox = shape.viewBox
-    
+
                   if (shape.pathFormula) {
                     element.pathFormula = shape.pathFormula
                     element.viewBox = [el.width, el.height]
-    
+
                     const pathFormula = SHAPE_PATH_FORMULAS[shape.pathFormula]
                     if ('editable' in pathFormula && pathFormula.editable) {
-                      element.path = pathFormula.formula(el.width, el.height, pathFormula.defaultValue)
+                      element.path = pathFormula.formula(
+                        el.width,
+                        el.height,
+                        pathFormula.defaultValue
+                      )
                       element.keypoints = pathFormula.defaultValue
                     }
-                    else element.path = pathFormula.formula(el.width, el.height)
+                    else {
+                      element.path = pathFormula.formula(el.width, el.height)
+                    }
                   }
                 }
                 if (el.shapType === 'custom') {
@@ -281,14 +300,14 @@ export default () => {
                   element.path = el.path!
                   element.viewBox = [originWidth, originHeight]
                 }
-    
+
                 slide.elements.push(element)
               }
             }
             else if (el.type === 'table') {
               const row = el.data.length
               const col = el.data[0].length
-  
+
               const style: TableCellStyle = {
                 fontname: theme.value.fontName,
                 color: theme.value.fontColor,
@@ -299,7 +318,8 @@ export default () => {
                 for (let j = 0; j < col; j++) {
                   const cellData = el.data[i][j]
 
-                  let textDiv: HTMLDivElement | null = document.createElement('div')
+                  let textDiv: HTMLDivElement | null =
+                    document.createElement('div')
                   textDiv.innerHTML = cellData.text
                   const p = textDiv.querySelector('p')
                   const align = p?.style.textAlign || 'left'
@@ -313,7 +333,9 @@ export default () => {
                     text: textDiv.innerText,
                     style: {
                       ...style,
-                      align: ['left', 'right', 'center'].includes(align) ? (align as 'left' | 'right' | 'center') : 'left',
+                      align: ['left', 'right', 'center'].includes(align)
+                        ? (align as 'left' | 'right' | 'center')
+                        : 'left',
                       fontsize,
                       fontname,
                     },
@@ -322,9 +344,9 @@ export default () => {
                 }
                 data.push(rowCells)
               }
-  
+
               const colWidths: number[] = new Array(col).fill(1 / col)
-  
+
               slide.elements.push({
                 type: 'table',
                 id: nanoid(10),
@@ -354,22 +376,25 @@ export default () => {
               let labels: string[]
               let legends: string[]
               let series: number[][]
-  
-              if (el.chartType === 'scatterChart' || el.chartType === 'bubbleChart') {
+
+              if (
+                el.chartType === 'scatterChart' ||
+                el.chartType === 'bubbleChart'
+              ) {
                 const data = el.data
-                labels = data[0].map(item => item + '')
+                labels = data[0].map((item) => item + '')
                 legends = ['系列1']
                 series = [data[1]]
               }
               else {
                 const data = el.data as ChartItem[]
                 labels = Object.values(data[0].xlabels)
-                legends = data.map(item => item.key)
-                series = data.map(item => item.values.map(v => v.y))
+                legends = data.map((item) => item.key)
+                series = data.map((item) => item.values.map((v) => v.y))
               }
-  
+
               const options: ChartOptions = {}
-  
+
               let chartType: ChartType = 'bar'
 
               switch (el.chartType) {
@@ -377,7 +402,12 @@ export default () => {
                 case 'bar3DChart':
                   chartType = 'bar'
                   if (el.barDir === 'bar') options.horizontalBars = true
-                  if (el.grouping === 'stacked' || el.grouping === 'percentStacked') options.stackBars = true
+                  if (
+                    el.grouping === 'stacked' ||
+                    el.grouping === 'percentStacked'
+                  ) {
+                    options.stackBars = true
+                  }
                   break
                 case 'lineChart':
                 case 'line3DChart':
@@ -386,8 +416,18 @@ export default () => {
                 case 'scatterChart':
                 case 'bubbleChart':
                   chartType = 'line'
-                  if (el.chartType === 'areaChart' || el.chartType === 'area3DChart') options.showArea = true
-                  if (el.chartType === 'scatterChart' || el.chartType === 'bubbleChart') options.showLine = false
+                  if (
+                    el.chartType === 'areaChart' ||
+                    el.chartType === 'area3DChart'
+                  ) {
+                    options.showArea = true
+                  }
+                  if (
+                    el.chartType === 'scatterChart' ||
+                    el.chartType === 'bubbleChart'
+                  ) {
+                    options.showLine = false
+                  }
                   break
                 case 'pieChart':
                 case 'pie3DChart':
@@ -397,7 +437,7 @@ export default () => {
                   break
                 default:
               }
-  
+
               slide.elements.push({
                 type: 'chart',
                 id: nanoid(10),
@@ -418,7 +458,7 @@ export default () => {
               })
             }
             else if (el.type === 'group' || el.type === 'diagram') {
-              const elements = el.elements.map(_el => ({
+              const elements = el.elements.map((_el) => ({
                 ..._el,
                 left: _el.left + originLeft,
                 top: _el.top + originTop,

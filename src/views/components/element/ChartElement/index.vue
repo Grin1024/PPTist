@@ -1,6 +1,7 @@
 <template>
-  <div class="editable-element-chart"
-    :class="{ 'lock': elementInfo.lock }"
+  <div
+    class="editable-element-chart"
+    :class="{ lock: elementInfo.lock }"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -12,14 +13,14 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
-        class="element-content" 
+      <div
+        class="element-content"
         :style="{
           backgroundColor: elementInfo.fill,
         }"
         v-contextmenu="contextmenus"
-        @mousedown="$event => handleSelectElement($event)"
-        @touchstart="$event => handleSelectElement($event)"
+        @mousedown="($event) => handleSelectElement($event)"
+        @touchstart="($event) => handleSelectElement($event)"
         @dblclick="openDataEditor()"
       >
         <ElementOutline
@@ -52,9 +53,13 @@ import ElementOutline from '@/views/components/element/ElementOutline.vue'
 import Chart from './Chart.vue'
 
 const props = defineProps<{
-  elementInfo: PPTChartElement
-  selectElement: (e: MouseEvent | TouchEvent, element: PPTChartElement, canMove?: boolean) => void
-  contextmenus: () => ContextmenuItem[] | null
+  elementInfo: PPTChartElement;
+  selectElement: (
+    e: MouseEvent | TouchEvent,
+    element: PPTChartElement,
+    canMove?: boolean
+  ) => void;
+  contextmenus: () => ContextmenuItem[] | null;
 }>()
 
 const handleSelectElement = (e: MouseEvent | TouchEvent) => {

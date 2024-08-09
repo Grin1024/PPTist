@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="base-element-text"
     :style="{
       top: elementInfo.top + 'px',
@@ -12,7 +12,7 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
+      <div
         class="element-content"
         :style="{
           width: elementInfo.vertical ? 'auto' : elementInfo.width + 'px',
@@ -32,11 +32,15 @@
           :height="elementInfo.height"
           :outline="elementInfo.outline"
         />
-        <div 
-          class="text ProseMirror-static" 
-          :class="{ 'thumbnail': target === 'thumbnail' }"
+        <div
+          class="text ProseMirror-static"
+          :class="{ thumbnail: target === 'thumbnail' }"
           :style="{
-            '--paragraphSpace': `${elementInfo.paragraphSpace === undefined ? 5 : elementInfo.paragraphSpace}px`,
+            '--paragraphSpace': `${
+              elementInfo.paragraphSpace === undefined
+                ? 5
+                : elementInfo.paragraphSpace
+            }px`,
           }"
           v-html="elementInfo.content"
         ></div>
@@ -53,8 +57,8 @@ import ElementOutline from '@/views/components/element/ElementOutline.vue'
 import useElementShadow from '@/views/components/element/hooks/useElementShadow'
 
 const props = defineProps<{
-  elementInfo: PPTTextElement
-  target?: string
+  elementInfo: PPTTextElement;
+  target?: string;
 }>()
 
 const shadow = computed(() => props.elementInfo.shadow)

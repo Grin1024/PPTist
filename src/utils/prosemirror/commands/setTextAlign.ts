@@ -2,7 +2,11 @@ import type { Schema, Node, NodeType } from 'prosemirror-model'
 import type { Transaction } from 'prosemirror-state'
 import type { EditorView } from 'prosemirror-view'
 
-export const setTextAlign = (tr: Transaction, schema: Schema, alignment: string) => {
+export const setTextAlign = (
+  tr: Transaction,
+  schema: Schema,
+  alignment: string
+) => {
   const { selection, doc } = tr
   if (!selection || !doc) return tr
 
@@ -14,9 +18,9 @@ export const setTextAlign = (tr: Transaction, schema: Schema, alignment: string)
   const paragraph = nodes.paragraph
 
   interface Task {
-    node: Node
-    pos: number
-    nodeType: NodeType
+    node: Node;
+    pos: number;
+    nodeType: NodeType;
   }
 
   const tasks: Task[] = []
@@ -39,7 +43,7 @@ export const setTextAlign = (tr: Transaction, schema: Schema, alignment: string)
 
   if (!tasks.length) return tr
 
-  tasks.forEach(task => {
+  tasks.forEach((task) => {
     const { node, pos, nodeType } = task
     let { attrs } = node
     if (alignment) attrs = { ...attrs, align: alignment }
@@ -53,10 +57,6 @@ export const setTextAlign = (tr: Transaction, schema: Schema, alignment: string)
 export const alignmentCommand = (view: EditorView, alignment: string) => {
   const { state } = view
   const { schema, selection } = state
-  const tr = setTextAlign(
-    state.tr.setSelection(selection),
-    schema,
-    alignment,
-  )
+  const tr = setTextAlign(state.tr.setSelection(selection), schema, alignment)
   view.dispatch(tr)
 }

@@ -1,19 +1,19 @@
 <template>
   <div class="link-dialog">
-    <Tabs 
-      :tabs="tabs" 
+    <Tabs
+      :tabs="tabs"
       v-model:value="type"
-      :tabsStyle="{ marginBottom: '20px' }" 
+      :tabsStyle="{ marginBottom: '20px' }"
     />
 
-    <Input 
+    <Input
       class="input"
-      v-if="type === 'web'" 
-      v-model:value="address" 
+      v-if="type === 'web'"
+      v-model:value="address"
       placeholder="请输入网页链接地址"
     />
 
-    <Select 
+    <Select
       class="input"
       v-if="type === 'slide'"
       v-model:value="slideId"
@@ -26,7 +26,7 @@
     </div>
 
     <div class="btns">
-      <Button @click="emit('close')" style="margin-right: 10px;">取消</Button>
+      <Button @click="emit('close')" style="margin-right: 10px">取消</Button>
       <Button type="primary" @click="save()">确认</Button>
     </div>
   </div>
@@ -45,14 +45,14 @@ import Input from '@/components/Input.vue'
 import Button from '@/components/Button.vue'
 import Select from '@/components/Select.vue'
 
-type TypeKey = 'web' | 'slide'
+type TypeKey = 'web' | 'slide';
 interface TabItem {
-  key: TypeKey
-  label: string
+  key: TypeKey;
+  label: string;
 }
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const { handleElement } = storeToRefs(useMainStore())
@@ -70,12 +70,13 @@ const slideOptions = computed(() => {
   }))
 })
 
-slideId.value = slides.value.find(item => item.id !== currentSlide.value.id)?.id || ''
+slideId.value =
+  slides.value.find((item) => item.id !== currentSlide.value.id)?.id || ''
 
 const selectedSlide = computed(() => {
   if (!slideId.value) return null
 
-  return slides.value.find(item => item.id === slideId.value) || null
+  return slides.value.find((item) => item.id === slideId.value) || null
 })
 
 const tabs: TabItem[] = [
@@ -87,8 +88,12 @@ const { setLink } = useLink()
 
 onMounted(() => {
   if (handleElement.value?.link) {
-    if (handleElement.value.link.type === 'web') address.value = handleElement.value.link.target
-    else if (handleElement.value.link.type === 'slide') slideId.value = handleElement.value.link.target
+    if (handleElement.value.link.type === 'web') {
+      address.value = handleElement.value.link.target
+    }
+    else if (handleElement.value.link.type === 'slide') {
+      slideId.value = handleElement.value.link.target
+    }
 
     type.value = handleElement.value.link.type
   }
@@ -120,7 +125,7 @@ const save = () => {
   margin-top: 12px;
 }
 .thumbnail {
-  border: 1px solid rgba($color: $themeColor, $alpha: .15);
+  border: 1px solid rgba($color: $themeColor, $alpha: 0.15);
   margin-top: 5px;
 }
 .btns {

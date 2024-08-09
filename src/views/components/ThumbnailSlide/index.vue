@@ -1,11 +1,12 @@
 <template>
-  <div class="thumbnail-slide"
+  <div
+    class="thumbnail-slide"
     :style="{
       width: size + 'px',
       height: size * viewportRatio + 'px',
     }"
   >
-    <div 
+    <div
       class="elements"
       :style="{
         width: VIEWPORT_SIZE + 'px',
@@ -37,13 +38,16 @@ import useSlideBackgroundStyle from '@/hooks/useSlideBackgroundStyle'
 
 import ThumbnailElement from './ThumbnailElement.vue'
 
-const props = withDefaults(defineProps<{
-  slide: Slide
-  size: number
-  visible?: boolean
-}>(), {
-  visible: true,
-})
+const props = withDefaults(
+  defineProps<{
+    slide: Slide;
+    size: number;
+    visible?: boolean;
+  }>(),
+  {
+    visible: true,
+  }
+)
 
 const { viewportRatio } = storeToRefs(useSlidesStore())
 

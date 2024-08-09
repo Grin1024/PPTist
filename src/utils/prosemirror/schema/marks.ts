@@ -7,7 +7,7 @@ const subscript: MarkSpec = {
     { tag: 'sub' },
     {
       style: 'vertical-align',
-      getAttrs: value => value === 'sub' && null
+      getAttrs: (value) => value === 'sub' && null,
     },
   ],
   toDOM: () => ['sub', 0],
@@ -19,7 +19,7 @@ const superscript: MarkSpec = {
     { tag: 'sup' },
     {
       style: 'vertical-align',
-      getAttrs: value => value === 'super' && null
+      getAttrs: (value) => value === 'super' && null,
     },
   ],
   toDOM: () => ['sup', 0],
@@ -30,11 +30,11 @@ const strikethrough: MarkSpec = {
     { tag: 'strike' },
     {
       style: 'text-decoration',
-      getAttrs: value => value === 'line-through' && null
+      getAttrs: (value) => value === 'line-through' && null,
     },
     {
       style: 'text-decoration-line',
-      getAttrs: value => value === 'line-through' && null
+      getAttrs: (value) => value === 'line-through' && null,
     },
   ],
   toDOM: () => ['span', { style: 'text-decoration-line: line-through;' }, 0],
@@ -45,11 +45,11 @@ const underline: MarkSpec = {
     { tag: 'u' },
     {
       style: 'text-decoration',
-      getAttrs: value => value === 'underline' && null
+      getAttrs: (value) => value === 'underline' && null,
     },
     {
       style: 'text-decoration-line',
-      getAttrs: value => value === 'underline' && null
+      getAttrs: (value) => value === 'underline' && null,
     },
   ],
   toDOM: () => ['span', { style: 'text-decoration: underline;' }, 0],
@@ -64,10 +64,10 @@ const forecolor: MarkSpec = {
   parseDOM: [
     {
       style: 'color',
-      getAttrs: color => color ? { color } : {}
+      getAttrs: (color) => (color ? { color } : {}),
     },
   ],
-  toDOM: mark => {
+  toDOM: (mark) => {
     const { color } = mark.attrs
     let style = ''
     if (color) style += `color: ${color};`
@@ -84,10 +84,10 @@ const backcolor: MarkSpec = {
   parseDOM: [
     {
       style: 'background-color',
-      getAttrs: backcolor => backcolor ? { backcolor } : {}
+      getAttrs: (backcolor) => (backcolor ? { backcolor } : {}),
     },
   ],
-  toDOM: mark => {
+  toDOM: (mark) => {
     const { backcolor } = mark.attrs
     let style = ''
     if (backcolor) style += `background-color: ${backcolor};`
@@ -104,10 +104,10 @@ const fontsize: MarkSpec = {
   parseDOM: [
     {
       style: 'font-size',
-      getAttrs: fontsize => fontsize ? { fontsize } : {}
+      getAttrs: (fontsize) => (fontsize ? { fontsize } : {}),
     },
   ],
-  toDOM: mark => {
+  toDOM: (mark) => {
     const { fontsize } = mark.attrs
     let style = ''
     if (fontsize) style += `font-size: ${fontsize};`
@@ -124,12 +124,17 @@ const fontname: MarkSpec = {
   parseDOM: [
     {
       style: 'font-family',
-      getAttrs: fontname => {
-        return { fontname: fontname && typeof fontname === 'string' ? fontname.replace(/[\"\']/g, '') : '' }
-      }
+      getAttrs: (fontname) => {
+        return {
+          fontname:
+            fontname && typeof fontname === 'string'
+              ? fontname.replace(/[\"\']/g, '')
+              : '',
+        }
+      },
     },
   ],
-  toDOM: mark => {
+  toDOM: (mark) => {
     const { fontname } = mark.attrs
     let style = ''
     if (fontname) style += `font-family: ${fontname};`
@@ -147,14 +152,14 @@ const link: MarkSpec = {
   parseDOM: [
     {
       tag: 'a[href]',
-      getAttrs: dom => {
+      getAttrs: (dom) => {
         const href = (dom as HTMLElement).getAttribute('href')
         const title = (dom as HTMLElement).getAttribute('title')
         return { href, title }
-      }
+      },
     },
   ],
-  toDOM: node => ['a', node.attrs, 0],
+  toDOM: (node) => ['a', node.attrs, 0],
 }
 
 const mark: MarkSpec = {
@@ -164,13 +169,13 @@ const mark: MarkSpec = {
   parseDOM: [
     {
       tag: 'mark',
-      getAttrs: dom => {
+      getAttrs: (dom) => {
         const index = (dom as HTMLElement).dataset.index
         return { index }
-      }
+      },
     },
   ],
-  toDOM: node => ['mark', { 'data-index': node.attrs.index }, 0],
+  toDOM: (node) => ['mark', { 'data-index': node.attrs.index }, 0],
 }
 
 const { em, strong, code } = marks

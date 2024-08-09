@@ -1,5 +1,6 @@
 <template>
-  <div class="base-element-chart"
+  <div
+    class="base-element-chart"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -11,7 +12,7 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
+      <div
         class="element-content"
         :style="{
           backgroundColor: elementInfo.fill,
@@ -48,13 +49,13 @@ import ElementOutline from '@/views/components/element/ElementOutline.vue'
 import Chart from './Chart.vue'
 
 defineProps<{
-  elementInfo: PPTChartElement
+  elementInfo: PPTChartElement;
 }>()
 
 const slideScale = inject(injectKeySlideScale) || ref(1)
 
 const needScaleSize = computed(() => slideScale.value < 1)
-const zoom = computed(() => needScaleSize.value ? 1 / slideScale.value : 1)
+const zoom = computed(() => (needScaleSize.value ? 1 / slideScale.value : 1))
 </script>
 
 <style lang="scss" scoped>

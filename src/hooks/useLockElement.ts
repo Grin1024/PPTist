@@ -13,8 +13,10 @@ export default () => {
 
   // 锁定选中的元素,并清空选中元素状态
   const lockElement = () => {
-    const newElementList: PPTElement[] = JSON.parse(JSON.stringify(currentSlide.value.elements))
-  
+    const newElementList: PPTElement[] = JSON.parse(
+      JSON.stringify(currentSlide.value.elements)
+    )
+
     for (const element of newElementList) {
       if (activeElementIdList.value.includes(element.id)) element.lock = true
     }
@@ -28,7 +30,9 @@ export default () => {
    * @param handleElement 需要解锁的元素
    */
   const unlockElement = (handleElement: PPTElement) => {
-    const newElementList: PPTElement[] = JSON.parse(JSON.stringify(currentSlide.value.elements))
+    const newElementList: PPTElement[] = JSON.parse(
+      JSON.stringify(currentSlide.value.elements)
+    )
 
     if (handleElement.groupId) {
       const groupElementIdList = []

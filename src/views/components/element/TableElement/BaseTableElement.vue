@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="base-element-table"
     :style="{
       top: elementInfo.top + 'px',
@@ -31,7 +31,7 @@ import type { PPTTableElement } from '@/types/slides'
 import StaticTable from './StaticTable.vue'
 
 defineProps<{
-  elementInfo: PPTTableElement
+  elementInfo: PPTTableElement;
 }>()
 </script>
 

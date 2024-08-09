@@ -1,18 +1,25 @@
 <template>
-  <div class="popover-menu-item" :class="{ 'center': center }" @click="emit('click')">
+  <div
+    class="popover-menu-item"
+    :class="{ center: center }"
+    @click="emit('click')"
+  >
     <slot></slot>
   </div>
 </template>
 
 <script lang="ts" setup>
-withDefaults(defineProps<{
-  center?: boolean
-}>(), {
-  center: false,
-})
+withDefaults(
+  defineProps<{
+    center?: boolean;
+  }>(),
+  {
+    center: false,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'click'): void
+  (event: 'click'): void;
 }>()
 </script>
 

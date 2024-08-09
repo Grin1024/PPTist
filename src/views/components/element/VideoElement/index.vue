@@ -1,6 +1,7 @@
 <template>
-  <div class="editable-element-video"
-    :class="{ 'lock': elementInfo.lock }"
+  <div
+    class="editable-element-video"
+    :class="{ lock: elementInfo.lock }"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -12,25 +13,25 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
-        class="element-content" 
-        v-contextmenu="contextmenus" 
-        @mousedown="$event => handleSelectElement($event, false)"
-        @touchstart="$event => handleSelectElement($event, false)"
+      <div
+        class="element-content"
+        v-contextmenu="contextmenus"
+        @mousedown="($event) => handleSelectElement($event, false)"
+        @touchstart="($event) => handleSelectElement($event, false)"
       >
         <VideoPlayer
           :width="elementInfo.width"
           :height="elementInfo.height"
-          :src="elementInfo.src" 
-          :poster="elementInfo.poster"  
-          :scale="canvasScale" 
+          :src="elementInfo.src"
+          :poster="elementInfo.poster"
+          :scale="canvasScale"
         />
-        <div 
-          :class="['handler-border', item]" 
-          v-for="item in ['t', 'b', 'l', 'r']" 
+        <div
+          :class="['handler-border', item]"
+          v-for="item in ['t', 'b', 'l', 'r']"
           :key="item"
-          @mousedown="$event => handleSelectElement($event)"
-          @touchstart="$event => handleSelectElement($event)"
+          @mousedown="($event) => handleSelectElement($event)"
+          @touchstart="($event) => handleSelectElement($event)"
         ></div>
       </div>
     </div>
@@ -46,9 +47,13 @@ import type { ContextmenuItem } from '@/components/Contextmenu/types'
 import VideoPlayer from './VideoPlayer/index.vue'
 
 const props = defineProps<{
-  elementInfo: PPTVideoElement
-  selectElement: (e: MouseEvent | TouchEvent, element: PPTVideoElement, canMove?: boolean) => void
-  contextmenus: () => ContextmenuItem[] | null
+  elementInfo: PPTVideoElement;
+  selectElement: (
+    e: MouseEvent | TouchEvent,
+    element: PPTVideoElement,
+    canMove?: boolean
+  ) => void;
+  contextmenus: () => ContextmenuItem[] | null;
 }>()
 
 const { canvasScale } = storeToRefs(useMainStore())

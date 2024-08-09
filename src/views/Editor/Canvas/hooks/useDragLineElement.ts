@@ -6,8 +6,8 @@ import { OperateLineHandlers } from '@/types/edit'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 interface AdsorptionPoint {
-  x: number
-  y: number
+  x: number;
+  y: number;
 }
 
 export default (elementList: Ref<PPTElement[]>) => {
@@ -17,7 +17,11 @@ export default (elementList: Ref<PPTElement[]>) => {
   const { addHistorySnapshot } = useHistorySnapshot()
 
   // 拖拽线条端点
-  const dragLineElement = (e: MouseEvent, element: PPTLineElement, command: OperateLineHandlers) => {
+  const dragLineElement = (
+    e: MouseEvent,
+    element: PPTLineElement,
+    command: OperateLineHandlers
+  ) => {
     let isMouseDown = true
 
     const sorptionRange = 8
@@ -36,7 +40,7 @@ export default (elementList: Ref<PPTElement[]>) => {
       const top = _element.top
       const width = _element.width
       const height = _element.height
-      
+
       const right = left + width
       const bottom = top + height
       const centerX = top + height / 2
@@ -60,11 +64,11 @@ export default (elementList: Ref<PPTElement[]>) => {
         leftTopPoint,
         rightTopPoint,
         leftBottomPoint,
-        rightBottomPoint,
+        rightBottomPoint
       )
     }
 
-    document.onmousemove = e => {
+    document.onmousemove = (e) => {
       if (!isMouseDown) return
 
       const currentPageX = e.pageX
@@ -72,7 +76,7 @@ export default (elementList: Ref<PPTElement[]>) => {
 
       const moveX = (currentPageX - startPageX) / canvasScale.value
       const moveY = (currentPageY - startPageY) / canvasScale.value
-      
+
       // 线条起点和终点在编辑区域中的位置
       let startX = element.left + element.start[0]
       let startY = element.top + element.start[1]
@@ -83,7 +87,10 @@ export default (elementList: Ref<PPTElement[]>) => {
       let midX = element.left + mid[0]
       let midY = element.top + mid[1]
 
-      const [c1, c2] = element.cubic || [[0, 0], [0, 0]]
+      const [c1, c2] = element.cubic || [
+        [0, 0],
+        [0, 0],
+      ]
       let c1X = element.left + c1[0]
       let c1Y = element.top + c1[1]
       let c2X = element.left + c2[0]
@@ -100,7 +107,10 @@ export default (elementList: Ref<PPTElement[]>) => {
 
         for (const adsorptionPoint of adsorptionPoints) {
           const { x, y } = adsorptionPoint
-          if (Math.abs(x - startX) < sorptionRange && Math.abs(y - startY) < sorptionRange) {
+          if (
+            Math.abs(x - startX) < sorptionRange &&
+            Math.abs(y - startY) < sorptionRange
+          ) {
             startX = x
             startY = y
             break
@@ -116,7 +126,10 @@ export default (elementList: Ref<PPTElement[]>) => {
 
         for (const adsorptionPoint of adsorptionPoints) {
           const { x, y } = adsorptionPoint
-          if (Math.abs(x - endX) < sorptionRange && Math.abs(y - endY) < sorptionRange) {
+          if (
+            Math.abs(x - endX) < sorptionRange &&
+            Math.abs(y - endY) < sorptionRange
+          ) {
             endX = x
             endY = y
             break
@@ -131,7 +144,10 @@ export default (elementList: Ref<PPTElement[]>) => {
         if (Math.abs(midY - startY) < sorptionRange) midY = startY
         if (Math.abs(midX - endX) < sorptionRange) midX = endX
         if (Math.abs(midY - endY) < sorptionRange) midY = endY
-        if (Math.abs(midX - (startX + endX) / 2) < sorptionRange && Math.abs(midY - (startY + endY) / 2) < sorptionRange) {
+        if (
+          Math.abs(midX - (startX + endX) / 2) < sorptionRange &&
+          Math.abs(midY - (startY + endY) / 2) < sorptionRange
+        ) {
           midX = (startX + endX) / 2
           midY = (startY + endY) / 2
         }
@@ -172,7 +188,7 @@ export default (elementList: Ref<PPTElement[]>) => {
         end[1] = 0
       }
 
-      elementList.value = elementList.value.map(el => {
+      elementList.value = elementList.value.map((el) => {
         if (el.id === element.id) {
           const newEl: PPTLineElement = {
             ...(el as PPTLineElement),
@@ -181,29 +197,64 @@ export default (elementList: Ref<PPTElement[]>) => {
             start: start,
             end: end,
           }
-          if (command === OperateLineHandlers.START || command === OperateLineHandlers.END) {
+          if (
+            command === OperateLineHandlers.START ||
+            command === OperateLineHandlers.END
+          ) {
             if (ctrlOrShiftKeyActive.value) {
               if (element.broken) newEl.broken = [midX - minX, midY - minY]
               if (element.curve) newEl.curve = [midX - minX, midY - minY]
-              if (element.cubic) newEl.cubic = [[c1X - minX, c1Y - minY], [c2X - minX, c2Y - minY]]
+              if (element.cubic) {
+                newEl.cubic = [
+                  [c1X - minX, c1Y - minY],
+                  [c2X - minX, c2Y - minY],
+                ]
+              }
             }
             else {
-              if (element.broken) newEl.broken = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]
-              if (element.curve) newEl.curve = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]
-              if (element.cubic) newEl.cubic = [[(start[0] + end[0]) / 2, (start[1] + end[1]) / 2], [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]]
+              if (element.broken) {
+                newEl.broken = [
+                  (start[0] + end[0]) / 2,
+                  (start[1] + end[1]) / 2,
+                ]
+              }
+              if (element.curve) {
+                newEl.curve = [
+                  (start[0] + end[0]) / 2,
+                  (start[1] + end[1]) / 2,
+                ]
+              }
+              if (element.cubic) {
+                newEl.cubic = [
+                  [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2],
+                  [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2],
+                ]
+              }
             }
-            if (element.broken2) newEl.broken2 = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]
+            if (element.broken2) {
+              newEl.broken2 = [
+                (start[0] + end[0]) / 2,
+                (start[1] + end[1]) / 2,
+              ]
+            }
           }
           else if (command === OperateLineHandlers.C) {
             if (element.broken) newEl.broken = [midX - minX, midY - minY]
             if (element.curve) newEl.curve = [midX - minX, midY - minY]
             if (element.broken2) {
-              if (maxX - minX >= maxY - minY) newEl.broken2 = [midX - minX, newEl.broken2![1]]
+              if (maxX - minX >= maxY - minY) {
+                newEl.broken2 = [midX - minX, newEl.broken2![1]]
+              }
               else newEl.broken2 = [newEl.broken2![0], midY - minY]
             }
           }
           else {
-            if (element.cubic) newEl.cubic = [[c1X - minX, c1Y - minY], [c2X - minX, c2Y - minY]]
+            if (element.cubic) {
+              newEl.cubic = [
+                [c1X - minX, c1Y - minY],
+                [c2X - minX, c2Y - minY],
+              ]
+            }
           }
           return newEl
         }
@@ -211,7 +262,7 @@ export default (elementList: Ref<PPTElement[]>) => {
       })
     }
 
-    document.onmouseup = e => {
+    document.onmouseup = (e) => {
       isMouseDown = false
       document.onmousemove = null
       document.onmouseup = null

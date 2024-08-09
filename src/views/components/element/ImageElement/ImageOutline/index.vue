@@ -33,7 +33,7 @@ import ImageEllipseOutline from './ImageEllipseOutline.vue'
 import ImagePolygonOutline from './ImagePolygonOutline.vue'
 
 const props = defineProps<{
-  elementInfo: PPTImageElement
+  elementInfo: PPTImageElement;
 }>()
 
 const clip = computed(() => props.elementInfo.clip)

@@ -1,11 +1,11 @@
 <template>
-  <div 
+  <div
     class="mask"
     @contextmenu.prevent="removeContextmenu()"
     @mousedown.left="removeContextmenu()"
   ></div>
 
-  <div 
+  <div
     class="contextmenu"
     :style="{
       left: style.left + 'px',
@@ -13,10 +13,7 @@
     }"
     @contextmenu.prevent
   >
-    <MenuContent 
-      :menus="menus"
-      :handleClickMenuItem="handleClickMenuItem" 
-    />
+    <MenuContent :menus="menus" :handleClickMenuItem="handleClickMenuItem" />
   </div>
 </template>
 
@@ -27,10 +24,10 @@ import type { ContextmenuItem, Axis } from './types'
 import MenuContent from './MenuContent.vue'
 
 const props = defineProps<{
-  axis: Axis
-  el: HTMLElement
-  menus: ContextmenuItem[]
-  removeContextmenu: () => void
+  axis: Axis;
+  el: HTMLElement;
+  menus: ContextmenuItem[];
+  removeContextmenu: () => void;
 }>()
 
 const style = computed(() => {
@@ -40,11 +37,14 @@ const style = computed(() => {
   const PADDING = 5
 
   const { x, y } = props.axis
-  const menuCount = props.menus.filter(menu => !(menu.divider || menu.hide)).length
-  const dividerCount = props.menus.filter(menu => menu.divider).length
+  const menuCount = props.menus.filter(
+    (menu) => !(menu.divider || menu.hide)
+  ).length
+  const dividerCount = props.menus.filter((menu) => menu.divider).length
 
   const menuWidth = MENU_WIDTH
-  const menuHeight = menuCount * MENU_HEIGHT + dividerCount * DIVIDER_HEIGHT + PADDING * 2
+  const menuHeight =
+    menuCount * MENU_HEIGHT + dividerCount * DIVIDER_HEIGHT + PADDING * 2
 
   const screenWidth = document.body.clientWidth
   const screenHeight = document.body.clientHeight

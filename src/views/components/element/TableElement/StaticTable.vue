@@ -1,11 +1,8 @@
 <template>
-  <div 
-    class="static-table"
-    :style="{ width: totalWidth + 'px' }"
-  >
+  <div class="static-table" :style="{ width: totalWidth + 'px' }">
     <table
       :class="{
-        'theme': theme,
+        theme: theme,
         'row-header': theme?.rowHeader,
         'row-footer': theme?.rowFooter,
         'col-header': theme?.colHeader,
@@ -14,11 +11,20 @@
       :style="`--themeColor: ${theme?.color}; --subThemeColor1: ${subThemeColor[0]}; --subThemeColor2: ${subThemeColor[1]}`"
     >
       <colgroup>
-        <col span="1" v-for="(width, index) in colSizeList" :key="index" :width="width">
+        <col
+          span="1"
+          v-for="(width, index) in colSizeList"
+          :key="index"
+          :width="width"
+        />
       </colgroup>
       <tbody>
-        <tr v-for="(rowCells, rowIndex) in data" :key="rowIndex" :style="{ height: cellMinHeight + 'px' }">
-          <td 
+        <tr
+          v-for="(rowCells, rowIndex) in data"
+          :key="rowIndex"
+          :style="{ height: cellMinHeight + 'px' }"
+        >
+          <td
             class="cell"
             :style="{
               borderStyle: outline.style,
@@ -32,7 +38,11 @@
             :colspan="cell.colspan"
             v-show="!hideCells.includes(`${rowIndex}_${colIndex}`)"
           >
-            <div class="cell-text" :style="{ minHeight: (cellMinHeight - 4) + 'px' }" v-html="formatText(cell.text)" />
+            <div
+              class="cell-text"
+              :style="{ minHeight: cellMinHeight - 4 + 'px' }"
+              v-html="formatText(cell.text)"
+            />
           </td>
         </tr>
       </tbody>
@@ -47,27 +57,31 @@ import { getTextStyle, formatText } from './utils'
 import useHideCells from './useHideCells'
 import useSubThemeColor from './useSubThemeColor'
 
-const props = withDefaults(defineProps<{
-  data: TableCell[][]
-  width: number
-  cellMinHeight: number
-  colWidths: number[]
-  outline: PPTElementOutline
-  theme?: TableTheme
-  editable?: boolean
-}>(), {
-  editable: true,
-})
+const props = withDefaults(
+  defineProps<{
+    data: TableCell[][];
+    width: number;
+    cellMinHeight: number;
+    colWidths: number[];
+    outline: PPTElementOutline;
+    theme?: TableTheme;
+    editable?: boolean;
+  }>(),
+  {
+    editable: true,
+  }
+)
 
 const colSizeList = ref<number[]>([])
 const totalWidth = computed(() => colSizeList.value.reduce((a, b) => a + b))
 
-watch([
-  () => props.colWidths,
-  () => props.width,
-], () => {
-  colSizeList.value = props.colWidths.map(item => item * props.width)
-}, { immediate: true })
+watch(
+  [() => props.colWidths, () => props.width],
+  () => {
+    colSizeList.value = props.colWidths.map((item) => item * props.width)
+  },
+  { immediate: true }
+)
 
 const cells = computed(() => props.data)
 const { hideCells } = useHideCells(cells)

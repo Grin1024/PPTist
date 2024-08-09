@@ -7,14 +7,14 @@ export const formatAttributes = (attributes: ElementAttribute[]) => {
     if (value === null) return `${attrs} ${key}`
     if (key === 'style' && !value) return ''
 
-    const quoteEscape = value.indexOf('\'') !== -1
-    const quote = quoteEscape ? '"' : '\''
+    const quoteEscape = value.indexOf("'") !== -1
+    const quote = quoteEscape ? '"' : "'"
     return `${attrs} ${key}=${quote}${value}${quote}`
   }, '')
 }
 
 export const toHTML = (tree: AST[]) => {
-  const htmlStrings: string[] = tree.map(node => {
+  const htmlStrings: string[] = tree.map((node) => {
     if (node.type === 'text') return node.content
     if (node.type === 'comment') return `<!--${node.content}-->`
 
@@ -22,7 +22,9 @@ export const toHTML = (tree: AST[]) => {
     const isSelfClosing = voidTags.includes(tagName.toLowerCase())
 
     if (isSelfClosing) return `<${tagName}${formatAttributes(attributes)}>`
-    return `<${tagName}${formatAttributes(attributes)}>${toHTML(children)}</${tagName}>`
+    return `<${tagName}${formatAttributes(attributes)}>${toHTML(
+      children
+    )}</${tagName}>`
   })
   return htmlStrings.join('')
 }

@@ -1,11 +1,13 @@
 <template>
   <div class="export-json-dialog">
     <div class="preview">
-      <pre>{{slides}}</pre>
+      <pre>{{ slides }}</pre>
     </div>
 
     <div class="btns">
-      <Button class="btn export" type="primary" @click="exportJSON()">导出 JSON</Button>
+      <Button class="btn export" type="primary" @click="exportJSON()"
+        >导出 JSON</Button
+      >
       <Button class="btn close" @click="emit('close')">关闭</Button>
     </div>
   </div>
@@ -18,7 +20,7 @@ import useExport from '@/hooks/useExport'
 import Button from '@/components/Button.vue'
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const { slides } = storeToRefs(useSlidesStore())
@@ -43,7 +45,8 @@ const { exportJSON } = useExport()
   overflow: auto;
 }
 pre {
-  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
+    monospace;
 }
 .btns {
   width: 300px;

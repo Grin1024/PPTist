@@ -1,61 +1,61 @@
 <template>
-  <div 
-    class="image-clip-handler" 
-    :style="clipWrapperPositionStyle" 
+  <div
+    class="image-clip-handler"
+    :style="clipWrapperPositionStyle"
     v-click-outside="handleClip"
   >
-    <img 
-      class="bottom-img" 
-      :src="src" 
-      :draggable="false" 
-      alt="" 
-      :style="bottomImgPositionStyle" 
+    <img
+      class="bottom-img"
+      :src="src"
+      :draggable="false"
+      alt=""
+      :style="bottomImgPositionStyle"
     />
 
-    <div 
-      class="top-image-content" 
+    <div
+      class="top-image-content"
       :style="{
         ...topImgWrapperPositionStyle,
         clipPath,
       }"
     >
-      <img 
-        class="top-img" 
-        :src="src" 
-        :draggable="false" 
-        alt="" 
-        :style="topImgPositionStyle" 
+      <img
+        class="top-img"
+        :src="src"
+        :draggable="false"
+        alt=""
+        :style="topImgPositionStyle"
       />
     </div>
 
-    <div 
-      class="operate" 
-      :style="topImgWrapperPositionStyle" 
-      @mousedown.stop="$event => moveClipRange($event)"
+    <div
+      class="operate"
+      :style="topImgWrapperPositionStyle"
+      @mousedown.stop="($event) => moveClipRange($event)"
     >
-      <div 
+      <div
         :class="['clip-point', point, rotateClassName]"
-        v-for="point in cornerPoint" 
-        :key="point" 
-        @mousedown.stop="$event => scaleClipRange($event, point)"
+        v-for="point in cornerPoint"
+        :key="point"
+        @mousedown.stop="($event) => scaleClipRange($event, point)"
       >
         <svg width="16" height="16" fill="#fff" stroke="#333">
           <path
-            stroke-width="0.3" 
+            stroke-width="0.3"
             shape-rendering="crispEdges"
             d="M 16 0 L 0 0 L 0 16 L 4 16 L 4 4 L 16 4 L 16 0 Z"
           ></path>
         </svg>
       </div>
-      <div 
+      <div
         :class="['clip-point', point, rotateClassName]"
-        v-for="point in edgePoints" 
-        :key="point" 
-        @mousedown.stop="$event => scaleClipRange($event, point)"
+        v-for="point in edgePoints"
+        :key="point"
+        @mousedown.stop="($event) => scaleClipRange($event, point)"
       >
         <svg width="16" height="16" fill="#fff" stroke="#333">
           <path
-            stroke-width="0.3" 
+            stroke-width="0.3"
             shape-rendering="crispEdges"
             d="M 16 0 L 0 0 L 0 4 L 16 4 Z"
           ></path>
@@ -74,18 +74,18 @@ import { type ImageClipedEmitData, OperateResizeHandlers } from '@/types/edit'
 import type { ImageClipDataRange, ImageElementClip } from '@/types/slides'
 
 const props = defineProps<{
-  src: string
-  clipPath: string
-  width: number
-  height: number
-  top: number
-  left: number
-  rotate: number
-  clipData?: ImageElementClip
+  src: string;
+  clipPath: string;
+  width: number;
+  height: number;
+  top: number;
+  left: number;
+  rotate: number;
+  clipData?: ImageElementClip;
 }>()
 
 const emit = defineEmits<{
-  (event: 'clip', payload: ImageClipedEmitData | null): void
+  (event: 'clip', payload: ImageClipedEmitData | null): void;
 }>()
 
 const { canvasScale } = storeToRefs(useMainStore())
@@ -100,7 +100,12 @@ const currentRange = ref<ImageClipDataRange | null>(null)
 
 // 获取裁剪区域信息（裁剪区域占原图的宽高比例，处在原图中的位置）
 const getClipDataTransformInfo = () => {
-  const [start, end] = props.clipData ? props.clipData.range : [[0, 0], [100, 100]]
+  const [start, end] = props.clipData
+    ? props.clipData.range
+    : [
+      [0, 0],
+      [100, 100],
+    ]
 
   const widthScale = (end[0] - start[0]) / 100
   const heightScale = (end[1] - start[1]) / 100
@@ -154,14 +159,14 @@ const topImgWrapperPositionStyle = computed(() => {
 const topImgPositionStyle = computed(() => {
   const bottomWidth = imgPosition.value.width
   const bottomHeight = imgPosition.value.height
-  
+
   const { top, left, width, height } = topImgWrapperPosition.value
-  
+
   return {
     left: -left * (100 / width) + '%',
     top: -top * (100 / height) + '%',
-    width: bottomWidth / width * 100 + '%',
-    height: bottomHeight / height * 100 + '%',
+    width: (bottomWidth / width) * 100 + '%',
+    height: (bottomHeight / height) * 100 + '%',
   }
 })
 
@@ -174,7 +179,7 @@ const initClipPosition = () => {
     width: 100,
     height: 100,
   }
-  
+
   clipWrapperPositionStyle.value = {
     top: -top + '%',
     left: -left + '%',
@@ -193,10 +198,10 @@ const handleClip = () => {
   const { left, top } = getClipDataTransformInfo()
 
   const position = {
-    left: (topImgWrapperPosition.value.left - left) / 100 * props.width,
-    top: (topImgWrapperPosition.value.top - top) / 100 * props.height,
-    width: (topImgWrapperPosition.value.width - 100) / 100 * props.width,
-    height: (topImgWrapperPosition.value.height - 100) / 100 * props.height,
+    left: ((topImgWrapperPosition.value.left - left) / 100) * props.width,
+    top: ((topImgWrapperPosition.value.top - top) / 100) * props.height,
+    width: ((topImgWrapperPosition.value.width - 100) / 100) * props.width,
+    height: ((topImgWrapperPosition.value.height - 100) / 100) * props.height,
   }
 
   const clipedEmitData: ImageClipedEmitData = {
@@ -254,7 +259,7 @@ const moveClipRange = (e: MouseEvent) => {
   const bottomPosition = imgPosition.value
   const originPositopn = { ...topImgWrapperPosition.value }
 
-  document.onmousemove = e => {
+  document.onmousemove = (e) => {
     if (!isMouseDown) return
 
     const currentPageX = e.pageX
@@ -282,7 +287,7 @@ const moveClipRange = (e: MouseEvent) => {
     else if (targetTop + originPositopn.height > bottomPosition.height) {
       targetTop = bottomPosition.height - originPositopn.height
     }
-    
+
     topImgWrapperPosition.value = {
       ...topImgWrapperPosition.value,
       left: targetLeft,
@@ -308,17 +313,18 @@ const scaleClipRange = (e: MouseEvent, type: OperateResizeHandlers) => {
   isSettingClipRange.value = true
   let isMouseDown = true
 
-  const minWidth = 50 / props.width * 100
-  const minHeight = 50 / props.height * 100
-  
+  const minWidth = (50 / props.width) * 100
+  const minHeight = (50 / props.height) * 100
+
   const startPageX = e.pageX
   const startPageY = e.pageY
   const bottomPosition = imgPosition.value
   const originPositopn = { ...topImgWrapperPosition.value }
 
-  const aspectRatio = topImgWrapperPosition.value.width / topImgWrapperPosition.value.height
+  const aspectRatio =
+    topImgWrapperPosition.value.width / topImgWrapperPosition.value.height
 
-  document.onmousemove = e => {
+  document.onmousemove = (e) => {
     if (!isMouseDown) return
 
     const currentPageX = e.pageX
@@ -336,8 +342,18 @@ const scaleClipRange = (e: MouseEvent, type: OperateResizeHandlers) => {
     let moveY = ((_moveL * Math.sin(rotate)) / props.height) * 100
 
     if (ctrlOrShiftKeyActive.value) {
-      if (type === OperateResizeHandlers.RIGHT_BOTTOM || type === OperateResizeHandlers.LEFT_TOP) moveY = moveX / aspectRatio
-      if (type === OperateResizeHandlers.LEFT_BOTTOM || type === OperateResizeHandlers.RIGHT_TOP) moveY = -moveX / aspectRatio
+      if (
+        type === OperateResizeHandlers.RIGHT_BOTTOM ||
+        type === OperateResizeHandlers.LEFT_TOP
+      ) {
+        moveY = moveX / aspectRatio
+      }
+      if (
+        type === OperateResizeHandlers.LEFT_BOTTOM ||
+        type === OperateResizeHandlers.RIGHT_TOP
+      ) {
+        moveY = -moveX / aspectRatio
+      }
     }
 
     let targetLeft, targetTop, targetWidth, targetHeight
@@ -361,8 +377,12 @@ const scaleClipRange = (e: MouseEvent, type: OperateResizeHandlers) => {
       targetTop = originPositopn.top + moveY
     }
     else if (type === OperateResizeHandlers.RIGHT_TOP) {
-      if (originPositopn.left + originPositopn.width + moveX > bottomPosition.width) {
-        moveX = bottomPosition.width - (originPositopn.left + originPositopn.width)
+      if (
+        originPositopn.left + originPositopn.width + moveX >
+        bottomPosition.width
+      ) {
+        moveX =
+          bottomPosition.width - (originPositopn.left + originPositopn.width)
       }
       if (originPositopn.top + moveY < 0) {
         moveY = -originPositopn.top
@@ -382,8 +402,12 @@ const scaleClipRange = (e: MouseEvent, type: OperateResizeHandlers) => {
       if (originPositopn.left + moveX < 0) {
         moveX = -originPositopn.left
       }
-      if (originPositopn.top + originPositopn.height + moveY > bottomPosition.height) {
-        moveY = bottomPosition.height - (originPositopn.top + originPositopn.height)
+      if (
+        originPositopn.top + originPositopn.height + moveY >
+        bottomPosition.height
+      ) {
+        moveY =
+          bottomPosition.height - (originPositopn.top + originPositopn.height)
       }
       if (originPositopn.width - moveX < minWidth) {
         moveX = originPositopn.width - minWidth
@@ -397,11 +421,19 @@ const scaleClipRange = (e: MouseEvent, type: OperateResizeHandlers) => {
       targetTop = originPositopn.top
     }
     else if (type === OperateResizeHandlers.RIGHT_BOTTOM) {
-      if (originPositopn.left + originPositopn.width + moveX > bottomPosition.width) {
-        moveX = bottomPosition.width - (originPositopn.left + originPositopn.width)
+      if (
+        originPositopn.left + originPositopn.width + moveX >
+        bottomPosition.width
+      ) {
+        moveX =
+          bottomPosition.width - (originPositopn.left + originPositopn.width)
       }
-      if (originPositopn.top + originPositopn.height + moveY > bottomPosition.height) {
-        moveY = bottomPosition.height - (originPositopn.top + originPositopn.height)
+      if (
+        originPositopn.top + originPositopn.height + moveY >
+        bottomPosition.height
+      ) {
+        moveY =
+          bottomPosition.height - (originPositopn.top + originPositopn.height)
       }
       if (originPositopn.width + moveX < minWidth) {
         moveX = minWidth - originPositopn.width
@@ -427,8 +459,12 @@ const scaleClipRange = (e: MouseEvent, type: OperateResizeHandlers) => {
       targetTop = originPositopn.top + moveY
     }
     else if (type === OperateResizeHandlers.BOTTOM) {
-      if (originPositopn.top + originPositopn.height + moveY > bottomPosition.height) {
-        moveY = bottomPosition.height - (originPositopn.top + originPositopn.height)
+      if (
+        originPositopn.top + originPositopn.height + moveY >
+        bottomPosition.height
+      ) {
+        moveY =
+          bottomPosition.height - (originPositopn.top + originPositopn.height)
       }
       if (originPositopn.height + moveY < minHeight) {
         moveY = minHeight - originPositopn.height
@@ -451,8 +487,12 @@ const scaleClipRange = (e: MouseEvent, type: OperateResizeHandlers) => {
       targetTop = originPositopn.top
     }
     else {
-      if (originPositopn.left + originPositopn.width + moveX > bottomPosition.width) {
-        moveX = bottomPosition.width - (originPositopn.left + originPositopn.width)
+      if (
+        originPositopn.left + originPositopn.width + moveX >
+        bottomPosition.width
+      ) {
+        moveX =
+          bottomPosition.width - (originPositopn.left + originPositopn.width)
       }
       if (originPositopn.width + moveX < minWidth) {
         moveX = minWidth - originPositopn.width
@@ -478,7 +518,7 @@ const scaleClipRange = (e: MouseEvent, type: OperateResizeHandlers) => {
 
     updateRange()
 
-    setTimeout(() => isSettingClipRange.value = false, 0)
+    setTimeout(() => (isSettingClipRange.value = false), 0)
   }
 }
 
@@ -521,7 +561,7 @@ const edgePoints = [
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: .5;
+    opacity: 0.5;
   }
 
   img {

@@ -5,27 +5,28 @@ import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 import { SHAPE_PATH_FORMULAS } from '@/configs/shapes'
 
 interface ShapePathData {
-  baseSize: number,
-  originPos: number,
-  min: number,
-  max: number,
-  relative: string,
+  baseSize: number;
+  originPos: number;
+  min: number;
+  max: number;
+  relative: string;
 }
 
-export default (
-  elementList: Ref<PPTElement[]>,
-  canvasScale: Ref<number>,
-) => {
+export default (elementList: Ref<PPTElement[]>, canvasScale: Ref<number>) => {
   const slidesStore = useSlidesStore()
 
   const { addHistorySnapshot } = useHistorySnapshot()
 
-  const moveShapeKeypoint = (e: MouseEvent | TouchEvent, element: PPTShapeElement, index = 0) => {
+  const moveShapeKeypoint = (
+    e: MouseEvent | TouchEvent,
+    element: PPTShapeElement,
+    index = 0
+  ) => {
     const isTouchEvent = !(e instanceof MouseEvent)
     if (isTouchEvent && (!e.changedTouches || !e.changedTouches[0])) return
 
     let isMouseDown = true
-  
+
     const startPageX = isTouchEvent ? e.changedTouches[0].pageX : e.pageX
     const startPageY = isTouchEvent ? e.changedTouches[0].pageY : e.pageY
 
@@ -49,27 +50,47 @@ export default (
     const handleMousemove = (e: MouseEvent | TouchEvent) => {
       if (!isMouseDown) return
 
-      const currentPageX = e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
-      const currentPageY = e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
+      const currentPageX =
+        e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
+      const currentPageY =
+        e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
       const moveX = (currentPageX - startPageX) / canvasScale.value
       const moveY = (currentPageY - startPageY) / canvasScale.value
 
-      elementList.value = elementList.value.map(el => {
+      elementList.value = elementList.value.map((el) => {
         if (el.id === element.id && shapePathData) {
           const { baseSize, originPos, min, max, relative } = shapePathData
           const shapeElement = el as PPTShapeElement
 
           let keypoint = 0
 
-          if (relative === 'center') keypoint = (originPos - moveX * 2) / baseSize
-          else if (relative === 'left') keypoint = (originPos + moveX) / baseSize
-          else if (relative === 'right') keypoint = (originPos - moveX) / baseSize
-          else if (relative === 'top') keypoint = (originPos + moveY) / baseSize
-          else if (relative === 'bottom') keypoint = (originPos - moveY) / baseSize
-          else if (relative === 'left_bottom') keypoint = (originPos + moveX) / baseSize
-          else if (relative === 'right_bottom') keypoint = (originPos - moveX) / baseSize
-          else if (relative === 'top_right') keypoint = (originPos + moveY) / baseSize
-          else if (relative === 'bottom_right') keypoint = (originPos - moveY) / baseSize
+          if (relative === 'center') {
+            keypoint = (originPos - moveX * 2) / baseSize
+          }
+          else if (relative === 'left') {
+            keypoint = (originPos + moveX) / baseSize
+          }
+          else if (relative === 'right') {
+            keypoint = (originPos - moveX) / baseSize
+          }
+          else if (relative === 'top') {
+            keypoint = (originPos + moveY) / baseSize
+          }
+          else if (relative === 'bottom') {
+            keypoint = (originPos - moveY) / baseSize
+          }
+          else if (relative === 'left_bottom') {
+            keypoint = (originPos + moveX) / baseSize
+          }
+          else if (relative === 'right_bottom') {
+            keypoint = (originPos - moveX) / baseSize
+          }
+          else if (relative === 'top_right') {
+            keypoint = (originPos + moveY) / baseSize
+          }
+          else if (relative === 'bottom_right') {
+            keypoint = (originPos - moveY) / baseSize
+          }
 
           if (keypoint < min) keypoint = min
           if (keypoint > max) keypoint = max
@@ -84,7 +105,11 @@ export default (
           return {
             ...el,
             keypoints,
-            path: pathFormula.formula(shapeElement.width, shapeElement.height, keypoints),
+            path: pathFormula.formula(
+              shapeElement.width,
+              shapeElement.height,
+              keypoints
+            ),
           }
         }
         return el
@@ -93,14 +118,16 @@ export default (
 
     const handleMouseup = (e: MouseEvent | TouchEvent) => {
       isMouseDown = false
-      
+
       document.ontouchmove = null
       document.ontouchend = null
       document.onmousemove = null
       document.onmouseup = null
 
-      const currentPageX = e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
-      const currentPageY = e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
+      const currentPageX =
+        e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
+      const currentPageY =
+        e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
 
       if (startPageX === currentPageX && startPageY === currentPageY) return
 

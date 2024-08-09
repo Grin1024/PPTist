@@ -1,16 +1,19 @@
 <template>
-  <div :class="['border-line', type, { 'wide': isWide }]"></div>
+  <div :class="['border-line', type, { wide: isWide }]"></div>
 </template>
 
 <script lang="ts" setup>
 import type { OperateBorderLines } from '@/types/edit'
 
-withDefaults(defineProps<{
-  type: OperateBorderLines
-  isWide?: boolean
-}>(), {
-  isWide: false
-})
+withDefaults(
+  defineProps<{
+    type: OperateBorderLines;
+    isWide?: boolean;
+  }>(),
+  {
+    isWide: false,
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -37,7 +40,7 @@ withDefaults(defineProps<{
 
   &.wide {
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       background: transparent;
       cursor: move;

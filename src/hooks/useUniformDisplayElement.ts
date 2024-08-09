@@ -2,41 +2,47 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useSlidesStore } from '@/store'
 import type { PPTElement } from '@/types/slides'
-import { getElementRange, getElementListRange, getRectRotatedOffset } from '@/utils/element'
+import {
+  getElementRange,
+  getElementListRange,
+  getRectRotatedOffset,
+} from '@/utils/element'
 import useHistorySnapshot from './useHistorySnapshot'
 
 interface ElementItem {
-  min: number
-  max: number
-  el: PPTElement
+  min: number;
+  max: number;
+  el: PPTElement;
 }
 
 interface GroupItem {
-  groupId: string
-  els: PPTElement[]
+  groupId: string;
+  els: PPTElement[];
 }
 
 interface GroupElementsItem {
-  min: number
-  max: number
-  els: PPTElement[]
+  min: number;
+  max: number;
+  els: PPTElement[];
 }
 
-type Item = ElementItem | GroupElementsItem
+type Item = ElementItem | GroupElementsItem;
 
 interface ElementWithPos {
-  pos: number
-  el: PPTElement
+  pos: number;
+  el: PPTElement;
 }
 
 interface LastPos {
-  min: number
-  max: number
+  min: number;
+  max: number;
 }
 
 export default () => {
   const slidesStore = useSlidesStore()
-  const { activeElementIdList, activeElementList } = storeToRefs(useMainStore())
+  const { activeElementIdList, activeElementList } = storeToRefs(
+    useMainStore()
+  )
   const { currentSlide } = storeToRefs(slidesStore)
 
   const { addHistorySnapshot } = useHistorySnapshot()
@@ -56,8 +62,12 @@ export default () => {
   // 水平均匀排列
   const uniformHorizontalDisplay = () => {
     const { minX, maxX } = getElementListRange(activeElementList.value)
-    const copyOfActiveElementList: PPTElement[] = JSON.parse(JSON.stringify(activeElementList.value))
-    const newElementList: PPTElement[] = JSON.parse(JSON.stringify(currentSlide.value.elements))
+    const copyOfActiveElementList: PPTElement[] = JSON.parse(
+      JSON.stringify(activeElementList.value)
+    )
+    const newElementList: PPTElement[] = JSON.parse(
+      JSON.stringify(currentSlide.value.elements)
+    )
 
     // 分别获取普通元素和组合元素集合，并记录下每一项的范围
     const singleElemetList: ElementItem[] = []
@@ -68,10 +78,14 @@ export default () => {
         singleElemetList.push({ min: minX, max: maxX, el })
       }
       else {
-        const groupEl = groupList.find(item => item.groupId === el.groupId)
+        const groupEl = groupList.find((item) => item.groupId === el.groupId)
         if (!groupEl) groupList.push({ groupId: el.groupId, els: [el] })
         else {
-          groupList = groupList.map(item => item.groupId === el.groupId ? { ...item, els: [...item.els, el] } : item)
+          groupList = groupList.map((item) =>
+            item.groupId === el.groupId
+              ? { ...item, els: [...item.els, el] }
+              : item
+          )
         }
       }
     }
@@ -92,7 +106,7 @@ export default () => {
       const width = item.max - item.min
       totalWidth += width
     }
-    const span = ((maxX - minX) - totalWidth) / (list.length - 1)
+    const span = (maxX - minX - totalWidth) / (list.length - 1)
 
     // 按位置顺序依次计算每一个元素的目标位置
     // 第一项中的元素即为起点，无需计算
@@ -161,8 +175,12 @@ export default () => {
   // 垂直均匀排列（逻辑类似水平均匀排列方法）
   const uniformVerticalDisplay = () => {
     const { minY, maxY } = getElementListRange(activeElementList.value)
-    const copyOfActiveElementList: PPTElement[] = JSON.parse(JSON.stringify(activeElementList.value))
-    const newElementList: PPTElement[] = JSON.parse(JSON.stringify(currentSlide.value.elements))
+    const copyOfActiveElementList: PPTElement[] = JSON.parse(
+      JSON.stringify(activeElementList.value)
+    )
+    const newElementList: PPTElement[] = JSON.parse(
+      JSON.stringify(currentSlide.value.elements)
+    )
 
     const singleElemetList: ElementItem[] = []
     let groupList: GroupItem[] = []
@@ -172,10 +190,14 @@ export default () => {
         singleElemetList.push({ min: minY, max: maxY, el })
       }
       else {
-        const groupEl = groupList.find(item => item.groupId === el.groupId)
+        const groupEl = groupList.find((item) => item.groupId === el.groupId)
         if (!groupEl) groupList.push({ groupId: el.groupId, els: [el] })
         else {
-          groupList = groupList.map(item => item.groupId === el.groupId ? { ...item, els: [...item.els, el] } : item)
+          groupList = groupList.map((item) =>
+            item.groupId === el.groupId
+              ? { ...item, els: [...item.els, el] }
+              : item
+          )
         }
       }
     }
@@ -193,7 +215,7 @@ export default () => {
       const height = item.max - item.min
       totalHeight += height
     }
-    const span = ((maxY - minY) - totalHeight) / (list.length - 1)
+    const span = (maxY - minY - totalHeight) / (list.length - 1)
 
     const sortedElementData: ElementWithPos[] = []
 

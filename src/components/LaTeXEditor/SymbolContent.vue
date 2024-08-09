@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import { hfmath } from './hfmath'
 
 const props = defineProps<{
-  latex: string
+  latex: string;
 }>()
 
 const svg = computed(() => {

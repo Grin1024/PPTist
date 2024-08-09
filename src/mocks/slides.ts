@@ -16,7 +16,7 @@ export const slides: Slide[] = [
         fill: '#5b9bd5',
         fixedRatio: false,
         opacity: 0.7,
-        rotate: 0
+        rotate: 0,
       },
       {
         type: 'shape',
@@ -30,7 +30,7 @@ export const slides: Slide[] = [
         fill: '#5b9bd5',
         fixedRatio: false,
         flipV: true,
-        rotate: 0
+        rotate: 0,
       },
       {
         type: 'text',
@@ -40,10 +40,11 @@ export const slides: Slide[] = [
         width: 450,
         height: 188,
         lineHeight: 1.2,
-        content: '<p><strong><span style=\'font-size:  112px\'>PPTist</span></strong></p>',
+        content:
+          "<p><strong><span style='font-size:  112px'>PPTist</span></strong></p>",
         rotate: 0,
         defaultFontName: 'Microsoft Yahei',
-        defaultColor: '#333'
+        defaultColor: '#333',
       },
       {
         type: 'text',
@@ -52,10 +53,11 @@ export const slides: Slide[] = [
         top: 253.25,
         width: 585,
         height: 56,
-        content: '<p><span style=\'font-size:  24px\'>基于 Vue 3.x + TypeScript 的在线演示文稿应用</span></p>',
+        content:
+          "<p><span style='font-size:  24px'>基于 Vue 3.x + TypeScript 的在线演示文稿应用</span></p>",
         rotate: 0,
         defaultFontName: 'Microsoft Yahei',
-        defaultColor: '#333'
+        defaultColor: '#333',
       },
       {
         type: 'line',
@@ -86,11 +88,12 @@ export const slides: Slide[] = [
         width: 711,
         height: 77,
         lineHeight: 1.2,
-        content: '<p style=\'text-align: center;\'><strong><span style=\'font-size: 48px\'>在此处添加标题</span></strong></p>',
+        content:
+          "<p style='text-align: center;'><strong><span style='font-size: 48px'>在此处添加标题</span></strong></p>",
         rotate: 0,
         defaultFontName: 'Microsoft Yahei',
         defaultColor: '#333',
-      }, 
+      },
       {
         type: 'text',
         id: 'mRHvQN',
@@ -98,11 +101,12 @@ export const slides: Slide[] = [
         top: 249.84259259259264,
         width: 585,
         height: 56,
-        content: '<p style=\'text-align: center;\'><span style=\'font-size: 24px\'>在此处添加副标题</span></p>',
+        content:
+          "<p style='text-align: center;'><span style='font-size: 24px'>在此处添加副标题</span></p>",
         rotate: 0,
         defaultFontName: 'Microsoft Yahei',
         defaultColor: '#333',
-      }, 
+      },
       {
         type: 'line',
         id: '7CQDwc',
@@ -113,8 +117,8 @@ export const slides: Slide[] = [
         points: ['', ''],
         color: '#5b9bd5',
         style: 'solid',
-        width: 4
-      }, 
+        width: 4,
+      },
       {
         type: 'shape',
         id: '09wqWw',
@@ -126,8 +130,8 @@ export const slides: Slide[] = [
         path: 'M 0 20 C 40 -40 60 60 100 20 C 140 -40 160 60 200 20 L 200 180 C 140 240 160 140 100 180 C 40 240 60 140 0 180 L 0 20 Z',
         fill: '#5b9bd5',
         fixedRatio: false,
-        rotate: 0
-      }
+        rotate: 0,
+      },
     ],
     background: {
       type: 'solid',
@@ -148,8 +152,8 @@ export const slides: Slide[] = [
         path: 'M 0 0 L 200 0 L 200 200 L 0 200 Z',
         fill: '#5b9bd5',
         fixedRatio: false,
-        rotate: 0
-      }, 
+        rotate: 0,
+      },
       {
         type: 'shape',
         id: 'Mpwv7x',
@@ -162,8 +166,8 @@ export const slides: Slide[] = [
         fill: '#5b9bd5',
         fixedRatio: false,
         rotate: 0,
-        opacity: 0.7
-      }, 
+        opacity: 0.7,
+      },
       {
         type: 'text',
         id: 'WQOTAp',
@@ -171,12 +175,13 @@ export const slides: Slide[] = [
         top: 198.10185185185182,
         width: 417.9629629629629,
         height: 140,
-        content: '<p style=\'text-align: center;\'><strong><span style=\'color: #ffffff;\'><span style=\'font-size: 80px\'>感谢观看</span></span></strong></p>',
+        content:
+          "<p style='text-align: center;'><strong><span style='color: #ffffff;'><span style='font-size: 80px'>感谢观看</span></span></strong></p>",
         rotate: 0,
         defaultFontName: 'Microsoft Yahei',
         defaultColor: '#333',
-        wordSpace: 5
-      }
+        wordSpace: 5,
+      },
     ],
     background: {
       type: 'solid',

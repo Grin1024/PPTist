@@ -1,9 +1,9 @@
 <template>
-  <div 
+  <div
     class="input"
     :class="{
-      'disabled': disabled,
-      'focused': focused,
+      disabled: disabled,
+      focused: focused,
     }"
   >
     <span class="prefix">
@@ -13,13 +13,13 @@
       type="text"
       ref="inputRef"
       :disabled="disabled"
-      :value="value" 
+      :value="value"
       :placeholder="placeholder"
-      @input="$event => handleInput($event)"
-      @focus="$event => handleFocus($event)"
-      @blur="$event => handleBlur($event)"
-      @change="$event => emit('change', $event)"
-      @keydown.enter="$event => emit('enter', $event)"
+      @input="($event) => handleInput($event)"
+      @focus="($event) => handleFocus($event)"
+      @blur="($event) => handleBlur($event)"
+      @change="($event) => emit('change', $event)"
+      @keydown.enter="($event) => emit('enter', $event)"
     />
     <span class="suffix">
       <slot name="suffix"></slot>
@@ -30,22 +30,25 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-withDefaults(defineProps<{
-  value: string
-  disabled?: boolean
-  placeholder?: string
-}>(), {
-  disabled: false,
-  placeholder: '',
-})
+withDefaults(
+  defineProps<{
+    value: string;
+    disabled?: boolean;
+    placeholder?: string;
+  }>(),
+  {
+    disabled: false,
+    placeholder: '',
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:value', payload: string): void
-  (event: 'input', payload: Event): void
-  (event: 'change', payload: Event): void
-  (event: 'blur', payload: Event): void
-  (event: 'focus', payload: Event): void
-  (event: 'enter', payload: Event): void
+  (event: 'update:value', payload: string): void;
+  (event: 'input', payload: Event): void;
+  (event: 'change', payload: Event): void;
+  (event: 'blur', payload: Event): void;
+  (event: 'focus', payload: Event): void;
+  (event: 'enter', payload: Event): void;
 }>()
 
 const focused = ref(false)
@@ -78,7 +81,7 @@ defineExpose({
   border: 1px solid #d9d9d9;
   padding: 0 5px;
   border-radius: $borderRadius;
-  transition: border-color .25s;
+  transition: border-color 0.25s;
   font-size: 13px;
   display: flex;
 
@@ -93,14 +96,17 @@ defineExpose({
     padding: 0 5px;
     flex: 1;
     font-size: 13px;
-    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
     &::placeholder {
       color: #bfbfbf;
     }
   }
 
-  &:not(.disabled):hover, &.focused {
+  &:not(.disabled):hover,
+  &.focused {
     border-color: $themeColor;
   }
 
@@ -114,7 +120,8 @@ defineExpose({
     }
   }
 
-  .prefix, .suffix {
+  .prefix,
+  .suffix {
     display: flex;
     justify-content: center;
     align-items: center;

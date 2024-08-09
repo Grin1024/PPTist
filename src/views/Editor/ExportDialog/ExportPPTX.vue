@@ -3,17 +3,18 @@
     <div class="configs">
       <div class="row">
         <div class="title">导出范围：</div>
-        <RadioGroup
-          class="config-item"
-          v-model:value="rangeType"
-        >
-          <RadioButton style="width: 33.33%;" value="all">全部</RadioButton>
-          <RadioButton style="width: 33.33%;" value="current">当前页</RadioButton>
-          <RadioButton style="width: 33.33%;" value="custom">自定义</RadioButton>
+        <RadioGroup class="config-item" v-model:value="rangeType">
+          <RadioButton style="width: 33.33%" value="all">全部</RadioButton>
+          <RadioButton style="width: 33.33%" value="current"
+            >当前页</RadioButton
+          >
+          <RadioButton style="width: 33.33%" value="custom">自定义</RadioButton>
         </RadioGroup>
       </div>
       <div class="row" v-if="rangeType === 'custom'">
-        <div class="title" :data-range="`（${range[0]} ~ ${range[1]}）`">自定义范围：</div>
+        <div class="title" :data-range="`（${range[0]} ~ ${range[1]}）`">
+          自定义范围：
+        </div>
         <Slider
           class="config-item"
           range
@@ -26,7 +27,12 @@
       <div class="row">
         <div class="title">忽略音频/视频：</div>
         <div class="config-item">
-          <Switch v-model:value="ignoreMedia" v-tooltip="'导出时默认忽略音视频，若您的幻灯片中存在音视频元素，且希望将其导出到PPTX文件中，可选择关闭【忽略音视频】选项，但要注意这将会大幅增加导出用时。'" />
+          <Switch
+            v-model:value="ignoreMedia"
+            v-tooltip="
+              '导出时默认忽略音视频，若您的幻灯片中存在音视频元素，且希望将其导出到PPTX文件中，可选择关闭【忽略音视频】选项，但要注意这将会大幅增加导出用时。'
+            "
+          />
         </div>
       </div>
       <div class="row">
@@ -37,11 +43,17 @@
       </div>
 
       <div class="tip" v-if="!ignoreMedia">
-        提示：1. 支持导出格式：avi、mp4、mov、wmv、mp3、wav；2. 跨域资源无法导出。
+        提示：1. 支持导出格式：avi、mp4、mov、wmv、mp3、wav；2.
+        跨域资源无法导出。
       </div>
     </div>
     <div class="btns">
-      <Button class="btn export" type="primary" @click="exportPPTX(selectedSlides, masterOverwrite, ignoreMedia)">导出 PPTX</Button>
+      <Button
+        class="btn export"
+        type="primary"
+        @click="exportPPTX(selectedSlides, masterOverwrite, ignoreMedia)"
+        >导出 PPTX</Button
+      >
       <Button class="btn close" @click="emit('close')">关闭</Button>
     </div>
 
@@ -63,7 +75,7 @@ import RadioButton from '@/components/RadioButton.vue'
 import RadioGroup from '@/components/RadioGroup.vue'
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const { slides, currentSlide } = storeToRefs(useSlidesStore())

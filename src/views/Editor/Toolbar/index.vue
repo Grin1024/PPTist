@@ -1,9 +1,9 @@
 <template>
   <div class="toolbar">
-    <Tabs 
-      :tabs="currentTabs" 
-      :value="toolbarState" 
-      card 
+    <Tabs
+      :tabs="currentTabs"
+      :value="toolbarState"
+      card
       @update:value="key => setToolbarState(key as ToolbarStates)"
     />
     <div class="content">
@@ -28,12 +28,13 @@ import SymbolPanel from './SymbolPanel.vue'
 import Tabs from '@/components/Tabs.vue'
 
 interface ElementTabs {
-  label: string
-  key: ToolbarStates
+  label: string;
+  key: ToolbarStates;
 }
 
 const mainStore = useMainStore()
-const { activeElementIdList, handleElement, toolbarState } = storeToRefs(mainStore)
+const { activeElementIdList, handleElement, toolbarState } =
+  storeToRefs(mainStore)
 
 const elementTabs = computed<ElementTabs[]>(() => {
   if (handleElement.value?.type === 'text') {
@@ -71,7 +72,9 @@ const currentTabs = computed(() => {
 })
 
 watch(currentTabs, () => {
-  const currentTabsValue: ToolbarStates[] = currentTabs.value.map(tab => tab.key)
+  const currentTabsValue: ToolbarStates[] = currentTabs.value.map(
+    (tab) => tab.key
+  )
   if (!currentTabsValue.includes(toolbarState.value)) {
     mainStore.setToolbarState(currentTabsValue[0])
   }

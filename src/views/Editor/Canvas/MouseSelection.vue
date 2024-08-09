@@ -1,5 +1,6 @@
 <template>
-  <div :class="`mouse-selection quadrant-${quadrant}`"
+  <div
+    :class="`mouse-selection quadrant-${quadrant}`"
     :style="{
       top: top + 'px',
       left: left + 'px',
@@ -11,11 +12,11 @@
 
 <script lang="ts" setup>
 defineProps<{
-  top: number
-  left: number
-  width: number
-  height: number
-  quadrant: number
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+  quadrant: number;
 }>()
 </script>
 

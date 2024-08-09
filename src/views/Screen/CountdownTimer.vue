@@ -1,43 +1,54 @@
 <template>
-  <MoveablePanel 
-    class="countdown-timer" 
+  <MoveablePanel
+    class="countdown-timer"
     :width="180"
     :height="110"
-    :left="left" 
+    :left="left"
     :top="top"
   >
     <div class="header">
-      <span class="text-btn" @click="toggle()">{{ inTiming ? '暂停' : '开始'}}</span>
+      <span class="text-btn" @click="toggle()">{{
+        inTiming ? "暂停" : "开始"
+      }}</span>
       <span class="text-btn" @click="reset()">重置</span>
-      <span class="text-btn" @click="toggleCountdown()" :class="{ 'active': isCountdown }">倒计时</span>
+      <span
+        class="text-btn"
+        @click="toggleCountdown()"
+        :class="{ active: isCountdown }"
+        >倒计时</span
+      >
     </div>
     <div class="content">
       <div class="timer">
-        <input 
+        <input
           type="text"
           :value="fillDigit(minute, 2)"
-          :maxlength="3" :disabled="inputEditable"
-          @mousedown.stop 
-          @blur="$event => changeTime($event, 'minute')"
+          :maxlength="3"
+          :disabled="inputEditable"
+          @mousedown.stop
+          @blur="($event) => changeTime($event, 'minute')"
           @keydown.stop
-          @keydown.enter.stop="$event => changeTime($event, 'minute')"
-        >
+          @keydown.enter.stop="($event) => changeTime($event, 'minute')"
+        />
       </div>
       <div class="colon">:</div>
       <div class="timer">
-        <input 
+        <input
           type="text"
           :value="fillDigit(second, 2)"
-          :maxlength="3" :disabled="inputEditable"
-          @mousedown.stop 
-          @blur="$event => changeTime($event, 'second')"
+          :maxlength="3"
+          :disabled="inputEditable"
+          @mousedown.stop
+          @blur="($event) => changeTime($event, 'second')"
           @keydown.stop
-          @keydown.enter.stop="$event => changeTime($event, 'second')"
-        >
+          @keydown.enter.stop="($event) => changeTime($event, 'second')"
+        />
       </div>
     </div>
 
-    <div class="close-btn" @click="emit('close')"><IconClose class="icon" /></div>
+    <div class="close-btn" @click="emit('close')">
+      <IconClose class="icon" />
+    </div>
   </MoveablePanel>
 </template>
 
@@ -47,16 +58,19 @@ import { fillDigit } from '@/utils/common'
 
 import MoveablePanel from '@/components/MoveablePanel.vue'
 
-withDefaults(defineProps<{
-  left?: number
-  top?: number
-}>(), {
-  left: 5,
-  top: 5,
-})
+withDefaults(
+  defineProps<{
+    left?: number;
+    top?: number;
+  }>(),
+  {
+    left: 5,
+    top: 5,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const timer = ref<number | null>(null)
@@ -84,7 +98,7 @@ const pause = () => {
 const reset = () => {
   clearTimer()
   inTiming.value = false
-  
+
   if (isCountdown.value) time.value = 600
   else time.value = 0
 }
@@ -120,15 +134,26 @@ const toggleCountdown = () => {
   reset()
 }
 
-const changeTime = (e: FocusEvent | KeyboardEvent, type: 'minute' | 'second') => {
+const changeTime = (
+  e: FocusEvent | KeyboardEvent,
+  type: 'minute' | 'second'
+) => {
   const inputRef = e.target as HTMLInputElement
   let value = inputRef.value
   const isNumber = /^(\d)+$/.test(value)
   if (isNumber) {
     if (type === 'second' && +value >= 60) value = '59'
-    time.value = type === 'minute' ? (+value * 60 + second.value) : (+value + minute.value * 60)
+    time.value =
+      type === 'minute'
+        ? +value * 60 + second.value
+        : +value + minute.value * 60
   }
-  else inputRef.value = type === 'minute' ? fillDigit(minute.value, 2) : fillDigit(second.value, 2)
+  else {
+    inputRef.value =
+      type === 'minute'
+        ? fillDigit(minute.value, 2)
+        : fillDigit(second.value, 2)
+  }
 }
 </script>
 
@@ -147,7 +172,8 @@ const changeTime = (e: FocusEvent | KeyboardEvent, type: 'minute' | 'second') =>
     margin-right: 8px;
     cursor: pointer;
 
-    &:hover, &.active {
+    &:hover,
+    &.active {
       color: $themeColor;
     }
   }
@@ -161,7 +187,7 @@ const changeTime = (e: FocusEvent | KeyboardEvent, type: 'minute' | 'second') =>
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  background-color: rgba($color: $themeColor, $alpha: .05);
+  background-color: rgba($color: $themeColor, $alpha: 0.05);
   font-size: 22px;
   overflow: hidden;
 
@@ -187,7 +213,8 @@ const changeTime = (e: FocusEvent | KeyboardEvent, type: 'minute' | 'second') =>
   align-items: center;
   cursor: pointer;
 }
-.pause, .play {
+.pause,
+.play {
   font-size: 17px;
 }
 .reset {

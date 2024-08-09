@@ -1,12 +1,12 @@
 <template>
   <div class="multi-style-panel">
     <div class="row">
-      <div style="width: 40%;">填充颜色：</div>
-      <Popover trigger="click" style="width: 60%;">
+      <div style="width: 40%">填充颜色：</div>
+      <Popover trigger="click" style="width: 60%">
         <template #content>
           <ColorPicker
             :modelValue="fill"
-            @update:modelValue="value => updateFill(value)"
+            @update:modelValue="(value) => updateFill(value)"
           />
         </template>
         <ColorButton :color="fill" />
@@ -16,9 +16,9 @@
     <Divider />
 
     <div class="row">
-      <div style="width: 40%;">边框样式：</div>
-      <Select 
-        style="width: 60%;" 
+      <div style="width: 40%">边框样式：</div>
+      <Select
+        style="width: 60%"
         :value="outline.style || ''"
         @update:value="value => updateOutline({ style: value as 'solid' | 'dashed' })"
         :options="[
@@ -28,23 +28,23 @@
       />
     </div>
     <div class="row">
-      <div style="width: 40%;">边框颜色：</div>
-      <Popover trigger="click" style="width: 60%;">
+      <div style="width: 40%">边框颜色：</div>
+      <Popover trigger="click" style="width: 60%">
         <template #content>
           <ColorPicker
             :modelValue="outline.color"
-            @update:modelValue="value => updateOutline({ color: value })"
+            @update:modelValue="(value) => updateOutline({ color: value })"
           />
         </template>
         <ColorButton :color="outline.color || '#000'" />
       </Popover>
     </div>
     <div class="row">
-      <div style="width: 40%;">边框粗细：</div>
-      <NumberInput 
+      <div style="width: 40%">边框粗细：</div>
+      <NumberInput
         :value="outline.width || 0"
-        @update:value="value => updateOutline({ width: value })" 
-        style="width: 60%;" 
+        @update:value="(value) => updateOutline({ width: value })"
+        style="width: 60%"
       />
     </div>
 
@@ -52,25 +52,25 @@
 
     <SelectGroup class="row">
       <Select
-        style="width: 60%;;"
+        style="width: 60%"
         :value="richTextAttrs.fontname"
         @update:value="value => updateFontStyle('fontname', value as string)"
-        :options="[
-          ...availableFonts,
-          ...WEB_FONTS
-        ]"
+        :options="[...availableFonts, ...WEB_FONTS]"
       >
         <template #icon>
           <IconFontSize />
         </template>
       </Select>
       <Select
-        style="width: 40%;"
+        style="width: 40%"
         :value="richTextAttrs.fontsize"
         @update:value="value => updateFontStyle('fontsize', value as string)"
-        :options="fontSizeOptions.map(item => ({
-          label: item, value: item
-        }))"
+        :options="
+          fontSizeOptions.map((item) => ({
+            label: item,
+            value: item,
+          }))
+        "
       >
         <template #icon>
           <IconAddText />
@@ -78,52 +78,69 @@
       </Select>
     </SelectGroup>
     <ButtonGroup class="row" passive>
-      <Popover trigger="click" style="width: 30%;">
+      <Popover trigger="click" style="width: 30%">
         <template #content>
           <ColorPicker
             :modelValue="richTextAttrs.color"
-            @update:modelValue="value => updateFontStyle('color', value)"
+            @update:modelValue="(value) => updateFontStyle('color', value)"
           />
         </template>
-        <TextColorButton first :color="richTextAttrs.color" v-tooltip="'文字颜色'">
+        <TextColorButton
+          first
+          :color="richTextAttrs.color"
+          v-tooltip="'文字颜色'"
+        >
           <IconText />
         </TextColorButton>
       </Popover>
-      <Popover trigger="click" style="width: 30%;">
+      <Popover trigger="click" style="width: 30%">
         <template #content>
           <ColorPicker
             :modelValue="richTextAttrs.backcolor"
-            @update:modelValue="value => updateFontStyle('backcolor', value)"
+            @update:modelValue="(value) => updateFontStyle('backcolor', value)"
           />
         </template>
-        <TextColorButton :color="richTextAttrs.backcolor" v-tooltip="'文字高亮'">
+        <TextColorButton
+          :color="richTextAttrs.backcolor"
+          v-tooltip="'文字高亮'"
+        >
           <IconHighLight />
         </TextColorButton>
       </Popover>
-      <Button 
+      <Button
         class="font-size-btn"
-        style="width: 20%;"
+        style="width: 20%"
         v-tooltip="'增大字号'"
         @click="updateFontStyle('fontsize-add', '2')"
-      ><IconFontSize />+</Button>
+        ><IconFontSize />+</Button
+      >
       <Button
         last
         class="font-size-btn"
-        style="width: 20%;"
+        style="width: 20%"
         v-tooltip="'减小字号'"
         @click="updateFontStyle('fontsize-reduce', '2')"
-      ><IconFontSize />-</Button>
+        ><IconFontSize />-</Button
+      >
     </ButtonGroup>
-    <RadioGroup 
-      class="row" 
-      button-style="solid" 
+    <RadioGroup
+      class="row"
+      button-style="solid"
       :value="richTextAttrs.align"
-      @update:value="value => updateFontStyle('align', value)"
+      @update:value="(value) => updateFontStyle('align', value)"
     >
-      <RadioButton value="left" style="flex: 1;" v-tooltip="'左对齐'"><IconAlignTextLeft /></RadioButton>
-      <RadioButton value="center" style="flex: 1;" v-tooltip="'居中'"><IconAlignTextCenter /></RadioButton>
-      <RadioButton value="right" style="flex: 1;" v-tooltip="'右对齐'"><IconAlignTextRight /></RadioButton>
-      <RadioButton value="justify" style="flex: 1;" v-tooltip="'两端对齐'"><IconAlignTextBoth /></RadioButton>
+      <RadioButton value="left" style="flex: 1" v-tooltip="'左对齐'"
+        ><IconAlignTextLeft
+      /></RadioButton>
+      <RadioButton value="center" style="flex: 1" v-tooltip="'居中'"
+        ><IconAlignTextCenter
+      /></RadioButton>
+      <RadioButton value="right" style="flex: 1" v-tooltip="'右对齐'"
+        ><IconAlignTextRight
+      /></RadioButton>
+      <RadioButton value="justify" style="flex: 1" v-tooltip="'两端对齐'"
+        ><IconAlignTextBoth
+      /></RadioButton>
     </RadioGroup>
   </div>
 </template>
@@ -151,7 +168,9 @@ import SelectGroup from '@/components/SelectGroup.vue'
 import Popover from '@/components/Popover.vue'
 
 const slidesStore = useSlidesStore()
-const { richTextAttrs, availableFonts, activeElementList } = storeToRefs(useMainStore())
+const { richTextAttrs, availableFonts, activeElementList } = storeToRefs(
+  useMainStore()
+)
 
 const { addHistorySnapshot } = useHistorySnapshot()
 
@@ -161,9 +180,30 @@ const updateElement = (id: string, props: Partial<PPTElement>) => {
 }
 
 const fontSizeOptions = [
-  '12px', '14px', '16px', '18px', '20px', '22px', '24px', '28px', '32px',
-  '36px', '40px', '44px', '48px', '54px', '60px', '66px', '72px', '76px',
-  '80px', '88px', '96px', '104px', '112px', '120px',
+  '12px',
+  '14px',
+  '16px',
+  '18px',
+  '20px',
+  '22px',
+  '24px',
+  '28px',
+  '32px',
+  '36px',
+  '40px',
+  '44px',
+  '48px',
+  '54px',
+  '60px',
+  '66px',
+  '72px',
+  '76px',
+  '80px',
+  '88px',
+  '96px',
+  '104px',
+  '112px',
+  '120px',
 ]
 
 const fill = ref('#fff')
@@ -176,11 +216,9 @@ const outline = ref<PPTElementOutline>({
 // 批量修改填充色（表格元素为单元格填充、音频元素为图标颜色）
 const updateFill = (value: string) => {
   for (const el of activeElementList.value) {
-    if (
-      el.type === 'text' ||
-      el.type === 'shape' ||
-      el.type === 'chart'
-    ) updateElement(el.id, { fill: value })
+    if (el.type === 'text' || el.type === 'shape' || el.type === 'chart') {
+      updateElement(el.id, { fill: value })
+    }
 
     if (el.type === 'table') {
       const data: TableCell[][] = JSON.parse(JSON.stringify(el.data))
@@ -200,7 +238,6 @@ const updateFill = (value: string) => {
 
 // 修改边框/线条样式
 const updateOutline = (outlineProps: Partial<PPTElementOutline>) => {
-
   for (const el of activeElementList.value) {
     if (
       el.type === 'text' ||
@@ -223,7 +260,10 @@ const updateOutline = (outlineProps: Partial<PPTElementOutline>) => {
 const updateFontStyle = (command: string, value: string) => {
   for (const el of activeElementList.value) {
     if (el.type === 'text' || (el.type === 'shape' && el.text?.content)) {
-      emitter.emit(EmitterEvents.RICH_TEXT_COMMAND, { target: el.id, action: { command, value } })
+      emitter.emit(EmitterEvents.RICH_TEXT_COMMAND, {
+        target: el.id,
+        action: { command, value },
+      })
     }
     if (el.type === 'table') {
       const data: TableCell[][] = JSON.parse(JSON.stringify(el.data))

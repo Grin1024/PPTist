@@ -1,14 +1,14 @@
 <template>
-  <label 
+  <label
     class="checkbox"
     :class="{
-      'checked': value,
-      'disabled': disabled,
+      checked: value,
+      disabled: disabled,
     }"
-    @change="$event => handleChange($event)"
+    @change="($event) => handleChange($event)"
   >
     <span class="checkbox-input"></span>
-    <input class="checkbox-original" type="checkbox">
+    <input class="checkbox-original" type="checkbox" />
     <span class="checkbox-label">
       <slot></slot>
     </span>
@@ -16,15 +16,18 @@
 </template>
 
 <script lang="ts" setup>
-const props = withDefaults(defineProps<{
-  value: boolean
-  disabled?: boolean
-}>(), {
-  disabled: false,
-})
+const props = withDefaults(
+  defineProps<{
+    value: boolean;
+    disabled?: boolean;
+  }>(),
+  {
+    disabled: false,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:value', payload: boolean): void
+  (event: 'update:value', payload: boolean): void;
 }>()
 
 const handleChange = (e: Event) => {
@@ -73,11 +76,12 @@ const handleChange = (e: Event) => {
   height: 16px;
   background-color: #fff;
   vertical-align: middle;
-  transition: border-color .15s cubic-bezier(.71, -.46, .29, 1.46), background-color .15s cubic-bezier(.71, -.46, .29, 1.46);
+  transition: border-color 0.15s cubic-bezier(0.71, -0.46, 0.29, 1.46),
+    background-color 0.15s cubic-bezier(0.71, -0.46, 0.29, 1.46);
   z-index: 1;
 
   &::after {
-    content: '';
+    content: "";
     border: 2px solid #fff;
     border-left: 0;
     border-top: 0;
@@ -87,7 +91,7 @@ const handleChange = (e: Event) => {
     top: 1px;
     transform: rotate(45deg) scaleY(0);
     width: 6px;
-    transition: transform .15s ease-in .05s;
+    transition: transform 0.15s ease-in 0.05s;
     transform-origin: center;
   }
 }

@@ -17,10 +17,12 @@ export default () => {
   const copyElement = () => {
     if (!activeElementIdList.value.length) return
 
-    const text = encrypt(JSON.stringify({
-      type: 'elements',
-      data: activeElementList.value,
-    }))
+    const text = encrypt(
+      JSON.stringify({
+        type: 'elements',
+        data: activeElementList.value,
+      })
+    )
 
     copyText(text).then(() => {
       mainStore.setEditorareaFocus(true)
@@ -35,9 +37,11 @@ export default () => {
 
   // 尝试将剪贴板元素数据解密后进行粘贴
   const pasteElement = () => {
-    readClipboard().then(text => {
-      pasteTextClipboardData(text)
-    }).catch(err => message.warning(err))
+    readClipboard()
+      .then((text) => {
+        pasteTextClipboardData(text)
+      })
+      .catch((err) => message.warning(err))
   }
 
   // 将选中元素复制后立刻粘贴

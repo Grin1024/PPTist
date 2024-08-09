@@ -1,14 +1,34 @@
 <template>
-  <div class="slider" :class="{ 'disabled': disabled }" ref="sliderRef" @mousedown="$event => handleMousedown($event)">
+  <div
+    class="slider"
+    :class="{ disabled: disabled }"
+    ref="sliderRef"
+    @mousedown="($event) => handleMousedown($event)"
+  >
     <div class="bar">
       <template v-if="!range">
         <div class="track" :style="{ width: `${percentage}%` }"></div>
-        <div class="thumb" :style="{ left: `${percentage}%` }" :data-tooltip="tooltipValue"></div>
+        <div
+          class="thumb"
+          :style="{ left: `${percentage}%` }"
+          :data-tooltip="tooltipValue"
+        ></div>
       </template>
       <template v-else>
-        <div class="track" :style="{ width: `${end - start}%`, left: `${start}%` }"></div>
-        <div class="thumb" :style="{ left: `${start}%` }" :data-tooltip="tooltipRangeStartValue"></div>
-        <div class="thumb" :style="{ left: `${end}%` }" :data-tooltip="tooltipRangeEndValue"></div>
+        <div
+          class="track"
+          :style="{ width: `${end - start}%`, left: `${start}%` }"
+        ></div>
+        <div
+          class="thumb"
+          :style="{ left: `${start}%` }"
+          :data-tooltip="tooltipRangeStartValue"
+        ></div>
+        <div
+          class="thumb"
+          :style="{ left: `${end}%` }"
+          :data-tooltip="tooltipRangeEndValue"
+        ></div>
       </template>
     </div>
   </div>
@@ -22,23 +42,26 @@ const getBoundingClientRectViewLeft = (element: HTMLElement) => {
   return element.getBoundingClientRect().left
 }
 
-const props = withDefaults(defineProps<{
-  value: number | [number, number]
-  disabled?: boolean
-  min?: number
-  max?: number
-  step?: number
-  range?: boolean
-}>(), {
-  disabled: false,
-  min: 0,
-  max: 100,
-  step: 1,
-  range: false,
-})
+const props = withDefaults(
+  defineProps<{
+    value: number | [number, number];
+    disabled?: boolean;
+    min?: number;
+    max?: number;
+    step?: number;
+    range?: boolean;
+  }>(),
+  {
+    disabled: false,
+    min: 0,
+    max: 100,
+    step: 1,
+    range: false,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:value', payload: number | [number, number]): void
+  (event: 'update:value', payload: number | [number, number]): void;
 }>()
 
 const sliderRef = ref<HTMLElement>()
@@ -48,7 +71,7 @@ const end = ref(0)
 const handler = ref<'start' | 'end'>('end')
 
 const getNewValue = (percentage: number) => {
-  let diff = percentage / 100 * (props.max - props.min)
+  let diff = (percentage / 100) * (props.max - props.min)
   if (props.step >= 1) diff = Math.fround(diff)
   else {
     const str = props.step.toString()
@@ -76,28 +99,37 @@ const tooltipRangeEndValue = computed(() => {
   return getNewValue(end.value)
 })
 
-watch(() => props.value, () => {
-  if (props.max === props.min) return
-  if (typeof props.value === 'number') {
-    percentage.value = (props.value - props.min) / (props.max - props.min) * 100
+watch(
+  () => props.value,
+  () => {
+    if (props.max === props.min) return
+    if (typeof props.value === 'number') {
+      percentage.value =
+        ((props.value - props.min) / (props.max - props.min)) * 100
+    }
+    else {
+      start.value =
+        ((props.value[0] - props.min) / (props.max - props.min)) * 100
+      end.value =
+        ((props.value[1] - props.min) / (props.max - props.min)) * 100
+    }
+  },
+  {
+    immediate: true,
   }
-  else {
-    start.value = (props.value[0] - props.min) / (props.max - props.min) * 100
-    end.value = (props.value[1] - props.min) / (props.max - props.min) * 100
-  }
-}, {
-  immediate: true,
-})
+)
 
 const getPercentage = (e: MouseEvent | TouchEvent) => {
   if (!sliderRef.value) return 0
   const clientX = 'clientX' in e ? e.clientX : e.changedTouches[0].clientX
-  let progress = (clientX - getBoundingClientRectViewLeft(sliderRef.value)) / sliderRef.value.clientWidth
+  let progress =
+    (clientX - getBoundingClientRectViewLeft(sliderRef.value)) /
+    sliderRef.value.clientWidth
   progress = Math.max(progress, 0)
   progress = Math.min(progress, 1)
 
   let _percentage = progress * 100
-  const step = props.step / (props.max - props.min) * 100
+  const step = (props.step / (props.max - props.min)) * 100
   const remainder = _percentage % step
 
   if (remainder > 0) {
@@ -119,7 +151,10 @@ const updateRangeEnd = (e: MouseEvent | TouchEvent) => {
   updatePercentage(e)
   const newValue = getNewValue(percentage.value)
   const oldValueArr = props.value as [number, number]
-  const newValueArr: [number, number] = handler.value === 'start' ? [newValue, oldValueArr[1]] : [oldValueArr[0], newValue]
+  const newValueArr: [number, number] =
+    handler.value === 'start'
+      ? [newValue, oldValueArr[1]]
+      : [oldValueArr[0], newValue]
   if (newValueArr[0] > newValueArr[1]) {
     [newValueArr[0], newValueArr[1]] = [newValueArr[1], newValueArr[0]]
   }
@@ -154,8 +189,10 @@ const handleMousedown = (e: MouseEvent | TouchEvent) => {
 
   if (props.range) {
     const _percentage = getPercentage(e)
-    
-    if (Math.abs(_percentage - start.value) < Math.abs(_percentage - end.value)) {
+
+    if (
+      Math.abs(_percentage - start.value) < Math.abs(_percentage - end.value)
+    ) {
       handler.value = 'start'
     }
     else handler.value = 'end'
@@ -207,7 +244,8 @@ const handleMousedown = (e: MouseEvent | TouchEvent) => {
   }
 
   .thumb {
-    &:hover, &:active {
+    &:hover,
+    &:active {
       outline: 4px solid $themeColor;
     }
   }
@@ -221,7 +259,7 @@ const handleMousedown = (e: MouseEvent | TouchEvent) => {
   position: relative;
   background-color: #f5f5f5;
   user-select: none;
-  transition: background-color .2s;
+  transition: background-color 0.2s;
 }
 
 .track {
@@ -230,7 +268,7 @@ const handleMousedown = (e: MouseEvent | TouchEvent) => {
   left: 0;
   height: 100%;
   background-color: $themeColor;
-  transition: background-color .2s;
+  transition: background-color 0.2s;
 }
 
 .thumb {
@@ -245,8 +283,10 @@ const handleMousedown = (e: MouseEvent | TouchEvent) => {
   border-radius: 50%;
   z-index: 100;
 
-  &:hover, &:active {
-    &::before, &::after {
+  &:hover,
+  &:active {
+    &::before,
+    &::after {
       display: block;
     }
   }
@@ -267,7 +307,7 @@ const handleMousedown = (e: MouseEvent | TouchEvent) => {
     font-size: 12px;
   }
   &::after {
-    content: '';
+    content: "";
     display: none;
     position: absolute;
     left: 50%;

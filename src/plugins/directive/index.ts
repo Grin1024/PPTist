@@ -9,5 +9,5 @@ export default {
     app.directive('contextmenu', Contextmenu)
     app.directive('click-outside', ClickOutside)
     app.directive('tooltip', Tooltip)
-  }
+  },
 }

@@ -4,15 +4,20 @@ import type { Transaction, EditorState } from 'prosemirror-state'
 import { findParentNode, isList } from '../utils'
 
 interface Attr {
-  [key: string]: number | string
+  [key: string]: number | string;
 }
 
 interface TextStyleAttr {
-  color?: string
-  fontsize?: string
+  color?: string;
+  fontsize?: string;
 }
 
-export const toggleList = (listType: NodeType, itemType: NodeType, listStyleType: string, textStyleAttr: TextStyleAttr = {}) => {
+export const toggleList = (
+  listType: NodeType,
+  itemType: NodeType,
+  listStyleType: string,
+  textStyleAttr: TextStyleAttr = {}
+) => {
   return (state: EditorState, dispatch: (tr: Transaction) => void) => {
     const { schema, selection } = state
     const { $from, $to } = selection
@@ -20,14 +25,19 @@ export const toggleList = (listType: NodeType, itemType: NodeType, listStyleType
 
     if (!range) return false
 
-    const parentList = findParentNode((node: Node) => isList(node, schema))(selection)
+    const parentList = findParentNode((node: Node) => isList(node, schema))(
+      selection
+    )
 
     if (range.depth >= 1 && parentList && range.depth - parentList.depth <= 1) {
       if (parentList.node.type === listType && !listStyleType) {
         return liftListItem(itemType)(state, dispatch)
       }
 
-      if (isList(parentList.node, schema) && listType.validContent(parentList.node.content)) {
+      if (
+        isList(parentList.node, schema) &&
+        listType.validContent(parentList.node.content)
+      ) {
         const { tr } = state
 
         const nodeAttrs: Attr = {

@@ -1,13 +1,22 @@
-import { type Directive, type DirectiveBinding, createVNode, render } from 'vue'
+import {
+  type Directive,
+  type DirectiveBinding,
+  createVNode,
+  render,
+} from 'vue'
 import ContextmenuComponent from '@/components/Contextmenu/index.vue'
 
 const CTX_CONTEXTMENU_HANDLER = 'CTX_CONTEXTMENU_HANDLER'
 
 interface CustomHTMLElement extends HTMLElement {
-  [CTX_CONTEXTMENU_HANDLER]?: (event: MouseEvent) => void
-} 
+  [CTX_CONTEXTMENU_HANDLER]?: (event: MouseEvent) => void;
+}
 
-const contextmenuListener = (el: HTMLElement, event: MouseEvent, binding: DirectiveBinding) => {
+const contextmenuListener = (
+  el: HTMLElement,
+  event: MouseEvent,
+  binding: DirectiveBinding
+) => {
   event.stopPropagation()
   event.preventDefault()
 
@@ -23,7 +32,7 @@ const contextmenuListener = (el: HTMLElement, event: MouseEvent, binding: Direct
       container = null
     }
     el.classList.remove('contextmenu-active')
-    document.body.removeEventListener('scroll', removeContextmenu)  
+    document.body.removeEventListener('scroll', removeContextmenu)
     window.removeEventListener('resize', removeContextmenu)
   }
 
@@ -49,7 +58,8 @@ const contextmenuListener = (el: HTMLElement, event: MouseEvent, binding: Direct
 
 const ContextmenuDirective: Directive = {
   mounted(el: CustomHTMLElement, binding) {
-    el[CTX_CONTEXTMENU_HANDLER] = (event: MouseEvent) => contextmenuListener(el, event, binding)
+    el[CTX_CONTEXTMENU_HANDLER] = (event: MouseEvent) =>
+      contextmenuListener(el, event, binding)
     el.addEventListener('contextmenu', el[CTX_CONTEXTMENU_HANDLER])
   },
 

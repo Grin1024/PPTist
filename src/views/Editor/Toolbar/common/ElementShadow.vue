@@ -1,27 +1,30 @@
 <template>
   <div class="element-shadow">
     <div class="row">
-      <div style="width: 40%;">启用阴影：</div>
-      <div class="switch-wrapper" style="width: 60%;">
-        <Switch :value="hasShadow" @update:value="value => toggleShadow(value)" />
+      <div style="width: 40%">启用阴影：</div>
+      <div class="switch-wrapper" style="width: 60%">
+        <Switch
+          :value="hasShadow"
+          @update:value="(value) => toggleShadow(value)"
+        />
       </div>
     </div>
     <template v-if="hasShadow && shadow">
       <div class="row">
-        <div style="width: 40%;">水平阴影：</div>
-        <Slider 
-          style="width: 60%;"
-          :min="-10" 
-          :max="10" 
-          :step="1" 
-          :value="shadow.h" 
+        <div style="width: 40%">水平阴影：</div>
+        <Slider
+          style="width: 60%"
+          :min="-10"
+          :max="10"
+          :step="1"
+          :value="shadow.h"
           @update:value="value => updateShadow({ h: value as number })"
         />
       </div>
       <div class="row">
-        <div style="width: 40%;">垂直阴影：</div>
+        <div style="width: 40%">垂直阴影：</div>
         <Slider
-          style="width: 60%;"
+          style="width: 60%"
           :min="-10"
           :max="10"
           :step="1"
@@ -30,9 +33,9 @@
         />
       </div>
       <div class="row">
-        <div style="width: 40%;">模糊距离：</div>
+        <div style="width: 40%">模糊距离：</div>
         <Slider
-          style="width: 60%;"
+          style="width: 60%"
           :min="1"
           :max="20"
           :step="1"
@@ -41,12 +44,12 @@
         />
       </div>
       <div class="row">
-        <div style="width: 40%;">阴影颜色：</div>
-        <Popover trigger="click" style="width: 60%;">
+        <div style="width: 40%">阴影颜色：</div>
+        <Popover trigger="click" style="width: 60%">
           <template #content>
             <ColorPicker
               :modelValue="shadow.color"
-              @update:modelValue="value => updateShadow({ color: value })"
+              @update:modelValue="(value) => updateShadow({ color: value })"
             />
           </template>
           <ColorButton :color="shadow.color" />
@@ -76,18 +79,26 @@ const { handleElement } = storeToRefs(useMainStore())
 const shadow = ref<PPTElementShadow>()
 const hasShadow = ref(false)
 
-watch(handleElement, () => {
-  if (!handleElement.value) return
-  shadow.value = 'shadow' in handleElement.value ? handleElement.value.shadow : undefined
-  hasShadow.value = !!shadow.value
-}, { deep: true, immediate: true })
+watch(
+  handleElement,
+  () => {
+    if (!handleElement.value) return
+    shadow.value =
+      'shadow' in handleElement.value ? handleElement.value.shadow : undefined
+    hasShadow.value = !!shadow.value
+  },
+  { deep: true, immediate: true }
+)
 
 const { addHistorySnapshot } = useHistorySnapshot()
 
 const updateShadow = (shadowProps: Partial<PPTElementShadow>) => {
   if (!handleElement.value || !shadow.value) return
   const _shadow = { ...shadow.value, ...shadowProps }
-  slidesStore.updateElement({ id: handleElement.value.id, props: { shadow: _shadow } })
+  slidesStore.updateElement({
+    id: handleElement.value.id,
+    props: { shadow: _shadow },
+  })
   addHistorySnapshot()
 }
 
@@ -95,10 +106,16 @@ const toggleShadow = (checked: boolean) => {
   if (!handleElement.value) return
   if (checked) {
     const _shadow: PPTElementShadow = theme.value.shadow
-    slidesStore.updateElement({ id: handleElement.value.id, props: { shadow: _shadow } })
+    slidesStore.updateElement({
+      id: handleElement.value.id,
+      props: { shadow: _shadow },
+    })
   }
   else {
-    slidesStore.removeElementProps({ id: handleElement.value.id, propName: 'shadow' })
+    slidesStore.removeElementProps({
+      id: handleElement.value.id,
+      propName: 'shadow',
+    })
   }
   addHistorySnapshot()
 }

@@ -1,36 +1,68 @@
 <template>
-  <MoveablePanel 
-    class="search-panel" 
-    :width="330" 
+  <MoveablePanel
+    class="search-panel"
+    :width="330"
     :height="0"
-    :left="-270" 
+    :left="-270"
     :top="90"
   >
     <div class="close-btn" @click="close()" @mousedown.stop><IconClose /></div>
-    <Tabs 
-      :tabs="tabs" 
-      v-model:value="type" 
-    />
+    <Tabs :tabs="tabs" v-model:value="type" />
 
     <div class="content" :class="type" @mousedown.stop>
-      <Input class="input" v-model:value="searchWord" placeholder="输入查找内容" @enter="searchNext()" ref="searchInpRef">
+      <Input
+        class="input"
+        v-model:value="searchWord"
+        placeholder="输入查找内容"
+        @enter="searchNext()"
+        ref="searchInpRef"
+      >
         <template #suffix>
-          <span class="count">{{searchIndex + 1}}/{{searchResults.length}}</span>
+          <span class="count"
+            >{{ searchIndex + 1 }}/{{ searchResults.length }}</span
+          >
           <Divider type="vertical" />
-          <span class="ignore-case"
-            :class="{ 'active': modifiers === 'g' }"
+          <span
+            class="ignore-case"
+            :class="{ active: modifiers === 'g' }"
             v-tooltip="'忽略大小写'"
             @click="toggleModifiers()"
-          >Aa</span>
+            >Aa</span
+          >
           <Divider type="vertical" />
-          <IconLeft class="next-btn left" @click="searchPrev()" v-tooltip="'上一个'" />
-          <IconRight class="next-btn right" @click="searchNext()" v-tooltip="'下一个'" />
+          <IconLeft
+            class="next-btn left"
+            @click="searchPrev()"
+            v-tooltip="'上一个'"
+          />
+          <IconRight
+            class="next-btn right"
+            @click="searchNext()"
+            v-tooltip="'下一个'"
+          />
         </template>
       </Input>
-      <Input class="input" v-model:value="replaceWord" placeholder="输入替换内容" @enter="replace()" v-if="type === 'replace'"></Input>
+      <Input
+        class="input"
+        v-model:value="replaceWord"
+        placeholder="输入替换内容"
+        @enter="replace()"
+        v-if="type === 'replace'"
+      ></Input>
       <div class="footer" v-if="type === 'replace'">
-        <Button :disabled="!searchWord" style="margin-left: 5px;" @click="replace()">替换</Button>
-        <Button :disabled="!searchWord" type="primary" style="margin-left: 5px;" @click="replaceAll()">全部替换</Button>
+        <Button
+          :disabled="!searchWord"
+          style="margin-left: 5px"
+          @click="replace()"
+          >替换</Button
+        >
+        <Button
+          :disabled="!searchWord"
+          type="primary"
+          style="margin-left: 5px"
+          @click="replaceAll()"
+          >全部替换</Button
+        >
       </div>
     </div>
   </MoveablePanel>
@@ -46,10 +78,10 @@ import Divider from '@/components/Divider.vue'
 import Input from '@/components/Input.vue'
 import Button from '@/components/Button.vue'
 
-type TypeKey = 'search' | 'replace'
+type TypeKey = 'search' | 'replace';
 interface TabItem {
-  key: TypeKey
-  label: string
+  key: TypeKey;
+  label: string;
 }
 
 const mainStore = useMainStore()

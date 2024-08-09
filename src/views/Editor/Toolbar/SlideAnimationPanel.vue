@@ -1,18 +1,18 @@
 <template>
   <div class="slide-animation-panel">
     <div class="animation-pool">
-      <div 
-        class="animation-item" 
-        :class="{ 'active': currentTurningMode === item.value }" 
-        v-for="item in animations" 
+      <div
+        class="animation-item"
+        :class="{ active: currentTurningMode === item.value }"
+        v-for="item in animations"
         :key="item.label"
         @click="updateTurningMode(item.value)"
       >
         <div :class="['animation-block', item.value]"></div>
-        <div class="animation-text">{{item.label}}</div>
+        <div class="animation-text">{{ item.label }}</div>
       </div>
     </div>
-    <Button style="width: 100%;" @click="applyAllSlide()">应用到全部</Button>
+    <Button style="width: 100%" @click="applyAllSlide()">应用到全部</Button>
   </div>
 </template>
 
@@ -29,7 +29,9 @@ import Button from '@/components/Button.vue'
 const slidesStore = useSlidesStore()
 const { slides, currentSlide } = storeToRefs(slidesStore)
 
-const currentTurningMode = computed(() => currentSlide.value.turningMode || 'slideY')
+const currentTurningMode = computed(
+  () => currentSlide.value.turningMode || 'slideY'
+)
 
 const animations = SLIDE_ANIMATIONS
 
@@ -44,7 +46,7 @@ const updateTurningMode = (mode: TurningMode) => {
 
 // 将当前页的切换页面方式应用到全部页面
 const applyAllSlide = () => {
-  const newSlides = slides.value.map(slide => {
+  const newSlides = slides.value.map((slide) => {
     return {
       ...slide,
       turningMode: currentSlide.value.turningMode,
@@ -83,7 +85,7 @@ const applyAllSlide = () => {
   &:nth-child(2n) {
     margin-left: -1px;
   }
-  &:nth-child(n+3) {
+  &:nth-child(n + 3) {
     margin-top: -1px;
   }
 }
@@ -95,13 +97,13 @@ const applyAllSlide = () => {
   overflow: hidden;
 
   @mixin elAnimation($animationType) {
-    content: 'PPTist';
+    content: "PPTist";
     width: 100%;
     height: 100%;
     position: absolute;
     left: 0;
     top: 0;
-    background-color: rgba($color: $themeColor, $alpha: .75);
+    background-color: rgba($color: $themeColor, $alpha: 0.75);
     color: #fff;
     display: flex;
     justify-content: center;
@@ -193,7 +195,7 @@ const applyAllSlide = () => {
 }
 @keyframes slideX3D {
   0% {
-    transform: translateX(100%) scale(.5);
+    transform: translateX(100%) scale(0.5);
   }
   100% {
     transform: translateX(0);
@@ -201,7 +203,7 @@ const applyAllSlide = () => {
 }
 @keyframes slideY3D {
   0% {
-    transform: translateY(100%) scale(.5);
+    transform: translateY(100%) scale(0.5);
   }
   100% {
     transform: translateY(0);
@@ -217,7 +219,7 @@ const applyAllSlide = () => {
 }
 @keyframes scaleY {
   0% {
-    transform: scaleY(.1);
+    transform: scaleY(0.1);
   }
   100% {
     transform: scaleY(1);
@@ -225,7 +227,7 @@ const applyAllSlide = () => {
 }
 @keyframes scaleX {
   0% {
-    transform: scaleX(.1);
+    transform: scaleX(0.1);
   }
   100% {
     transform: scaleY(1);
@@ -233,7 +235,7 @@ const applyAllSlide = () => {
 }
 @keyframes scale {
   0% {
-    transform: scale(.25);
+    transform: scale(0.25);
   }
   100% {
     transform: scale(1);

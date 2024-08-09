@@ -1,8 +1,17 @@
 import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useSlidesStore, useKeyboardStore } from '@/store'
-import type { PPTElement, PPTImageElement, PPTLineElement, PPTShapeElement } from '@/types/slides'
-import { OperateResizeHandlers, type AlignmentLineProps, type MultiSelectRange } from '@/types/edit'
+import type {
+  PPTElement,
+  PPTImageElement,
+  PPTLineElement,
+  PPTShapeElement,
+} from '@/types/slides'
+import {
+  OperateResizeHandlers,
+  type AlignmentLineProps,
+  type MultiSelectRange,
+} from '@/types/edit'
 import { VIEWPORT_SIZE } from '@/configs/canvas'
 import { MIN_SIZE } from '@/configs/element'
 import { SHAPE_PATH_FORMULAS } from '@/configs/shapes'
@@ -10,10 +19,10 @@ import { type AlignLine, uniqAlignLines } from '@/utils/element'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 interface RotateElementData {
-  left: number
-  top: number
-  width: number
-  height: number
+  left: number;
+  top: number;
+  width: number;
+  height: number;
 }
 
 /**
@@ -24,13 +33,13 @@ interface RotateElementData {
 const getRotateElementPoints = (element: RotateElementData, angle: number) => {
   const { left, top, width, height } = element
 
-  const radius = Math.sqrt( Math.pow(width, 2) + Math.pow(height, 2) ) / 2
-  const auxiliaryAngle = Math.atan(height / width) * 180 / Math.PI
+  const radius = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)) / 2
+  const auxiliaryAngle = (Math.atan(height / width) * 180) / Math.PI
 
-  const tlbraRadian = (180 - angle - auxiliaryAngle) * Math.PI / 180
-  const trblaRadian = (auxiliaryAngle - angle) * Math.PI / 180
-  const taRadian = (90 - angle) * Math.PI / 180
-  const raRadian = angle * Math.PI / 180
+  const tlbraRadian = ((180 - angle - auxiliaryAngle) * Math.PI) / 180
+  const trblaRadian = ((auxiliaryAngle - angle) * Math.PI) / 180
+  const taRadian = ((90 - angle) * Math.PI) / 180
+  const raRadian = (angle * Math.PI) / 180
 
   const halfWidth = width / 2
   const halfHeight = height / 2
@@ -71,7 +80,16 @@ const getRotateElementPoints = (element: RotateElementData, angle: number) => {
     top: middleTop - halfWidth * Math.sin(raRadian),
   }
 
-  return { leftTopPoint, topPoint, rightTopPoint, rightPoint, rightBottomPoint, bottomPoint, leftBottomPoint, leftPoint }
+  return {
+    leftTopPoint,
+    topPoint,
+    rightTopPoint,
+    rightPoint,
+    rightBottomPoint,
+    bottomPoint,
+    leftBottomPoint,
+    leftPoint,
+  }
 }
 
 /**
@@ -79,7 +97,10 @@ const getRotateElementPoints = (element: RotateElementData, angle: number) => {
  * @param direction 当前操作的缩放点
  * @param points 旋转后的元素八个缩放点的位置
  */
-const getOppositePoint = (direction: OperateResizeHandlers, points: ReturnType<typeof getRotateElementPoints>): { left: number; top: number } => {
+const getOppositePoint = (
+  direction: OperateResizeHandlers,
+  points: ReturnType<typeof getRotateElementPoints>
+): { left: number; top: number } => {
   const oppositeMap = {
     [OperateResizeHandlers.RIGHT_BOTTOM]: points.leftTopPoint,
     [OperateResizeHandlers.LEFT_BOTTOM]: points.rightTopPoint,
@@ -96,7 +117,7 @@ const getOppositePoint = (direction: OperateResizeHandlers, points: ReturnType<t
 export default (
   elementList: Ref<PPTElement[]>,
   alignmentLines: Ref<AlignmentLineProps[]>,
-  canvasScale: Ref<number>,
+  canvasScale: Ref<number>
 ) => {
   const mainStore = useMainStore()
   const slidesStore = useSlidesStore()
@@ -107,7 +128,11 @@ export default (
   const { addHistorySnapshot } = useHistorySnapshot()
 
   // 缩放元素
-  const scaleElement = (e: MouseEvent | TouchEvent, element: Exclude<PPTElement, PPTLineElement>, command: OperateResizeHandlers) => {
+  const scaleElement = (
+    e: MouseEvent | TouchEvent,
+    element: Exclude<PPTElement, PPTLineElement>,
+    command: OperateResizeHandlers
+  ) => {
     const isTouchEvent = !(e instanceof MouseEvent)
     if (isTouchEvent && (!e.changedTouches || !e.changedTouches[0])) return
 
@@ -119,12 +144,15 @@ export default (
     const elOriginWidth = element.width
     const elOriginHeight = element.height
 
-    const originTableCellMinHeight = element.type === 'table' ? element.cellMinHeight : 0
-    
-    const elRotate = ('rotate' in element && element.rotate) ? element.rotate : 0
-    const rotateRadian = Math.PI * elRotate / 180
+    const originTableCellMinHeight =
+      element.type === 'table' ? element.cellMinHeight : 0
 
-    const fixedRatio = ctrlOrShiftKeyActive.value || ('fixedRatio' in element && element.fixedRatio)
+    const elRotate = 'rotate' in element && element.rotate ? element.rotate : 0
+    const rotateRadian = (Math.PI * elRotate) / 180
+
+    const fixedRatio =
+      ctrlOrShiftKeyActive.value ||
+      ('fixedRatio' in element && element.fixedRatio)
     const aspectRatio = elOriginWidth / elOriginHeight
 
     const startPageX = isTouchEvent ? e.changedTouches[0].pageX : e.pageX
@@ -132,7 +160,8 @@ export default (
 
     // 元素最小缩放限制
     const minSize = MIN_SIZE[element.type] || 20
-    const getSizeWithinRange = (size: number) => size < minSize ? minSize : size
+    const getSizeWithinRange = (size: number) =>
+      size < minSize ? minSize : size
 
     let points: ReturnType<typeof getRotateElementPoints>
     let baseLeft = 0
@@ -158,12 +187,14 @@ export default (
       const edgeWidth = VIEWPORT_SIZE
       const edgeHeight = VIEWPORT_SIZE * viewportRatio.value
       const isActiveGroupElement = element.id === activeGroupElementId.value
-      
+
       for (const el of elementList.value) {
         if ('rotate' in el && el.rotate) continue
         if (el.type === 'line') continue
         if (isActiveGroupElement && el.id === element.id) continue
-        if (!isActiveGroupElement && activeElementIdList.value.includes(el.id)) continue
+        if (!isActiveGroupElement && activeElementIdList.value.includes(el.id)) {
+          continue
+        }
 
         const left = el.left
         const top = el.top
@@ -183,53 +214,86 @@ export default (
 
       // 画布可视区域的四个边界、水平中心、垂直中心
       const edgeTopLine: AlignLine = { value: 0, range: [0, edgeWidth] }
-      const edgeBottomLine: AlignLine = { value: edgeHeight, range: [0, edgeWidth] }
-      const edgeHorizontalCenterLine: AlignLine = { value: edgeHeight / 2, range: [0, edgeWidth] }
+      const edgeBottomLine: AlignLine = {
+        value: edgeHeight,
+        range: [0, edgeWidth],
+      }
+      const edgeHorizontalCenterLine: AlignLine = {
+        value: edgeHeight / 2,
+        range: [0, edgeWidth],
+      }
       const edgeLeftLine: AlignLine = { value: 0, range: [0, edgeHeight] }
-      const edgeRightLine: AlignLine = { value: edgeWidth, range: [0, edgeHeight] }
-      const edgeVerticalCenterLine: AlignLine = { value: edgeWidth / 2, range: [0, edgeHeight] }
+      const edgeRightLine: AlignLine = {
+        value: edgeWidth,
+        range: [0, edgeHeight],
+      }
+      const edgeVerticalCenterLine: AlignLine = {
+        value: edgeWidth / 2,
+        range: [0, edgeHeight],
+      }
 
-      horizontalLines.push(edgeTopLine, edgeBottomLine, edgeHorizontalCenterLine)
+      horizontalLines.push(
+        edgeTopLine,
+        edgeBottomLine,
+        edgeHorizontalCenterLine
+      )
       verticalLines.push(edgeLeftLine, edgeRightLine, edgeVerticalCenterLine)
-      
+
       horizontalLines = uniqAlignLines(horizontalLines)
       verticalLines = uniqAlignLines(verticalLines)
     }
-    
+
     // 对齐吸附方法
     // 将收集到的对齐吸附线与计算的目标元素当前的位置大小相关数据做对比，差值小于设定的值时执行自动缩放校正
     // 水平和垂直两个方向需要分开计算
-    const alignedAdsorption = (currentX: number | null, currentY: number | null) => {
+    const alignedAdsorption = (
+      currentX: number | null,
+      currentY: number | null
+    ) => {
       const sorptionRange = 5
 
       const _alignmentLines: AlignmentLineProps[] = []
       let isVerticalAdsorbed = false
       let isHorizontalAdsorbed = false
       const correctionVal = { offsetX: 0, offsetY: 0 }
-      
+
       if (currentY || currentY === 0) {
         for (let i = 0; i < horizontalLines.length; i++) {
           const { value, range } = horizontalLines[i]
           const min = Math.min(...range, currentX || 0)
           const max = Math.max(...range, currentX || 0)
-          
-          if (Math.abs(currentY - value) < sorptionRange && !isHorizontalAdsorbed) {
+
+          if (
+            Math.abs(currentY - value) < sorptionRange &&
+            !isHorizontalAdsorbed
+          ) {
             correctionVal.offsetY = currentY - value
             isHorizontalAdsorbed = true
-            _alignmentLines.push({ type: 'horizontal', axis: {x: min - 50, y: value}, length: max - min + 100 })
+            _alignmentLines.push({
+              type: 'horizontal',
+              axis: { x: min - 50, y: value },
+              length: max - min + 100,
+            })
           }
         }
       }
       if (currentX || currentX === 0) {
         for (let i = 0; i < verticalLines.length; i++) {
           const { value, range } = verticalLines[i]
-          const min = Math.min(...range, (currentY || 0))
-          const max = Math.max(...range, (currentY || 0))
+          const min = Math.min(...range, currentY || 0)
+          const max = Math.max(...range, currentY || 0)
 
-          if (Math.abs(currentX - value) < sorptionRange && !isVerticalAdsorbed) {
+          if (
+            Math.abs(currentX - value) < sorptionRange &&
+            !isVerticalAdsorbed
+          ) {
             correctionVal.offsetX = currentX - value
             isVerticalAdsorbed = true
-            _alignmentLines.push({ type: 'vertical', axis: {x: value, y: min - 50}, length: max - min + 100 })
+            _alignmentLines.push({
+              type: 'vertical',
+              axis: { x: value, y: min - 50 },
+              length: max - min + 100,
+            })
           }
         }
       }
@@ -240,8 +304,10 @@ export default (
     const handleMousemove = (e: MouseEvent | TouchEvent) => {
       if (!isMouseDown) return
 
-      const currentPageX = e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
-      const currentPageY = e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
+      const currentPageX =
+        e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
+      const currentPageY =
+        e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
 
       const x = currentPageX - startPageX
       const y = currentPageY - startPageY
@@ -250,17 +316,31 @@ export default (
       let height = elOriginHeight
       let left = elOriginLeft
       let top = elOriginTop
-      
+
       // 元素被旋转的情况下，需要根据元素旋转的角度，重新计算需要缩放的距离（鼠标按下后移动的距离）
       if (elRotate) {
-        const revisedX = (Math.cos(rotateRadian) * x + Math.sin(rotateRadian) * y) / canvasScale.value
-        let revisedY = (Math.cos(rotateRadian) * y - Math.sin(rotateRadian) * x) / canvasScale.value
+        const revisedX =
+          (Math.cos(rotateRadian) * x + Math.sin(rotateRadian) * y) /
+          canvasScale.value
+        let revisedY =
+          (Math.cos(rotateRadian) * y - Math.sin(rotateRadian) * x) /
+          canvasScale.value
 
         // 锁定宽高比例（仅四个角可能触发，四条边不会触发）
         // 以水平方向上缩放的距离为基础，计算垂直方向上的缩放距离，保持二者具有相同的缩放比例
         if (fixedRatio) {
-          if (command === OperateResizeHandlers.RIGHT_BOTTOM || command === OperateResizeHandlers.LEFT_TOP) revisedY = revisedX / aspectRatio
-          if (command === OperateResizeHandlers.LEFT_BOTTOM || command === OperateResizeHandlers.RIGHT_TOP) revisedY = -revisedX / aspectRatio
+          if (
+            command === OperateResizeHandlers.RIGHT_BOTTOM ||
+            command === OperateResizeHandlers.LEFT_TOP
+          ) {
+            revisedY = revisedX / aspectRatio
+          }
+          if (
+            command === OperateResizeHandlers.LEFT_BOTTOM ||
+            command === OperateResizeHandlers.RIGHT_TOP
+          ) {
+            revisedY = -revisedX / aspectRatio
+          }
         }
 
         // 根据不同的操作点分别计算元素缩放后的大小和位置
@@ -303,7 +383,10 @@ export default (
         }
 
         // 获取当前元素的基点坐标，与初始状态时的基点坐标进行对比，并计算差值进行元素位置的校正
-        const currentPoints = getRotateElementPoints({ width, height, left, top }, elRotate)
+        const currentPoints = getRotateElementPoints(
+          { width, height, left, top },
+          elRotate
+        )
         const currentOppositePoint = getOppositePoint(command, currentPoints)
         const currentBaseLeft = currentOppositePoint.left
         const currentBaseTop = currentOppositePoint.top
@@ -323,12 +406,25 @@ export default (
         let moveY = y / canvasScale.value
 
         if (fixedRatio) {
-          if (command === OperateResizeHandlers.RIGHT_BOTTOM || command === OperateResizeHandlers.LEFT_TOP) moveY = moveX / aspectRatio
-          if (command === OperateResizeHandlers.LEFT_BOTTOM || command === OperateResizeHandlers.RIGHT_TOP) moveY = -moveX / aspectRatio
+          if (
+            command === OperateResizeHandlers.RIGHT_BOTTOM ||
+            command === OperateResizeHandlers.LEFT_TOP
+          ) {
+            moveY = moveX / aspectRatio
+          }
+          if (
+            command === OperateResizeHandlers.LEFT_BOTTOM ||
+            command === OperateResizeHandlers.RIGHT_TOP
+          ) {
+            moveY = -moveX / aspectRatio
+          }
         }
 
         if (command === OperateResizeHandlers.RIGHT_BOTTOM) {
-          const { offsetX, offsetY } = alignedAdsorption(elOriginLeft + elOriginWidth + moveX, elOriginTop + elOriginHeight + moveY)
+          const { offsetX, offsetY } = alignedAdsorption(
+            elOriginLeft + elOriginWidth + moveX,
+            elOriginTop + elOriginHeight + moveY
+          )
           moveX = moveX - offsetX
           moveY = moveY - offsetY
           if (fixedRatio) {
@@ -339,7 +435,10 @@ export default (
           height = getSizeWithinRange(elOriginHeight + moveY)
         }
         else if (command === OperateResizeHandlers.LEFT_BOTTOM) {
-          const { offsetX, offsetY } = alignedAdsorption(elOriginLeft + moveX, elOriginTop + elOriginHeight + moveY)
+          const { offsetX, offsetY } = alignedAdsorption(
+            elOriginLeft + moveX,
+            elOriginTop + elOriginHeight + moveY
+          )
           moveX = moveX - offsetX
           moveY = moveY - offsetY
           if (fixedRatio) {
@@ -351,7 +450,10 @@ export default (
           left = elOriginLeft - (width - elOriginWidth)
         }
         else if (command === OperateResizeHandlers.LEFT_TOP) {
-          const { offsetX, offsetY } = alignedAdsorption(elOriginLeft + moveX, elOriginTop + moveY)
+          const { offsetX, offsetY } = alignedAdsorption(
+            elOriginLeft + moveX,
+            elOriginTop + moveY
+          )
           moveX = moveX - offsetX
           moveY = moveY - offsetY
           if (fixedRatio) {
@@ -364,7 +466,10 @@ export default (
           top = elOriginTop - (height - elOriginHeight)
         }
         else if (command === OperateResizeHandlers.RIGHT_TOP) {
-          const { offsetX, offsetY } = alignedAdsorption(elOriginLeft + elOriginWidth + moveX, elOriginTop + moveY)
+          const { offsetX, offsetY } = alignedAdsorption(
+            elOriginLeft + elOriginWidth + moveX,
+            elOriginTop + moveY
+          )
           moveX = moveX - offsetX
           moveY = moveY - offsetY
           if (fixedRatio) {
@@ -382,7 +487,10 @@ export default (
           left = elOriginLeft - (width - elOriginWidth)
         }
         else if (command === OperateResizeHandlers.RIGHT) {
-          const { offsetX } = alignedAdsorption(elOriginLeft + elOriginWidth + moveX, null)
+          const { offsetX } = alignedAdsorption(
+            elOriginLeft + elOriginWidth + moveX,
+            null
+          )
           moveX = moveX - offsetX
           width = getSizeWithinRange(elOriginWidth + moveX)
         }
@@ -393,34 +501,51 @@ export default (
           top = elOriginTop - (height - elOriginHeight)
         }
         else if (command === OperateResizeHandlers.BOTTOM) {
-          const { offsetY } = alignedAdsorption(null, elOriginTop + elOriginHeight + moveY)
+          const { offsetY } = alignedAdsorption(
+            null,
+            elOriginTop + elOriginHeight + moveY
+          )
           moveY = moveY - offsetY
           height = getSizeWithinRange(elOriginHeight + moveY)
         }
       }
-      
-      elementList.value = elementList.value.map(el => {
+
+      elementList.value = elementList.value.map((el) => {
         if (element.id !== el.id) return el
         if (el.type === 'shape' && 'pathFormula' in el && el.pathFormula) {
           const pathFormula = SHAPE_PATH_FORMULAS[el.pathFormula]
 
           let path = ''
-          if ('editable' in pathFormula) path = pathFormula.formula(width, height, el.keypoints!)
+          if ('editable' in pathFormula) {
+            path = pathFormula.formula(width, height, el.keypoints!)
+          }
           else path = pathFormula.formula(width, height)
 
           return {
-            ...el, left, top, width, height,
+            ...el,
+            left,
+            top,
+            width,
+            height,
             viewBox: [width, height],
             path,
           }
         }
         if (el.type === 'table') {
-          let cellMinHeight = originTableCellMinHeight + (height - elOriginHeight) / el.data.length
+          let cellMinHeight =
+            originTableCellMinHeight +
+            (height - elOriginHeight) / el.data.length
           cellMinHeight = cellMinHeight < 36 ? 36 : cellMinHeight
 
-          if (cellMinHeight === originTableCellMinHeight) return { ...el, left, width }
+          if (cellMinHeight === originTableCellMinHeight) {
+            return { ...el, left, width }
+          }
           return {
-            ...el, left, top, width, height,
+            ...el,
+            left,
+            top,
+            width,
+            height,
             cellMinHeight: cellMinHeight < 36 ? 36 : cellMinHeight,
           }
         }
@@ -430,7 +555,7 @@ export default (
 
     const handleMouseup = (e: MouseEvent | TouchEvent) => {
       isMouseDown = false
-      
+
       document.ontouchmove = null
       document.ontouchend = null
       document.onmousemove = null
@@ -438,14 +563,16 @@ export default (
 
       alignmentLines.value = []
 
-      const currentPageX = e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
-      const currentPageY = e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
-      
+      const currentPageX =
+        e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
+      const currentPageY =
+        e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
+
       if (startPageX === currentPageX && startPageY === currentPageY) return
-      
+
       slidesStore.updateSlide({ elements: elementList.value })
       mainStore.setScalingState(false)
-      
+
       addHistorySnapshot()
     }
 
@@ -460,9 +587,13 @@ export default (
   }
 
   // 多选元素缩放
-  const scaleMultiElement = (e: MouseEvent, range: MultiSelectRange, command: OperateResizeHandlers) => {
+  const scaleMultiElement = (
+    e: MouseEvent,
+    range: MultiSelectRange,
+    command: OperateResizeHandlers
+  ) => {
     let isMouseDown = true
-    
+
     const { minX, maxX, minY, maxY } = range
     const operateWidth = maxX - minX
     const operateHeight = maxY - minY
@@ -471,11 +602,13 @@ export default (
     const startPageX = e.pageX
     const startPageY = e.pageY
 
-    const originElementList: PPTElement[] = JSON.parse(JSON.stringify(elementList.value))
+    const originElementList: PPTElement[] = JSON.parse(
+      JSON.stringify(elementList.value)
+    )
 
-    document.onmousemove = e => {
+    document.onmousemove = (e) => {
       if (!isMouseDown) return
-      
+
       const currentPageX = e.pageX
       const currentPageY = e.pageY
 
@@ -484,8 +617,18 @@ export default (
 
       // 锁定宽高比例，逻辑同上
       if (ctrlOrShiftKeyActive.value) {
-        if (command === OperateResizeHandlers.RIGHT_BOTTOM || command === OperateResizeHandlers.LEFT_TOP) y = x / aspectRatio
-        if (command === OperateResizeHandlers.LEFT_BOTTOM || command === OperateResizeHandlers.RIGHT_TOP) y = -x / aspectRatio
+        if (
+          command === OperateResizeHandlers.RIGHT_BOTTOM ||
+          command === OperateResizeHandlers.LEFT_TOP
+        ) {
+          y = x / aspectRatio
+        }
+        if (
+          command === OperateResizeHandlers.LEFT_BOTTOM ||
+          command === OperateResizeHandlers.RIGHT_TOP
+        ) {
+          y = -x / aspectRatio
+        }
       }
 
       // 所有选中元素的整体范围
@@ -533,11 +676,16 @@ export default (
 
       if (widthScale <= 0) widthScale = 0
       if (heightScale <= 0) heightScale = 0
-      
+
       // 根据前面计算的比例，计算并修改所有选中元素的位置大小
-      elementList.value = elementList.value.map(el => {
-        if ((el.type === 'image' || el.type === 'shape') && activeElementIdList.value.includes(el.id)) {
-          const originElement = originElementList.find(originEl => originEl.id === el.id) as PPTImageElement | PPTShapeElement
+      elementList.value = elementList.value.map((el) => {
+        if (
+          (el.type === 'image' || el.type === 'shape') &&
+          activeElementIdList.value.includes(el.id)
+        ) {
+          const originElement = originElementList.find(
+            (originEl) => originEl.id === el.id
+          ) as PPTImageElement | PPTShapeElement
           return {
             ...el,
             width: originElement.width * widthScale,
@@ -550,7 +698,7 @@ export default (
       })
     }
 
-    document.onmouseup = e => {
+    document.onmouseup = (e) => {
       isMouseDown = false
       document.onmousemove = null
       document.onmouseup = null

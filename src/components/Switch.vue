@@ -2,9 +2,9 @@
   <span
     class="switch"
     :class="{
-      'active': value,
-      'disabled': disabled,
-    }" 
+      active: value,
+      disabled: disabled,
+    }"
     @click="handleChange()"
   >
     <span class="switch-core"></span>
@@ -12,15 +12,18 @@
 </template>
 
 <script lang="ts" setup>
-const props = withDefaults(defineProps<{
-  value: boolean
-  disabled?: boolean
-}>(), {
-  disabled: false,
-})
+const props = withDefaults(
+  defineProps<{
+    value: boolean;
+    disabled?: boolean;
+  }>(),
+  {
+    disabled: false,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:value', payload: boolean): void
+  (event: 'update:value', payload: boolean): void;
 }>()
 
 const handleChange = () => {
@@ -66,16 +69,16 @@ const handleChange = () => {
   border-radius: 10px;
   box-sizing: border-box;
   background: #d9d9d9;
-  transition: border-color .3s, background-color .3s;
+  transition: border-color 0.3s, background-color 0.3s;
   vertical-align: middle;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 1px;
     left: 1px;
     border-radius: 100%;
-    transition: all .3s;
+    transition: all 0.3s;
     width: 16px;
     height: 16px;
     background-color: #fff;

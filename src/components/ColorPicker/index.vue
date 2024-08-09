@@ -1,25 +1,40 @@
 <template>
   <div class="color-picker">
     <div class="picker-saturation-wrap">
-      <Saturation :value="color" :hue="hue" @colorChange="value => changeColor(value)" />
+      <Saturation
+        :value="color"
+        :hue="hue"
+        @colorChange="(value) => changeColor(value)"
+      />
     </div>
     <div class="picker-controls">
       <div class="picker-color-wrap">
-        <div class="picker-current-color" :style="{ background: currentColor }"></div>
+        <div
+          class="picker-current-color"
+          :style="{ background: currentColor }"
+        ></div>
         <Checkboard />
       </div>
       <div class="picker-sliders">
         <div class="picker-hue-wrap">
-          <Hue :value="color" :hue="hue" @colorChange="value => changeColor(value)" />
+          <Hue
+            :value="color"
+            :hue="hue"
+            @colorChange="(value) => changeColor(value)"
+          />
         </div>
         <div class="picker-alpha-wrap">
-          <Alpha :value="color" @colorChange="value => changeColor(value)" />
+          <Alpha :value="color" @colorChange="(value) => changeColor(value)" />
         </div>
       </div>
     </div>
 
     <div class="picker-field">
-      <EditableInput class="input" :value="color" @colorChange="value => changeColor(value)" />
+      <EditableInput
+        class="input"
+        :value="color"
+        @colorChange="(value) => changeColor(value)"
+      />
       <div class="straw" @click="openEyeDropper()"><IconNeedle /></div>
       <div class="transparent" @click="selectPresetColor('#00000000')">
         <Checkboard />
@@ -42,7 +57,8 @@
         v-for="(col, index) in presetColors"
         :key="index"
       >
-        <div class="picker-gradient-color"
+        <div
+          class="picker-gradient-color"
           v-for="c in col"
           :key="c"
           :style="{ background: c }"
@@ -69,7 +85,10 @@
         class="picker-presets-color alpha"
         @click="selectPresetColor(c)"
       >
-        <div class="picker-presets-color-content" :style="{ background: c }"></div>
+        <div
+          class="picker-presets-color-content"
+          :style="{ background: c }"
+        ></div>
       </div>
     </div>
   </div>
@@ -88,14 +107,17 @@ import Hue from './Hue.vue'
 import Saturation from './Saturation.vue'
 import EditableInput from './EditableInput.vue'
 
-const props = withDefaults(defineProps<{
-  modelValue?: string
-}>(), {
-  modelValue: '#e86b99',
-})
+const props = withDefaults(
+  defineProps<{
+    modelValue?: string;
+  }>(),
+  {
+    modelValue: '#e86b99',
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:modelValue', payload: string): void
+  (event: 'update:modelValue', payload: string): void;
 }>()
 
 const RECENT_COLORS = 'RECENT_COLORS'
@@ -141,8 +163,30 @@ const getPresetColors = () => {
   return presetColors
 }
 
-const themeColors = ['#000000', '#ffffff', '#eeece1', '#1e497b', '#4e81bb', '#e2534d', '#9aba60', '#8165a0', '#47acc5', '#f9974c']
-const standardColors = ['#c21401', '#ff1e02', '#ffc12a', '#ffff3a', '#90cf5b', '#00af57', '#00afee', '#0071be', '#00215f', '#72349d']
+const themeColors = [
+  '#000000',
+  '#ffffff',
+  '#eeece1',
+  '#1e497b',
+  '#4e81bb',
+  '#e2534d',
+  '#9aba60',
+  '#8165a0',
+  '#47acc5',
+  '#f9974c',
+]
+const standardColors = [
+  '#c21401',
+  '#ff1e02',
+  '#ffc12a',
+  '#ffff3a',
+  '#90cf5b',
+  '#00af57',
+  '#00afee',
+  '#0071be',
+  '#00215f',
+  '#72349d',
+]
 
 const hue = ref(-1)
 const recentColors = ref<string[]>([])
@@ -160,7 +204,12 @@ const color = computed({
 const presetColors = getPresetColors()
 
 const currentColor = computed(() => {
-  return `rgba(${[color.value.r, color.value.g, color.value.b, color.value.a].join(',')})`
+  return `rgba(${[
+    color.value.r,
+    color.value.g,
+    color.value.b,
+    color.value.a,
+  ].join(',')})`
 })
 
 const selectPresetColor = (colorString: string) => {
@@ -169,17 +218,21 @@ const selectPresetColor = (colorString: string) => {
 }
 
 // 每次选择非预设颜色时，需要将该颜色加入到最近使用列表中
-const updateRecentColorsCache = debounce(function() {
-  const _color = tinycolor(color.value).toRgbString()
-  if (!recentColors.value.includes(_color)) {
-    recentColors.value = [_color, ...recentColors.value]
+const updateRecentColorsCache = debounce(
+  function() {
+    const _color = tinycolor(color.value).toRgbString()
+    if (!recentColors.value.includes(_color)) {
+      recentColors.value = [_color, ...recentColors.value]
 
-    const maxLength = 10
-    if (recentColors.value.length > maxLength) {
-      recentColors.value = recentColors.value.slice(0, maxLength)
+      const maxLength = 10
+      if (recentColors.value.length > maxLength) {
+        recentColors.value = recentColors.value.slice(0, maxLength)
+      }
     }
-  }
-}, 300, { trailing: true })
+  },
+  300,
+  { trailing: true }
+)
 
 onMounted(() => {
   const recentColorsCache = localStorage.getItem(RECENT_COLORS)
@@ -191,7 +244,9 @@ watch(recentColors, () => {
   localStorage.setItem(RECENT_COLORS, recentColorsCache)
 })
 
-const changeColor = (value: ColorFormats.RGBA | ColorFormats.HSLA | ColorFormats.HSVA) => {
+const changeColor = (
+  value: ColorFormats.RGBA | ColorFormats.HSLA | ColorFormats.HSVA
+) => {
   if ('h' in value) {
     hue.value = value.h
     color.value = tinycolor(value).toRgb()
@@ -218,16 +273,19 @@ const browserEyeDropper = () => {
   message.success('按 ESC 键关闭取色吸管', { duration: 0 })
 
   // eslint-disable-next-line
-  const eyeDropper = new (window as any).EyeDropper()
-  eyeDropper.open().then((result: { sRGBHex: string }) => {
-    const tColor = tinycolor(result.sRGBHex)
-    hue.value = tColor.toHsl().h
-    color.value = tColor.toRgb()
+  const eyeDropper = new (window as any).EyeDropper();
+  eyeDropper
+    .open()
+    .then((result: { sRGBHex: string }) => {
+      const tColor = tinycolor(result.sRGBHex)
+      hue.value = tColor.toHsl().h
+      color.value = tColor.toRgb()
 
-    updateRecentColorsCache()
-  }).catch(() => {
-    message.closeAll()
-  })
+      updateRecentColorsCache()
+    })
+    .catch(() => {
+      message.closeAll()
+    })
 }
 
 // 基于 Canvas 的自定义取色吸管
@@ -236,72 +294,86 @@ const customEyeDropper = () => {
   if (!targetRef) return
 
   const maskRef = document.createElement('div')
-  maskRef.style.cssText = 'position: fixed; top: 0; left: 0; bottom: 0; right: 0; z-index: 9999; cursor: wait;'
+  maskRef.style.cssText =
+    'position: fixed; top: 0; left: 0; bottom: 0; right: 0; z-index: 9999; cursor: wait;'
   document.body.appendChild(maskRef)
 
   const colorBlockRef = document.createElement('div')
-  colorBlockRef.style.cssText = 'position: absolute; top: -100px; left: -100px; width: 16px; height: 16px; border: 1px solid #000; z-index: 999'
+  colorBlockRef.style.cssText =
+    'position: absolute; top: -100px; left: -100px; width: 16px; height: 16px; border: 1px solid #000; z-index: 999'
   maskRef.appendChild(colorBlockRef)
 
   const { left, top, width, height } = targetRef.getBoundingClientRect()
 
   const filter = (node: HTMLElement) => {
-    if (node.tagName && node.tagName.toUpperCase() === 'FOREIGNOBJECT') return false
+    if (node.tagName && node.tagName.toUpperCase() === 'FOREIGNOBJECT') {
+      return false
+    }
     if (node.classList && node.classList.contains('operate')) return false
     return true
   }
 
-  toCanvas(targetRef, { filter, fontEmbedCSS: '', width, height, canvasWidth: width, canvasHeight: height, pixelRatio: 1 }).then(canvasRef => {
-    canvasRef.style.cssText = `position: absolute; top: ${top}px; left: ${left}px; cursor: crosshair;`
-    maskRef.style.cursor = 'default'
-    maskRef.appendChild(canvasRef)
-
-    const ctx = canvasRef.getContext('2d')
-    if (!ctx) return
-
-    let currentColor = ''
-    const handleMousemove = (e: MouseEvent) => {
-      const x = e.x
-      const y = e.y
-
-      const mouseX = x - left
-      const mouseY = y - top
-
-      const [r, g, b, a] = ctx.getImageData(mouseX, mouseY, 1, 1).data
-      currentColor = `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(2)})`
-
-      colorBlockRef.style.left = x + 10 + 'px'
-      colorBlockRef.style.top = y + 10 + 'px'
-      colorBlockRef.style.backgroundColor = currentColor
-    }
-    const handleMouseleave = () => {
-      currentColor = ''
-      colorBlockRef.style.left = '-100px'
-      colorBlockRef.style.top = '-100px'
-      colorBlockRef.style.backgroundColor = ''
-    }
-    const handleMousedown = (e: MouseEvent) => {
-      if (currentColor && e.button === 0) {
-        const tColor = tinycolor(currentColor)
-        hue.value = tColor.toHsl().h
-        color.value = tColor.toRgb()
-
-        updateRecentColorsCache()
-      }
-      document.body.removeChild(maskRef)
-      
-      canvasRef.removeEventListener('mousemove', handleMousemove)
-      canvasRef.removeEventListener('mouseleave', handleMouseleave)
-      window.removeEventListener('mousedown', handleMousedown)
-    }
-
-    canvasRef.addEventListener('mousemove', handleMousemove)
-    canvasRef.addEventListener('mouseleave', handleMouseleave)
-    window.addEventListener('mousedown', handleMousedown)
-  }).catch(() => {
-    message.error('取色吸管初始化失败')
-    document.body.removeChild(maskRef)
+  toCanvas(targetRef, {
+    filter,
+    fontEmbedCSS: '',
+    width,
+    height,
+    canvasWidth: width,
+    canvasHeight: height,
+    pixelRatio: 1,
   })
+    .then((canvasRef) => {
+      canvasRef.style.cssText = `position: absolute; top: ${top}px; left: ${left}px; cursor: crosshair;`
+      maskRef.style.cursor = 'default'
+      maskRef.appendChild(canvasRef)
+
+      const ctx = canvasRef.getContext('2d')
+      if (!ctx) return
+
+      let currentColor = ''
+      const handleMousemove = (e: MouseEvent) => {
+        const x = e.x
+        const y = e.y
+
+        const mouseX = x - left
+        const mouseY = y - top
+
+        const [r, g, b, a] = ctx.getImageData(mouseX, mouseY, 1, 1).data
+        currentColor = `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(2)})`
+
+        colorBlockRef.style.left = x + 10 + 'px'
+        colorBlockRef.style.top = y + 10 + 'px'
+        colorBlockRef.style.backgroundColor = currentColor
+      }
+      const handleMouseleave = () => {
+        currentColor = ''
+        colorBlockRef.style.left = '-100px'
+        colorBlockRef.style.top = '-100px'
+        colorBlockRef.style.backgroundColor = ''
+      }
+      const handleMousedown = (e: MouseEvent) => {
+        if (currentColor && e.button === 0) {
+          const tColor = tinycolor(currentColor)
+          hue.value = tColor.toHsl().h
+          color.value = tColor.toRgb()
+
+          updateRecentColorsCache()
+        }
+        document.body.removeChild(maskRef)
+
+        canvasRef.removeEventListener('mousemove', handleMousemove)
+        canvasRef.removeEventListener('mouseleave', handleMouseleave)
+        window.removeEventListener('mousedown', handleMousedown)
+      }
+
+      canvasRef.addEventListener('mousemove', handleMousemove)
+      canvasRef.addEventListener('mouseleave', handleMouseleave)
+      window.addEventListener('mousedown', handleMousedown)
+    })
+    .catch(() => {
+      message.error('取色吸管初始化失败')
+      document.body.removeChild(maskRef)
+    })
 }
 </script>
 
@@ -342,7 +414,7 @@ const customEyeDropper = () => {
   position: relative;
   margin-top: 4px;
   margin-right: 4px;
-  outline: 1px dashed rgba($color: #666, $alpha: .12);
+  outline: 1px dashed rgba($color: #666, $alpha: 0.12);
 
   .checkerboard {
     background-size: auto;
@@ -367,7 +439,7 @@ const customEyeDropper = () => {
     cursor: pointer;
 
     &::after {
-      content: '';
+      content: "";
       width: 26px;
       height: 2px;
       position: absolute;

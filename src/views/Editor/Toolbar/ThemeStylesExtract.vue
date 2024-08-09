@@ -1,21 +1,42 @@
 <template>
   <div class="theme-styles-extract">
-    <Tabs 
-      :tabs="tabs" 
-      v-model:value="activeTab" 
-      :tabsStyle="{ marginBottom: '12px' }" 
-      :tabStyle="{ padding: '8px 12px' }" 
+    <Tabs
+      :tabs="tabs"
+      v-model:value="activeTab"
+      :tabsStyle="{ marginBottom: '12px' }"
+      :tabStyle="{ padding: '8px 12px' }"
     />
     <div class="content">
       <div class="config-item">
         <div class="label">字体：</div>
         <div class="values">
-          <div class="value-wrap" v-for="(item, index) in themeStyles.fontNames" :key="item">
-            <div class="value" :style="{ fontFamily: item }">{{ fontMap[item] || item }}</div>
+          <div
+            class="value-wrap"
+            v-for="(item, index) in themeStyles.fontNames"
+            :key="item"
+          >
+            <div class="value" :style="{ fontFamily: item }">
+              {{ fontMap[item] || item }}
+            </div>
             <div class="handler">
-              <div class="state" :class="{ 'active': selectedIndex.fontName === index }">√</div>
-              <div class="config-btn" @click="selectedIndex.fontName = index">选择</div>
-              <div class="config-btn" @click="updateTheme({ fontName: item }); selectedIndex.fontName = index">配置到主题</div>
+              <div
+                class="state"
+                :class="{ active: selectedIndex.fontName === index }"
+              >
+                √
+              </div>
+              <div class="config-btn" @click="selectedIndex.fontName = index">
+                选择
+              </div>
+              <div
+                class="config-btn"
+                @click="
+                  updateTheme({ fontName: item });
+                  selectedIndex.fontName = index;
+                "
+              >
+                配置到主题
+              </div>
             </div>
           </div>
         </div>
@@ -23,12 +44,31 @@
       <div class="config-item">
         <div class="label">文字颜色：</div>
         <div class="values">
-          <div class="value-wrap" v-for="(item, index) in themeStyles.fontColors" :key="item">
+          <div
+            class="value-wrap"
+            v-for="(item, index) in themeStyles.fontColors"
+            :key="item"
+          >
             <div class="value" :style="{ backgroundColor: item }"></div>
             <div class="handler">
-              <div class="state" :class="{ 'active': selectedIndex.fontColor === index }">√</div>
-              <div class="config-btn" @click="selectedIndex.fontColor = index">选择</div>
-              <div class="config-btn" @click="updateTheme({ fontColor: item }); selectedIndex.fontColor = index">配置到主题</div>
+              <div
+                class="state"
+                :class="{ active: selectedIndex.fontColor === index }"
+              >
+                √
+              </div>
+              <div class="config-btn" @click="selectedIndex.fontColor = index">
+                选择
+              </div>
+              <div
+                class="config-btn"
+                @click="
+                  updateTheme({ fontColor: item });
+                  selectedIndex.fontColor = index;
+                "
+              >
+                配置到主题
+              </div>
             </div>
           </div>
         </div>
@@ -36,12 +76,34 @@
       <div class="config-item">
         <div class="label">背景颜色：</div>
         <div class="values">
-          <div class="value-wrap" v-for="(item, index) in themeStyles.backgroundColors" :key="item">
+          <div
+            class="value-wrap"
+            v-for="(item, index) in themeStyles.backgroundColors"
+            :key="item"
+          >
             <div class="value" :style="{ backgroundColor: item }"></div>
             <div class="handler">
-              <div class="state" :class="{ 'active': selectedIndex.backgroundColor === index }">√</div>
-              <div class="config-btn" @click="selectedIndex.backgroundColor = index">选择</div>
-              <div class="config-btn" @click="updateTheme({ backgroundColor: item }); selectedIndex.backgroundColor = index">配置到主题</div>
+              <div
+                class="state"
+                :class="{ active: selectedIndex.backgroundColor === index }"
+              >
+                √
+              </div>
+              <div
+                class="config-btn"
+                @click="selectedIndex.backgroundColor = index"
+              >
+                选择
+              </div>
+              <div
+                class="config-btn"
+                @click="
+                  updateTheme({ backgroundColor: item });
+                  selectedIndex.backgroundColor = index;
+                "
+              >
+                配置到主题
+              </div>
             </div>
           </div>
         </div>
@@ -49,12 +111,31 @@
       <div class="config-item">
         <div class="label">主题色：</div>
         <div class="values">
-          <div class="value-wrap" v-for="(item, index) in themeStyles.themeColors" :key="item">
+          <div
+            class="value-wrap"
+            v-for="(item, index) in themeStyles.themeColors"
+            :key="item"
+          >
             <div class="value" :style="{ backgroundColor: item }"></div>
             <div class="handler">
-              <div class="state" :class="{ 'active': selectedIndex.themeColor === index }">√</div>
-              <div class="config-btn" @click="selectedIndex.themeColor = index">选择</div>
-              <div class="config-btn" @click="updateTheme({ themeColor: item }); selectedIndex.themeColor = index">配置到主题</div>
+              <div
+                class="state"
+                :class="{ active: selectedIndex.themeColor === index }"
+              >
+                √
+              </div>
+              <div class="config-btn" @click="selectedIndex.themeColor = index">
+                选择
+              </div>
+              <div
+                class="config-btn"
+                @click="
+                  updateTheme({ themeColor: item });
+                  selectedIndex.themeColor = index;
+                "
+              >
+                配置到主题
+              </div>
             </div>
           </div>
         </div>
@@ -62,7 +143,9 @@
     </div>
 
     <div class="btns">
-      <Button class="btn" type="primary" @click="updateAllThemes()">将选中配置保存为主题</Button>
+      <Button class="btn" type="primary" @click="updateAllThemes()"
+        >将选中配置保存为主题</Button
+      >
     </div>
   </div>
 </template>
@@ -78,7 +161,7 @@ import Button from '@/components/Button.vue'
 import type { SlideTheme } from '@/types/slides'
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const slidesStore = useSlidesStore()
@@ -86,8 +169,8 @@ const { slides, currentSlide } = storeToRefs(slidesStore)
 const { getSlidesThemeStyles } = useSlideTheme()
 
 interface TabItem {
-  key: 'single' | 'all'
-  label: string
+  key: 'single' | 'all';
+  label: string;
 }
 
 const tabs: TabItem[] = [
@@ -122,7 +205,9 @@ const selectedIndex = ref({
 })
 
 watch(activeTab, () => {
-  if (activeTab.value === 'single') themeStyles.value = getSlidesThemeStyles(currentSlide.value)
+  if (activeTab.value === 'single') {
+    themeStyles.value = getSlidesThemeStyles(currentSlide.value)
+  }
   else themeStyles.value = getSlidesThemeStyles(slides.value)
 })
 onMounted(() => {
@@ -135,7 +220,8 @@ const updateTheme = (themeProps: Partial<SlideTheme>) => {
 
 const updateAllThemes = () => {
   slidesStore.setTheme({
-    backgroundColor: themeStyles.value.backgroundColors[selectedIndex.value.backgroundColor],
+    backgroundColor:
+      themeStyles.value.backgroundColors[selectedIndex.value.backgroundColor],
     themeColor: themeStyles.value.themeColors[selectedIndex.value.themeColor],
     fontColor: themeStyles.value.fontColors[selectedIndex.value.fontColor],
     fontName: themeStyles.value.fontNames[selectedIndex.value.fontName],
@@ -162,7 +248,7 @@ const updateAllThemes = () => {
   font-size: 13px;
 }
 .label {
-  margin-bottom: 5px
+  margin-bottom: 5px;
 }
 .values {
   .value-wrap {

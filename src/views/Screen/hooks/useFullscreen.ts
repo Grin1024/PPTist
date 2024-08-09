@@ -22,7 +22,10 @@ export default () => {
   })
   onUnmounted(() => {
     document.removeEventListener('fullscreenchange', handleFullscreenChange)
-    document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
+    document.removeEventListener(
+      'webkitfullscreenchange',
+      handleFullscreenChange
+    )
   })
 
   const manualExitFullscreen = () => {

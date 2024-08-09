@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="screen-slide"
     :style="{
       width: VIEWPORT_SIZE + 'px',
@@ -32,11 +32,11 @@ import useSlideBackgroundStyle from '@/hooks/useSlideBackgroundStyle'
 import ScreenElement from './ScreenElement.vue'
 
 const props = defineProps<{
-  slide: Slide
-  scale: number
-  animationIndex: number
-  turnSlideToId: (id: string) => void
-  manualExitFullscreen: () => void
+  slide: Slide;
+  scale: number;
+  animationIndex: number;
+  turnSlideToId: (id: string) => void;
+  manualExitFullscreen: () => void;
 }>()
 
 const { viewportRatio } = storeToRefs(useSlidesStore())

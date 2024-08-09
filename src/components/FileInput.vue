@@ -1,28 +1,31 @@
 <template>
   <div class="file-input" @click="handleClick()">
     <slot></slot>
-    <input 
+    <input
       class="input"
-      type="file" 
-      name="upload" 
-      ref="inputRef" 
-      :accept="accept" 
-      @change="$event => handleChange($event)"
-    >
+      type="file"
+      name="upload"
+      ref="inputRef"
+      :accept="accept"
+      @change="($event) => handleChange($event)"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-withDefaults(defineProps<{
-  accept?: string
-}>(), {
-  accept: 'image/*',
-})
+withDefaults(
+  defineProps<{
+    accept?: string;
+  }>(),
+  {
+    accept: 'image/*',
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'change', payload: FileList): void
+  (event: 'change', payload: FileList): void;
 }>()
 
 const inputRef = ref<HTMLInputElement>()

@@ -10,7 +10,7 @@ import { buildInputRules } from './inputrules'
 import { placeholderPlugin } from './placeholder'
 
 export interface PluginOptions {
-  placeholder?: string
+  placeholder?: string;
 }
 
 export const buildPlugins = (schema: Schema, options?: PluginOptions) => {

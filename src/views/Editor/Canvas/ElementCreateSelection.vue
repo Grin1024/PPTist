@@ -1,26 +1,29 @@
 <template>
-  <div 
+  <div
     class="element-create-selection"
     ref="selectionRef"
-    @mousedown.stop="$event => createSelection($event)"
+    @mousedown.stop="($event) => createSelection($event)"
     @contextmenu.stop.prevent
   >
-    <div :class="['selection', creatingElement?.type]" v-if="start && end" :style="position">
-
+    <div
+      :class="['selection', creatingElement?.type]"
+      v-if="start && end"
+      :style="position"
+    >
       <!-- 绘制线条专用 -->
       <svg
         v-if="creatingElement?.type === 'line' && lineData"
-        overflow="visible" 
+        overflow="visible"
         :width="lineData.svgWidth"
         :height="lineData.svgHeight"
       >
-				<path
-          :d="lineData.path" 
-          stroke="#d14424" 
-          fill="none" 
-          stroke-width="2" 
+        <path
+          :d="lineData.path"
+          stroke="#d14424"
+          fill="none"
+          stroke-width="2"
         ></path>
-			</svg>
+      </svg>
     </div>
   </div>
 </template>
@@ -32,7 +35,7 @@ import { useMainStore, useKeyboardStore } from '@/store'
 import type { CreateElementSelectionData } from '@/types/edit'
 
 const emit = defineEmits<{
-  (event: 'created', payload: CreateElementSelectionData): void
+  (event: 'created', payload: CreateElementSelectionData): void;
 }>()
 
 const mainStore = useMainStore()
@@ -62,7 +65,7 @@ const createSelection = (e: MouseEvent) => {
   const startPageY = e.pageY
   start.value = [startPageX, startPageY]
 
-  document.onmousemove = e => {
+  document.onmousemove = (e) => {
     if (!creatingElement.value || !isMouseDown) return
 
     let currentPageX = e.pageX
@@ -79,7 +82,6 @@ const createSelection = (e: MouseEvent) => {
       const absY = Math.abs(moveY)
 
       if (creatingElement.value.type === 'shape') {
-
         // 判断是否为反向拖动：从左上到右下为正向操作，此外所有情况都是反向操作
         const isOpposite = (moveY > 0 && moveX < 0) || (moveY < 0 && moveX > 0)
 
@@ -90,7 +92,6 @@ const createSelection = (e: MouseEvent) => {
           currentPageX = isOpposite ? startPageX - moveY : startPageX + moveY
         }
       }
-
       else if (creatingElement.value.type === 'line') {
         if (absX > absY) currentPageY = startPageY
         else currentPageX = startPageX
@@ -100,7 +101,7 @@ const createSelection = (e: MouseEvent) => {
     end.value = [currentPageX, currentPageY]
   }
 
-  document.onmouseup = e => {
+  document.onmouseup = (e) => {
     document.onmousemove = null
     document.onmouseup = null
 
@@ -118,7 +119,8 @@ const createSelection = (e: MouseEvent) => {
 
     if (
       creatingElement.value?.type === 'line' &&
-      (Math.abs(endPageX - startPageX) >= minSize || Math.abs(endPageY - startPageY) >= minSize)
+      (Math.abs(endPageX - startPageX) >= minSize ||
+        Math.abs(endPageY - startPageY) >= minSize)
     ) {
       emit('created', {
         start: start.value!,
@@ -127,7 +129,8 @@ const createSelection = (e: MouseEvent) => {
     }
     else if (
       creatingElement.value?.type !== 'line' &&
-      (Math.abs(endPageX - startPageX) >= minSize && Math.abs(endPageY - startPageY) >= minSize)
+      Math.abs(endPageX - startPageX) >= minSize &&
+      Math.abs(endPageY - startPageY) >= minSize
     ) {
       emit('created', {
         start: start.value!,
@@ -153,7 +156,9 @@ const createSelection = (e: MouseEvent) => {
 // 绘制线条的路径相关数据（仅当绘制元素类型为线条时使用）
 const lineData = computed(() => {
   if (!start.value || !end.value) return null
-  if (!creatingElement.value || creatingElement.value.type !== 'line') return null
+  if (!creatingElement.value || creatingElement.value.type !== 'line') {
+    return null
+  }
 
   const [_startX, _startY] = start.value
   const [_endX, _endY] = end.value
@@ -222,7 +227,7 @@ const position = computed(() => {
 }
 .selection {
   position: absolute;
-  opacity: .8;
+  opacity: 0.8;
 
   &:not(.line) {
     border: 1px solid $themeColor;

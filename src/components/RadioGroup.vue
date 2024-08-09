@@ -10,15 +10,18 @@ import { injectKeyRadioGroupValue } from '@/types/injectKey'
 
 import ButtonGroup from './ButtonGroup.vue'
 
-const props = withDefaults(defineProps<{
-  value: string
-  disabled?: boolean
-}>(), {
-  disabled: false,
-})
+const props = withDefaults(
+  defineProps<{
+    value: string;
+    disabled?: boolean;
+  }>(),
+  {
+    disabled: false,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:value', payload: string): void
+  (event: 'update:value', payload: string): void;
 }>()
 
 const updateValue = (value: string) => {

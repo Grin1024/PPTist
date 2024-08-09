@@ -23,7 +23,9 @@ export default () => {
   const removeSection = (sectionId: string) => {
     if (!sectionId) return
 
-    const slide = slides.value.find(slide => slide.sectionTag?.id === sectionId)!
+    const slide = slides.value.find(
+      (slide) => slide.sectionTag?.id === sectionId
+    )!
     slidesStore.removeSlideProps({
       id: slide.id,
       propName: 'sectionTag',
@@ -32,7 +34,7 @@ export default () => {
   }
 
   const removeAllSection = () => {
-    const _slides = slides.value.map(slide => {
+    const _slides = slides.value.map((slide) => {
       if (slide.sectionTag) delete slide.sectionTag
       return slide
     })
@@ -43,13 +45,15 @@ export default () => {
   const removeSectionSlides = (sectionId: string) => {
     let startIndex = 0
     if (sectionId) {
-      startIndex = slides.value.findIndex(slide => slide.sectionTag?.id === sectionId)
+      startIndex = slides.value.findIndex(
+        (slide) => slide.sectionTag?.id === sectionId
+      )
     }
     const ids: string[] = []
-    
+
     for (let i = startIndex; i < slides.value.length; i++) {
       const slide = slides.value[i]
-      if(i !== startIndex && slide.sectionTag) break
+      if (i !== startIndex && slide.sectionTag) break
 
       ids.push(slide.id)
     }
@@ -61,23 +65,31 @@ export default () => {
     if (!title) return
 
     if (sectionId === 'default') {
-      slidesStore.updateSlide({
-        sectionTag: {
-          id: nanoid(6),
-          title,
+      slidesStore.updateSlide(
+        {
+          sectionTag: {
+            id: nanoid(6),
+            title,
+          },
         },
-      }, slides.value[0].id)
+        slides.value[0].id
+      )
     }
     else {
-      const slide = slides.value.find(slide => slide.sectionTag?.id === sectionId)
+      const slide = slides.value.find(
+        (slide) => slide.sectionTag?.id === sectionId
+      )
       if (!slide) return
 
-      slidesStore.updateSlide({
-        sectionTag: {
-          ...slide.sectionTag!,
-          title,
+      slidesStore.updateSlide(
+        {
+          sectionTag: {
+            ...slide.sectionTag!,
+            title,
+          },
         },
-      }, slide.id)
+        slide.id
+      )
     }
     addHistorySnapshot()
   }

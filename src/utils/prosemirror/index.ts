@@ -12,7 +12,8 @@ const schema = new Schema({
 export const createDocument = (content: string) => {
   const htmlString = `<div>${content}</div>`
   const parser = new window.DOMParser()
-  const element = parser.parseFromString(htmlString, 'text/html').body.firstElementChild
+  const element = parser.parseFromString(htmlString, 'text/html').body
+    .firstElementChild
   return DOMParser.fromSchema(schema).parse(element as Element)
 }
 
@@ -20,7 +21,7 @@ export const initProsemirrorEditor = (
   dom: Element,
   content: string,
   props: Omit<DirectEditorProps, 'state'>,
-  pluginOptions?: PluginOptions,
+  pluginOptions?: PluginOptions
 ) => {
   return new EditorView(dom, {
     state: EditorState.create({

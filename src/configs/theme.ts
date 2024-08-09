@@ -1,8 +1,8 @@
 export interface PresetTheme {
-  background: string
-  fontColor: string
-  fontname: string
-  colors: string[]
+  background: string;
+  fontColor: string;
+  fontname: string;
+  colors: string[];
 }
 
 export const PRESET_THEMES: PresetTheme[] = [

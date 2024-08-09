@@ -1,4 +1,8 @@
-import { splitListItem, liftListItem, sinkListItem } from 'prosemirror-schema-list'
+import {
+  splitListItem,
+  liftListItem,
+  sinkListItem,
+} from 'prosemirror-schema-list'
 import type { Schema } from 'prosemirror-model'
 import { undo, redo } from 'prosemirror-history'
 import { undoInputRule } from 'prosemirror-inputrules'
@@ -16,12 +20,12 @@ import {
 } from 'prosemirror-commands'
 
 interface Keys {
-  [key: string]: Command
+  [key: string]: Command;
 }
 
 export const buildKeymap = (schema: Schema) => {
   const keys: Keys = {}
-  const bind = (key: string, cmd: Command) => keys[key] = cmd
+  const bind = (key: string, cmd: Command) => (keys[key] = cmd)
 
   bind('Alt-ArrowUp', joinUp)
   bind('Alt-ArrowDown', joinDown)
@@ -36,13 +40,16 @@ export const buildKeymap = (schema: Schema) => {
   bind('Mod-e', toggleMark(schema.marks.code))
   bind('Mod-;', toggleMark(schema.marks.superscript))
   bind(`Mod-'`, toggleMark(schema.marks.subscript))
-  bind('Enter', chainCommands(
-    splitListItem(schema.nodes.list_item),
-    newlineInCode,
-    createParagraphNear,
-    liftEmptyBlock,
-    splitBlockKeepMarks,
-  ))
+  bind(
+    'Enter',
+    chainCommands(
+      splitListItem(schema.nodes.list_item),
+      newlineInCode,
+      createParagraphNear,
+      liftEmptyBlock,
+      splitBlockKeepMarks
+    )
+  )
   bind('Mod-[', liftListItem(schema.nodes.list_item))
   bind('Mod-]', sinkListItem(schema.nodes.list_item))
   bind('Tab', sinkListItem(schema.nodes.list_item))

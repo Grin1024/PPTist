@@ -1,7 +1,7 @@
 import type { ChartType } from '@/types/slides'
 
 interface ChartTypes {
-  [propName: string]: ChartType
+  [propName: string]: ChartType;
 }
 
 export const CHART_TYPES: ChartTypes = {

@@ -1,13 +1,10 @@
 <template>
   <div class="remark">
-    <div 
-      class="resize-handler"
-      @mousedown="$event => resize($event)"
-    ></div>
+    <div class="resize-handler" @mousedown="($event) => resize($event)"></div>
     <Editor
       :value="remark"
       ref="editorRef"
-      @update="value => handleInput(value)"
+      @update="(value) => handleInput(value)"
     />
   </div>
 </template>
@@ -20,24 +17,28 @@ import { useSlidesStore } from '@/store'
 import Editor from './Editor.vue'
 
 const props = defineProps<{
-  height: number
+  height: number;
 }>()
 
 const emit = defineEmits<{
-  (event: 'update:height', payload: number): void
+  (event: 'update:height', payload: number): void;
 }>()
 
 const slidesStore = useSlidesStore()
 const { currentSlide } = storeToRefs(slidesStore)
 
 const editorRef = ref<InstanceType<typeof Editor>>()
-watch(() => currentSlide.value.id, () => {
-  nextTick(() => {
-    editorRef.value!.updateTextContent()
-  })
-}, {
-  immediate: true,
-})
+watch(
+  () => currentSlide.value.id,
+  () => {
+    nextTick(() => {
+      editorRef.value!.updateTextContent()
+    })
+  },
+  {
+    immediate: true,
+  }
+)
 
 const remark = computed(() => currentSlide.value?.remark || '')
 
@@ -50,7 +51,7 @@ const resize = (e: MouseEvent) => {
   const startPageY = e.pageY
   const originHeight = props.height
 
-  document.onmousemove = e => {
+  document.onmousemove = (e) => {
     if (!isMouseDown) return
 
     const currentPageY = e.pageY

@@ -1,31 +1,49 @@
 <template>
-  <Transition 
-    name="message-fade" 
-    appear 
+  <Transition
+    name="message-fade"
+    appear
     mode="in-out"
     @beforeLeave="emit('close')"
     @afterLeave="emit('destroy')"
   >
     <div class="message" :id="id" v-if="visible">
-      <div class="message-container"
+      <div
+        class="message-container"
         @mouseenter="clearTimer()"
         @mouseleave="startTimer()"
       >
         <div class="icons">
-          <IconAttention theme="filled" size="18" fill="#faad14" v-if="type === 'warning'" />
-          <IconCheckOne theme="filled" size="18" fill="#52c41a" v-if="type === 'success'" />
-          <IconCloseOne theme="filled" size="18" fill="#ff4d4f" v-if="type === 'error'" />
-          <IconInfo theme="filled" size="18" fill="#1677ff" v-if="type === 'info'" />
+          <IconAttention
+            theme="filled"
+            size="18"
+            fill="#faad14"
+            v-if="type === 'warning'"
+          />
+          <IconCheckOne
+            theme="filled"
+            size="18"
+            fill="#52c41a"
+            v-if="type === 'success'"
+          />
+          <IconCloseOne
+            theme="filled"
+            size="18"
+            fill="#ff4d4f"
+            v-if="type === 'error'"
+          />
+          <IconInfo
+            theme="filled"
+            size="18"
+            fill="#1677ff"
+            v-if="type === 'info'"
+          />
         </div>
         <div class="content">
           <div class="title" v-if="title">{{ title }}</div>
           <div class="description">{{ message }}</div>
         </div>
         <div class="control" v-if="closable">
-          <span 
-            class="close-btn"
-            @click="close()"
-          >
+          <span class="close-btn" @click="close()">
             <IconCloseSmall />
           </span>
         </div>
@@ -38,31 +56,29 @@
 import { onMounted, ref, onBeforeMount } from 'vue'
 import { icons } from '@/plugins/icon'
 
-const {
-  IconAttention,
-  IconCheckOne,
-  IconCloseOne,
-  IconInfo,
-  IconCloseSmall,
-} = icons
+const { IconAttention, IconCheckOne, IconCloseOne, IconInfo, IconCloseSmall } =
+  icons
 
-const props = withDefaults(defineProps<{
-  id: string
-  message: string
-  type?: string
-  title?: string
-  duration?: number
-  closable?: boolean
-}>(), {
-  type: 'success',
-  title: '',
-  duration: 3000,
-  closable: false,
-})
+const props = withDefaults(
+  defineProps<{
+    id: string;
+    message: string;
+    type?: string;
+    title?: string;
+    duration?: number;
+    closable?: boolean;
+  }>(),
+  {
+    type: 'success',
+    title: '',
+    duration: 3000,
+    closable: false,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'close'): void
-  (event: 'destroy'): void
+  (event: 'close'): void;
+  (event: 'destroy'): void;
 }>()
 
 const visible = ref(true)
@@ -76,7 +92,7 @@ const clearTimer = () => {
   if (timer.value) clearTimeout(timer.value)
 }
 
-const close = () => visible.value = false
+const close = () => (visible.value = false)
 
 onBeforeMount(() => {
   clearTimer()
@@ -106,7 +122,7 @@ defineExpose({
   font-size: 13px;
   overflow: hidden;
   border-radius: $borderRadius;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, .15);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.15);
   background: #fff;
   pointer-events: all;
   position: relative;
@@ -152,10 +168,10 @@ defineExpose({
 }
 
 .message-fade-enter-active {
-  animation: message-fade-in-down .3s;
+  animation: message-fade-in-down 0.3s;
 }
 .message-fade-leave-active {
-  animation: message-fade-out .3s;
+  animation: message-fade-out 0.3s;
 }
 
 @keyframes message-fade-in-down {

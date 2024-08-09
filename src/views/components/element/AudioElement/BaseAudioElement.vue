@@ -1,5 +1,6 @@
 <template>
-  <div class="base-element-audio"
+  <div
+    class="base-element-audio"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -12,8 +13,8 @@
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
       <div class="element-content">
-        <IconVolumeNotice 
-          class="audio-icon" 
+        <IconVolumeNotice
+          class="audio-icon"
           :style="{
             fontSize: audioIconSize,
             color: elementInfo.color,
@@ -29,7 +30,7 @@ import { computed } from 'vue'
 import type { PPTAudioElement } from '@/types/slides'
 
 const props = defineProps<{
-  elementInfo: PPTAudioElement
+  elementInfo: PPTAudioElement;
 }>()
 
 const audioIconSize = computed(() => {

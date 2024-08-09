@@ -1,13 +1,16 @@
 <template>
   <div class="export-dialog">
-    <Tabs 
-      :tabs="tabs" 
-      :value="dialogForExport" 
+    <Tabs
+      :tabs="tabs"
+      :value="dialogForExport"
       card
-      @update:value="key => setDialogForExport(key as DialogForExportTypes)" 
+      @update:value="key => setDialogForExport(key as DialogForExportTypes)"
     />
     <div class="content">
-      <component :is="currentDialogComponent" @close="setDialogForExport('')"></component>
+      <component
+        :is="currentDialogComponent"
+        @close="setDialogForExport('')"
+      ></component>
     </div>
   </div>
 </template>
@@ -26,8 +29,8 @@ import ExportSpecificFile from './ExportSpecificFile.vue'
 import Tabs from '@/components/Tabs.vue'
 
 interface TabItem {
-  key: DialogForExportTypes
-  label: string
+  key: DialogForExportTypes;
+  label: string;
 }
 
 const mainStore = useMainStore()
@@ -45,11 +48,11 @@ const tabs: TabItem[] = [
 
 const currentDialogComponent = computed<unknown>(() => {
   const dialogMap = {
-    'image': ExportImage,
-    'json': ExportJSON,
-    'pdf': ExportPDF,
-    'pptx': ExportPPTX,
-    'pptist': ExportSpecificFile,
+    image: ExportImage,
+    json: ExportJSON,
+    pdf: ExportPDF,
+    pptx: ExportPPTX,
+    pptist: ExportSpecificFile,
   }
   if (dialogForExport.value) return dialogMap[dialogForExport.value] || null
   return null

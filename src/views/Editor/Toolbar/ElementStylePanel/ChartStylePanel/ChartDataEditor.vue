@@ -2,21 +2,21 @@
   <div class="chart-data-editor">
     <div class="editor-content">
       <div class="range-box">
-        <div 
-          class="temp-range" 
+        <div
+          class="temp-range"
           :style="{
             width: tempRangeSize.width + 'px',
             height: tempRangeSize.height + 'px',
           }"
         ></div>
-        <div 
-          :class="['range-line', line.type]" 
-          v-for="line in rangeLines" 
-          :key="line.type" 
+        <div
+          :class="['range-line', line.type]"
+          v-for="line in rangeLines"
+          :key="line.type"
           :style="line.style"
         ></div>
-        <div 
-          class="resizable" 
+        <div
+          class="resizable"
           :style="resizablePointStyle"
           @mousedown.stop="changeSelectRange($event)"
         ></div>
@@ -24,18 +24,31 @@
       <table>
         <tbody>
           <tr v-for="rowIndex in 31" :key="rowIndex">
-            <td 
-              v-for="colIndex in 7" 
-              :key="colIndex" 
-              :class="{ 'head': (colIndex === 1 && rowIndex <= selectedRange[1]) || (rowIndex === 1 && colIndex <= selectedRange[0]) }"
+            <td
+              v-for="colIndex in 7"
+              :key="colIndex"
+              :class="{
+                head:
+                  (colIndex === 1 && rowIndex <= selectedRange[1]) ||
+                  (rowIndex === 1 && colIndex <= selectedRange[0]),
+              }"
             >
-              <input 
-                :class="['item', { 'selected': rowIndex <= selectedRange[1] && colIndex <= selectedRange[0] }]"
+              <input
+                :class="[
+                  'item',
+                  {
+                    selected:
+                      rowIndex <= selectedRange[1] &&
+                      colIndex <= selectedRange[0],
+                  },
+                ]"
                 :id="`cell-${rowIndex - 1}-${colIndex - 1}`"
                 autocomplete="off"
                 @focus="focusCell = [rowIndex - 1, colIndex - 1]"
-                @paste="$event => handlePaste($event, rowIndex - 1, colIndex - 1)"
-              >
+                @paste="
+                  ($event) => handlePaste($event, rowIndex - 1, colIndex - 1)
+                "
+              />
             </td>
           </tr>
         </tbody>
@@ -48,7 +61,13 @@
       </div>
       <div class="right">
         <Button class="btn" @click="closeEditor()">取消</Button>
-        <Button type="primary" class="btn" @click="getTableData()" style="margin-left: 10px;">确认</Button>
+        <Button
+          type="primary"
+          class="btn"
+          @click="getTableData()"
+          style="margin-left: 10px"
+          >确认</Button
+        >
       </div>
     </div>
   </div>
@@ -58,16 +77,19 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import type { ChartData } from '@/types/slides'
 import { KEYS } from '@/configs/hotkey'
-import { pasteCustomClipboardString, pasteExcelClipboardString } from '@/utils/clipboard'
+import {
+  pasteCustomClipboardString,
+  pasteExcelClipboardString,
+} from '@/utils/clipboard'
 import Button from '@/components/Button.vue'
 
 const props = defineProps<{
-  data: ChartData
+  data: ChartData;
 }>()
 
 const emit = defineEmits<{
-  (event: 'save', payload: ChartData): void
-  (event: 'close'): void
+  (event: 'save', payload: ChartData): void;
+  (event: 'close'): void;
 }>()
 
 const CELL_WIDTH = 100
@@ -82,10 +104,10 @@ const rangeLines = computed(() => {
   const width = selectedRange.value[0] * CELL_WIDTH
   const height = selectedRange.value[1] * CELL_HEIGHT
   return [
-    { type: 't', style: {width: width + 'px'} },
-    { type: 'b', style: {top: height + 'px', width: width + 'px'} },
-    { type: 'l', style: {height: height + 'px'} },
-    { type: 'r', style: {left: width + 'px', height: height + 'px'} },
+    { type: 't', style: { width: width + 'px' } },
+    { type: 'b', style: { top: height + 'px', width: width + 'px' } },
+    { type: 'l', style: { height: height + 'px' } },
+    { type: 'r', style: { left: width + 'px', height: height + 'px' } },
   ]
 })
 
@@ -115,7 +137,9 @@ const initData = () => {
 
   for (let rowIndex = 0; rowIndex < rowCount + 1; rowIndex++) {
     for (let colIndex = 0; colIndex < colCount + 1; colIndex++) {
-      const inputRef = document.querySelector(`#cell-${rowIndex}-${colIndex}`) as HTMLInputElement
+      const inputRef = document.querySelector(
+        `#cell-${rowIndex}-${colIndex}`
+      ) as HTMLInputElement
       if (!inputRef) continue
       inputRef.value = _data[rowIndex][colIndex] + ''
     }
@@ -131,7 +155,9 @@ const moveNextRow = () => {
   if (!focusCell.value) return
 
   const [rowIndex, colIndex] = focusCell.value
-  const inputRef = document.querySelector(`#cell-${rowIndex + 1}-${colIndex}`) as HTMLInputElement
+  const inputRef = document.querySelector(
+    `#cell-${rowIndex + 1}-${colIndex}`
+  ) as HTMLInputElement
   inputRef && inputRef.focus()
 }
 
@@ -158,13 +184,17 @@ const getTableData = () => {
   // 第一行为系列名，第一列为项目名，实际数据从第二行第二列开始
   for (let rowIndex = 1; rowIndex < row; rowIndex++) {
     let labelsItem = `类别${rowIndex}`
-    const labelInputRef = document.querySelector(`#cell-${rowIndex}-0`) as HTMLInputElement
+    const labelInputRef = document.querySelector(
+      `#cell-${rowIndex}-0`
+    ) as HTMLInputElement
     if (labelInputRef && labelInputRef.value) labelsItem = labelInputRef.value
     labels.push(labelsItem)
   }
   for (let colIndex = 1; colIndex < col; colIndex++) {
     let legendsItem = `系列${colIndex}`
-    const labelInputRef = document.querySelector(`#cell-0-${colIndex}`) as HTMLInputElement
+    const labelInputRef = document.querySelector(
+      `#cell-0-${colIndex}`
+    ) as HTMLInputElement
     if (labelInputRef && labelInputRef.value) legendsItem = labelInputRef.value
     legends.push(legendsItem)
   }
@@ -172,9 +202,11 @@ const getTableData = () => {
   for (let colIndex = 1; colIndex < col; colIndex++) {
     const seriesItem = []
     for (let rowIndex = 1; rowIndex < row; rowIndex++) {
-      const valueInputRef = document.querySelector(`#cell-${rowIndex}-${colIndex}`) as HTMLInputElement
+      const valueInputRef = document.querySelector(
+        `#cell-${rowIndex}-${colIndex}`
+      ) as HTMLInputElement
       let value = 0
-      if (valueInputRef && valueInputRef.value && !!(+valueInputRef.value)) {
+      if (valueInputRef && valueInputRef.value && !!+valueInputRef.value) {
         value = +valueInputRef.value
       }
       seriesItem.push(value)
@@ -189,7 +221,9 @@ const getTableData = () => {
 const clear = () => {
   for (let rowIndex = 1; rowIndex < 31; rowIndex++) {
     for (let colIndex = 1; colIndex < 7; colIndex++) {
-      const inputRef = document.querySelector(`#cell-${rowIndex}-${colIndex}`) as HTMLInputElement
+      const inputRef = document.querySelector(
+        `#cell-${rowIndex}-${colIndex}`
+      ) as HTMLInputElement
       if (!inputRef) continue
       inputRef.value = ''
     }
@@ -204,18 +238,24 @@ const handlePaste = (e: ClipboardEvent, rowIndex: number, colIndex: number) => {
 
   const clipboardDataFirstItem = e.clipboardData.items[0]
 
-  if (clipboardDataFirstItem && clipboardDataFirstItem.kind === 'string' && clipboardDataFirstItem.type === 'text/plain') {
-    clipboardDataFirstItem.getAsString(text => {
+  if (
+    clipboardDataFirstItem &&
+    clipboardDataFirstItem.kind === 'string' &&
+    clipboardDataFirstItem.type === 'text/plain'
+  ) {
+    clipboardDataFirstItem.getAsString((text) => {
       const clipboardData = pasteCustomClipboardString(text)
       if (typeof clipboardData === 'object') return
- 
+
       const excelData = pasteExcelClipboardString(text)
       if (excelData) {
         const maxRow = rowIndex + excelData.length
         const maxCol = colIndex + excelData[0].length
         for (let i = rowIndex; i < maxRow; i++) {
           for (let j = colIndex; j < maxCol; j++) {
-            const inputRef = document.querySelector(`#cell-${i}-${j}`) as HTMLInputElement
+            const inputRef = document.querySelector(
+              `#cell-${i}-${j}`
+            ) as HTMLInputElement
             if (!inputRef) continue
             inputRef.value = excelData[i - rowIndex][j - colIndex]
           }
@@ -238,7 +278,7 @@ const changeSelectRange = (e: MouseEvent) => {
   const originWidth = selectedRange.value[0] * CELL_WIDTH
   const originHeight = selectedRange.value[1] * CELL_HEIGHT
 
-  document.onmousemove = e => {
+  document.onmousemove = (e) => {
     if (!isMouseDown) return
 
     const currentPageX = e.pageX
@@ -253,7 +293,7 @@ const changeSelectRange = (e: MouseEvent) => {
     tempRangeSize.value = { width, height }
   }
 
-  document.onmouseup = e => {
+  document.onmouseup = (e) => {
     isMouseDown = false
     document.onmousemove = null
     document.onmouseup = null
@@ -266,8 +306,12 @@ const changeSelectRange = (e: MouseEvent) => {
     // 拖拽结束时，范围超过格子一半自动扩大到下一格（如拖动到一格半多的位置，会自动扩展到两格，横竖都同理）
     let width = tempRangeSize.value.width
     let height = tempRangeSize.value.height
-    if (width % CELL_WIDTH > CELL_WIDTH * 0.5) width = width + (CELL_WIDTH - width % CELL_WIDTH)
-    if (height % CELL_HEIGHT > CELL_HEIGHT * 0.5) height = height + (CELL_HEIGHT - height % CELL_HEIGHT)
+    if (width % CELL_WIDTH > CELL_WIDTH * 0.5) {
+      width = width + (CELL_WIDTH - (width % CELL_WIDTH))
+    }
+    if (height % CELL_HEIGHT > CELL_HEIGHT * 0.5) {
+      height = height + (CELL_HEIGHT - (height % CELL_HEIGHT))
+    }
 
     let row = Math.round(height / CELL_HEIGHT)
     let col = Math.round(width / CELL_WIDTH)
@@ -308,7 +352,7 @@ const changeSelectRange = (e: MouseEvent) => {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba($color: #888, $alpha: .3);
+  background-color: rgba($color: #888, $alpha: 0.3);
 }
 .range-line {
   width: 0;
@@ -341,7 +385,7 @@ const changeSelectRange = (e: MouseEvent) => {
   cursor: nwse-resize;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 4px;
     height: 12px;
@@ -350,7 +394,7 @@ const changeSelectRange = (e: MouseEvent) => {
     background-color: $themeColor;
   }
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     width: 12px;
     height: 4px;
@@ -373,7 +417,7 @@ table {
     height: 32px;
 
     &.head {
-      background-color: rgba($color: $themeColor, $alpha: .1);
+      background-color: rgba($color: $themeColor, $alpha: 0.1);
     }
   }
   .item {
@@ -386,7 +430,7 @@ table {
     background-color: transparent;
 
     &.selected {
-      background-color: rgba($color: $themeColor, $alpha: .02);
+      background-color: rgba($color: $themeColor, $alpha: 0.02);
     }
   }
 }

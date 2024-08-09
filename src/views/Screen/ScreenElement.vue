@@ -1,7 +1,7 @@
 <template>
-  <div 
+  <div
     class="screen-element"
-    :class="{ 'link': elementInfo.link }"
+    :class="{ link: elementInfo.link }"
     :id="`screen-element-${elementInfo.id}`"
     :style="{
       zIndex: elementIndex,
@@ -10,7 +10,7 @@
       visibility: needWaitAnimation ? 'hidden' : 'visible',
     }"
     :title="elementInfo.link?.target || ''"
-    @click="$event => openLink($event)"
+    @click="($event) => openLink($event)"
   >
     <component
       :is="currentElementComponent"
@@ -36,11 +36,11 @@ import ScreenVideoElement from '@/views/components/element/VideoElement/ScreenVi
 import ScreenAudioElement from '@/views/components/element/AudioElement/ScreenAudioElement.vue'
 
 const props = defineProps<{
-  elementInfo: PPTElement
-  elementIndex: number
-  animationIndex: number
-  turnSlideToId: (id: string) => void
-  manualExitFullscreen: () => void
+  elementInfo: PPTElement;
+  elementIndex: number;
+  animationIndex: number;
+  turnSlideToId: (id: string) => void;
+  manualExitFullscreen: () => void;
 }>()
 
 const currentElementComponent = computed<unknown>(() => {
@@ -63,8 +63,8 @@ const { formatedAnimations, theme } = storeToRefs(useSlidesStore())
 // 判断元素是否需要等待执行入场动画：等待执行入场的元素需要先隐藏
 const needWaitAnimation = computed(() => {
   // 该元素在本页动画序列中的位置
-  const elementIndexInAnimation = formatedAnimations.value.findIndex(item => {
-    const elIds = item.animations.map(item => item.elId)
+  const elementIndexInAnimation = formatedAnimations.value.findIndex((item) => {
+    const elIds = item.animations.map((item) => item.elId)
     return elIds.includes(props.elementInfo.id)
   })
 
@@ -77,7 +77,9 @@ const needWaitAnimation = computed(() => {
 
   // 若该元素未执行过动画，获取其将要执行的第一个动画
   // 若将要执行的第一个动画为入场，则需要隐藏，否则无须隐藏
-  const firstAnimation = formatedAnimations.value[elementIndexInAnimation].animations.find(item => item.elId === props.elementInfo.id)
+  const firstAnimation = formatedAnimations.value[
+    elementIndexInAnimation
+  ].animations.find((item) => item.elId === props.elementInfo.id)
   if (firstAnimation?.type === 'in') return true
   return false
 })

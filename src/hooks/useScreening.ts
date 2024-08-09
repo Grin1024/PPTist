@@ -1,5 +1,9 @@
 import { useScreenStore, useSlidesStore } from '@/store'
-import { enterFullscreen, exitFullscreen, isFullscreen } from '@/utils/fullscreen'
+import {
+  enterFullscreen,
+  exitFullscreen,
+  isFullscreen,
+} from '@/utils/fullscreen'
 
 export default () => {
   const screenStore = useScreenStore()

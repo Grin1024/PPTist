@@ -1,6 +1,11 @@
 import type { ShapePoolItem } from '@/configs/shapes'
 import type { LinePoolItem } from '@/configs/lines'
-import type { ImageClipDataRange, PPTElementOutline, PPTElementShadow, ShapeGradient } from './slides'
+import type {
+  ImageClipDataRange,
+  PPTElementOutline,
+  PPTElementShadow,
+  ShapeGradient,
+} from './slides'
 
 export enum ElementOrderCommands {
   UP = 'up',
@@ -46,81 +51,93 @@ export const enum OperateLineHandlers {
 }
 
 export interface AlignmentLineAxis {
-  x: number
-  y: number
+  x: number;
+  y: number;
 }
 
 export interface AlignmentLineProps {
-  type: 'vertical' | 'horizontal'
-  axis: AlignmentLineAxis
-  length: number
+  type: 'vertical' | 'horizontal';
+  axis: AlignmentLineAxis;
+  length: number;
 }
 
 export interface MultiSelectRange {
-  minX: number
-  maxX: number
-  minY: number
-  maxY: number
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
 }
 
 export interface ImageClipedEmitData {
-  range: ImageClipDataRange
+  range: ImageClipDataRange;
   position: {
-    left: number
-    top: number
-    width: number
-    height: number
-  }
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  };
 }
 
 export interface CreateElementSelectionData {
-  start: [number, number]
-  end: [number, number]
+  start: [number, number];
+  end: [number, number];
 }
 
 export interface CreateCustomShapeData {
-  start: [number, number]
-  end: [number, number]
-  path: string
-  viewBox: [number, number]
-  fill?: string
-  outline?: PPTElementOutline
+  start: [number, number];
+  end: [number, number];
+  path: string;
+  viewBox: [number, number];
+  fill?: string;
+  outline?: PPTElementOutline;
 }
 
 export interface CreatingTextElement {
-  type: 'text'
-  vertical?: boolean
+  type: 'text';
+  vertical?: boolean;
 }
 export interface CreatingShapeElement {
-  type: 'shape'
-  data: ShapePoolItem
+  type: 'shape';
+  data: ShapePoolItem;
 }
 export interface CreatingLineElement {
-  type: 'line'
-  data: LinePoolItem
+  type: 'line';
+  data: LinePoolItem;
 }
-export type CreatingElement = CreatingTextElement | CreatingShapeElement | CreatingLineElement
+export type CreatingElement =
+  | CreatingTextElement
+  | CreatingShapeElement
+  | CreatingLineElement;
 
-export type TextFormatPainterKeys = 'bold' | 'em' | 'underline' | 'strikethrough' | 'color' | 'backcolor' | 'fontsize' | 'fontname' | 'align'
+export type TextFormatPainterKeys =
+  | 'bold'
+  | 'em'
+  | 'underline'
+  | 'strikethrough'
+  | 'color'
+  | 'backcolor'
+  | 'fontsize'
+  | 'fontname'
+  | 'align';
 
 export interface TextFormatPainter {
-  keep: boolean
-  bold?: boolean
-  em?: boolean
-  underline?: boolean
-  strikethrough?: boolean
-  color?: string
-  backcolor?: string
-  fontsize?: string
-  fontname?: string
-  align?: 'left' | 'right' | 'center'
+  keep: boolean;
+  bold?: boolean;
+  em?: boolean;
+  underline?: boolean;
+  strikethrough?: boolean;
+  color?: string;
+  backcolor?: string;
+  fontsize?: string;
+  fontname?: string;
+  align?: 'left' | 'right' | 'center';
 }
 
 export interface ShapeFormatPainter {
-  keep: boolean
-  fill?: string
-  gradient?: ShapeGradient
-  outline?: PPTElementOutline
-  opacity?: number
-  shadow?: PPTElementShadow
+  keep: boolean;
+  fill?: string;
+  gradient?: ShapeGradient;
+  outline?: PPTElementOutline;
+  opacity?: number;
+  shadow?: PPTElementShadow;
 }

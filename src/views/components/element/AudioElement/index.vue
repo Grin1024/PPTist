@@ -1,6 +1,7 @@
 <template>
-  <div class="editable-element-audio"
-    :class="{ 'lock': elementInfo.lock }"
+  <div
+    class="editable-element-audio"
+    :class="{ lock: elementInfo.lock }"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -12,14 +13,14 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div 
-        class="element-content" 
-        v-contextmenu="contextmenus" 
-        @mousedown="$event => handleSelectElement($event)"
-        @touchstart="$event => handleSelectElement($event)"
+      <div
+        class="element-content"
+        v-contextmenu="contextmenus"
+        @mousedown="($event) => handleSelectElement($event)"
+        @touchstart="($event) => handleSelectElement($event)"
       >
-        <IconVolumeNotice 
-          class="audio-icon" 
+        <IconVolumeNotice
+          class="audio-icon"
           :style="{
             fontSize: audioIconSize,
             color: elementInfo.color,
@@ -29,7 +30,7 @@
           class="audio-player"
           v-if="handleElementId === elementInfo.id"
           :style="{ ...audioPlayerPosition }"
-          :src="elementInfo.src" 
+          :src="elementInfo.src"
           :loop="elementInfo.loop"
           :scale="canvasScale"
           @mousedown.stop=""
@@ -50,9 +51,13 @@ import { VIEWPORT_SIZE } from '@/configs/canvas'
 import AudioPlayer from './AudioPlayer.vue'
 
 const props = defineProps<{
-  elementInfo: PPTAudioElement
-  selectElement: (e: MouseEvent | TouchEvent, element: PPTAudioElement, canMove?: boolean) => void
-  contextmenus: () => ContextmenuItem[] | null
+  elementInfo: PPTAudioElement;
+  selectElement: (
+    e: MouseEvent | TouchEvent,
+    element: PPTAudioElement,
+    canMove?: boolean
+  ) => void;
+  contextmenus: () => ContextmenuItem[] | null;
 }>()
 
 const { canvasScale, handleElementId } = storeToRefs(useMainStore())
@@ -75,7 +80,7 @@ const audioPlayerPosition = computed(() => {
 
   let left = 0
   let top = elHeight
-  
+
   if (elLeft + audioWidth >= canvasWidth) left = elWidth - audioWidth
   if (elTop + elHeight + audioHeight >= canvasHeight) top = -audioHeight
 

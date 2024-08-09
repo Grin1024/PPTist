@@ -2,19 +2,22 @@
   <div class="fullscreen-spin" v-if="loading">
     <div class="spin">
       <div class="spinner"></div>
-      <div class="text">{{tip}}</div>
+      <div class="text">{{ tip }}</div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-withDefaults(defineProps<{
-  loading?: boolean
-  tip?: string
-}>(), {
-  loading: false,
-  tip: '',
-})
+withDefaults(
+  defineProps<{
+    loading?: boolean;
+    tip?: string;
+  }>(),
+  {
+    loading: false,
+    tip: '',
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -28,7 +31,7 @@ withDefaults(defineProps<{
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba($color: #f1f1f1, $alpha: .7);
+  background-color: rgba($color: #f1f1f1, $alpha: 0.7);
 }
 .spin {
   width: 200px;
@@ -49,7 +52,7 @@ withDefaults(defineProps<{
   border: 3px solid $themeColor;
   border-top-color: transparent;
   border-radius: 50%;
-  animation: spinner .8s linear infinite;
+  animation: spinner 0.8s linear infinite;
 }
 .text {
   margin-top: 20px;

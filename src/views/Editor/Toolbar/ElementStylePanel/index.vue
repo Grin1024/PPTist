@@ -33,16 +33,27 @@ const panelMap = {
   [ElementTypes.AUDIO]: AudioStylePanel,
 }
 
-const { activeElementIdList, activeElementList, handleElement, activeGroupElementId } = storeToRefs(useMainStore())
+const {
+  activeElementIdList,
+  activeElementList,
+  handleElement,
+  activeGroupElementId,
+} = storeToRefs(useMainStore())
 
 const currentPanelComponent = computed<unknown>(() => {
   if (activeElementIdList.value.length > 1) {
     if (!activeGroupElementId.value) return MultiStylePanel
 
-    const activeGroupElement = activeElementList.value.find(item => item.id === activeGroupElementId.value)
-    return activeGroupElement ? (panelMap[activeGroupElement.type] || null) : null
+    const activeGroupElement = activeElementList.value.find(
+      (item) => item.id === activeGroupElementId.value
+    )
+    return activeGroupElement
+      ? panelMap[activeGroupElement.type] || null
+      : null
   }
 
-  return handleElement.value ? (panelMap[handleElement.value.type] || null) : null
+  return handleElement.value
+    ? panelMap[handleElement.value.type] || null
+    : null
 })
 </script>

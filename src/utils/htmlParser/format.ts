@@ -17,7 +17,7 @@ const unquote = (str: string) => {
 }
 
 const formatAttributes = (attributes: string[]) => {
-  return attributes.map(attribute => {
+  return attributes.map((attribute) => {
     const parts = splitHead(attribute.trim(), '=')
     const key = parts[0]
     const value = typeof parts[1] === 'string' ? unquote(parts[1]) : null
@@ -26,7 +26,7 @@ const formatAttributes = (attributes: string[]) => {
 }
 
 export const format = (nodes: HTMLNode[]): AST[] => {
-  return nodes.map(node => {   
+  return nodes.map((node) => {
     if (node.type === 'element') {
       const children = format(node.children)
       const item: ElementAST = {

@@ -1,45 +1,48 @@
 <template>
   <textarea
-    class="textarea" 
+    class="textarea"
     :class="{
-      'disabled': disabled,
-      'resizable': resizable,
+      disabled: disabled,
+      resizable: resizable,
     }"
     ref="textareaRef"
     :disabled="disabled"
-    :value="value" 
+    :value="value"
     :rows="rows"
     :placeholder="placeholder"
     :style="{
       padding: padding ? `${padding}px` : '10px',
     }"
-    @input="$event => handleInput($event)"
-    @focus="$event => emit('focus', $event)"
-    @blur="$event => emit('blur', $event)"
+    @input="($event) => handleInput($event)"
+    @focus="($event) => emit('focus', $event)"
+    @blur="($event) => emit('blur', $event)"
   ></textarea>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-withDefaults(defineProps<{
-  value: string
-  rows?: number
-  padding?: number
-  disabled?: boolean
-  resizable?: boolean
-  placeholder?: string
-}>(), {
-  rows: 4,
-  disabled: false,
-  resizable: false,
-  placeholder: '',
-})
+withDefaults(
+  defineProps<{
+    value: string;
+    rows?: number;
+    padding?: number;
+    disabled?: boolean;
+    resizable?: boolean;
+    placeholder?: string;
+  }>(),
+  {
+    rows: 4,
+    disabled: false,
+    resizable: false,
+    placeholder: '',
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:value', payload: string): void
-  (event: 'focus', payload: FocusEvent): void
-  (event: 'blur', payload: FocusEvent): void
+  (event: 'update:value', payload: string): void;
+  (event: 'focus', payload: FocusEvent): void;
+  (event: 'blur', payload: FocusEvent): void;
 }>()
 
 const handleInput = (e: Event) => {
@@ -64,11 +67,13 @@ defineExpose({
   border: 1px solid #d9d9d9;
   border-radius: $borderRadius;
   padding: 10px;
-  transition: border-color .25s;
+  transition: border-color 0.25s;
   box-sizing: border-box;
   line-height: 1.675;
   resize: none;
-  font-family: -apple-system,BlinkMacSystemFont, 'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   &:focus {
     border-color: $themeColor;

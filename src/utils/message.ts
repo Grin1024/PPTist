@@ -2,30 +2,33 @@ import { createVNode, render, type AppContext } from 'vue'
 import MessageComponent from '@/components/Message.vue'
 
 export interface MessageOptions {
-  type?: 'info' | 'success' | 'warning' | 'error'
-  title?: string
-  message?: string
-  duration?: number
-  closable?: boolean
-  ctx?: AppContext
-  onClose?: () => void
+  type?: 'info' | 'success' | 'warning' | 'error';
+  title?: string;
+  message?: string;
+  duration?: number;
+  closable?: boolean;
+  ctx?: AppContext;
+  onClose?: () => void;
 }
 
-export type MessageTypeOptions = Omit<MessageOptions, 'type' | 'message'>
+export type MessageTypeOptions = Omit<MessageOptions, 'type' | 'message'>;
 export interface MessageIntance {
-  id: string
-  close: () => void
+  id: string;
+  close: () => void;
 }
 
-export type MessageFn = (message: string, options?: MessageTypeOptions) => MessageIntance
+export type MessageFn = (
+  message: string,
+  options?: MessageTypeOptions
+) => MessageIntance;
 export interface Message {
-  (options: MessageOptions): MessageIntance
-  info: MessageFn
-  success: MessageFn
-  error: MessageFn
-  warning: MessageFn
-  closeAll: () => void
-  _context?: AppContext | null
+  (options: MessageOptions): MessageIntance;
+  info: MessageFn;
+  success: MessageFn;
+  error: MessageFn;
+  warning: MessageFn;
+  closeAll: () => void;
+  _context?: AppContext | null;
 }
 
 const instances: MessageIntance[] = []
@@ -89,10 +92,14 @@ const message: Message = (options: MessageOptions) => {
   return instance
 }
 
-message.success = (msg: string, options?: MessageTypeOptions) => message({ ...options, type: 'success', message: msg })
-message.info = (msg: string, options?: MessageTypeOptions) => message({ ...options, type: 'info', message: msg })
-message.warning = (msg: string, options?: MessageTypeOptions) => message({ ...options, type: 'warning', message: msg })
-message.error = (msg: string, options?: MessageTypeOptions) => message({ ...options, type: 'error', message: msg })
+message.success = (msg: string, options?: MessageTypeOptions) =>
+  message({ ...options, type: 'success', message: msg })
+message.info = (msg: string, options?: MessageTypeOptions) =>
+  message({ ...options, type: 'info', message: msg })
+message.warning = (msg: string, options?: MessageTypeOptions) =>
+  message({ ...options, type: 'warning', message: msg })
+message.error = (msg: string, options?: MessageTypeOptions) =>
+  message({ ...options, type: 'error', message: msg })
 
 message.closeAll = function() {
   for (let i = instances.length - 1; i >= 0; i--) {

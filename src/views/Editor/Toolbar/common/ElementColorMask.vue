@@ -1,22 +1,22 @@
 <template>
   <div class="element-color-mask">
     <div class="row">
-      <div style="width: 40%;">着色（蒙版）：</div>
-      <div class="switch-wrapper" style="width: 60%;">
-        <Switch 
-          :value="hasColorMask" 
-          @update:value="value => toggleColorMask(value)" 
+      <div style="width: 40%">着色（蒙版）：</div>
+      <div class="switch-wrapper" style="width: 60%">
+        <Switch
+          :value="hasColorMask"
+          @update:value="(value) => toggleColorMask(value)"
         />
       </div>
     </div>
     <template v-if="hasColorMask">
-      <div class="row" style="margin-top: 15px;">
-        <div style="width: 40%;">蒙版颜色：</div>
-        <Popover trigger="click" style="width: 60%;">
+      <div class="row" style="margin-top: 15px">
+        <div style="width: 40%">蒙版颜色：</div>
+        <Popover trigger="click" style="width: 60%">
           <template #content>
             <ColorPicker
               :modelValue="colorMask"
-              @update:modelValue="value => updateColorMask(value)"
+              @update:modelValue="(value) => updateColorMask(value)"
             />
           </template>
           <ColorButton :color="colorMask" />
@@ -47,29 +47,42 @@ const hasColorMask = ref(false)
 
 const { addHistorySnapshot } = useHistorySnapshot()
 
-watch(handleElement, () => {
-  if (!handleElement.value || handleElement.value.type !== 'image') return
+watch(
+  handleElement,
+  () => {
+    if (!handleElement.value || handleElement.value.type !== 'image') return
 
-  if (handleElement.value.colorMask) {
-    colorMask.value = handleElement.value.colorMask
-    hasColorMask.value = true
-  }
-  else hasColorMask.value = false
-}, { deep: true, immediate: true })
+    if (handleElement.value.colorMask) {
+      colorMask.value = handleElement.value.colorMask
+      hasColorMask.value = true
+    }
+    else hasColorMask.value = false
+  },
+  { deep: true, immediate: true }
+)
 
 const toggleColorMask = (checked: boolean) => {
   if (!handleElement.value) return
   if (checked) {
-    slidesStore.updateElement({ id: handleElement.value.id, props: { colorMask: defaultColorMask } })
+    slidesStore.updateElement({
+      id: handleElement.value.id,
+      props: { colorMask: defaultColorMask },
+    })
   }
   else {
-    slidesStore.removeElementProps({ id: handleElement.value.id, propName: 'colorMask' })
+    slidesStore.removeElementProps({
+      id: handleElement.value.id,
+      propName: 'colorMask',
+    })
   }
   addHistorySnapshot()
 }
 
 const updateColorMask = (colorMask: string) => {
-  slidesStore.updateElement({ id: handleElementId.value, props: { colorMask } })
+  slidesStore.updateElement({
+    id: handleElementId.value,
+    props: { colorMask },
+  })
   addHistorySnapshot()
 }
 </script>

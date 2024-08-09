@@ -9,10 +9,10 @@
       </div>
     </div>
   </div>
-  <Popover 
+  <Popover
     class="select-wrap"
-    trigger="click" 
-    v-model:value="popoverVisible" 
+    trigger="click"
+    v-model:value="popoverVisible"
     placement="bottom"
     :contentStyle="{
       padding: 0,
@@ -22,15 +22,18 @@
   >
     <template #content>
       <div class="options" :style="{ width: width + 2 + 'px' }">
-        <div class="option" 
+        <div
+          class="option"
           :class="{
-            'disabled': option.disabled,
-            'selected': option.value === value,
+            disabled: option.disabled,
+            selected: option.value === value,
           }"
-          v-for="option in options" 
+          v-for="option in options"
           :key="option.value"
           @click="handleSelect(option)"
-        >{{ option.label }}</div>
+        >
+          {{ option.label }}
+        </div>
       </div>
     </template>
     <div class="select" ref="selectRef">
@@ -49,25 +52,31 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import Popover from './Popover.vue'
 
 interface SelectOption {
-  label: string
-  value: string | number
-  disabled?: boolean
+  label: string;
+  value: string | number;
+  disabled?: boolean;
 }
 
-const props = withDefaults(defineProps<{
-  value: string | number
-  options: SelectOption[]
-  disabled?: boolean
-}>(), {
-  disabled: false,
-})
+const props = withDefaults(
+  defineProps<{
+    value: string | number;
+    options: SelectOption[];
+    disabled?: boolean;
+  }>(),
+  {
+    disabled: false,
+  }
+)
 
 const showLabel = computed(() => {
-  return props.options.find(item => item.value === props.value)?.label || props.value
+  return (
+    props.options.find((item) => item.value === props.value)?.label ||
+    props.value
+  )
 })
 
 const emit = defineEmits<{
-  (event: 'update:value', payload: string | number): void
+  (event: 'update:value', payload: string | number): void;
 }>()
 
 const popoverVisible = ref(false)
@@ -102,7 +111,7 @@ const handleSelect = (option: SelectOption) => {
   height: 32px;
   padding-right: 32px;
   border-radius: $borderRadius;
-  transition: border-color .25s;
+  transition: border-color 0.25s;
   font-size: 13px;
   user-select: none;
   background-color: #fff;
@@ -150,11 +159,11 @@ const handleSelect = (option: SelectOption) => {
     cursor: default;
   }
   &:not(.disabled, .selected):hover {
-    background-color: rgba($color: #666, $alpha: .05);
+    background-color: rgba($color: #666, $alpha: 0.05);
   }
 
   &.selected {
-    background-color: rgba($color: $themeColor, $alpha: .05);
+    background-color: rgba($color: $themeColor, $alpha: 0.05);
   }
 }
 .icon {

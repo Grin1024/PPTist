@@ -6,12 +6,15 @@
 import { computed } from 'vue'
 import type { OperateResizeHandlers } from '@/types/edit'
 
-const props = withDefaults(defineProps<{
-  type?: OperateResizeHandlers
-  rotate?: number
-}>(), {
-  rotate: 0,
-})
+const props = withDefaults(
+  defineProps<{
+    type?: OperateResizeHandlers;
+    rotate?: number;
+  }>(),
+  {
+    rotate: 0,
+  }
+)
 
 const rotateClassName = computed(() => {
   const prefix = 'rotate-'

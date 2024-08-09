@@ -18,10 +18,14 @@ export default () => {
 
     let newElementList: PPTElement[] = []
     if (activeGroupElementId.value) {
-      newElementList = currentSlide.value.elements.filter(el => el.id !== activeGroupElementId.value)
+      newElementList = currentSlide.value.elements.filter(
+        (el) => el.id !== activeGroupElementId.value
+      )
     }
     else {
-      newElementList = currentSlide.value.elements.filter(el => !activeElementIdList.value.includes(el.id))
+      newElementList = currentSlide.value.elements.filter(
+        (el) => !activeElementIdList.value.includes(el.id)
+      )
     }
 
     mainStore.setActiveElementIdList([])

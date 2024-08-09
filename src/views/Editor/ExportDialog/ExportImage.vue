@@ -2,39 +2,37 @@
   <div class="export-img-dialog">
     <div class="thumbnails-view">
       <div class="thumbnails" ref="imageThumbnailsRef">
-        <ThumbnailSlide 
-          class="thumbnail" 
-          v-for="slide in renderSlides" 
-          :key="slide.id" 
-          :slide="slide" 
-          :size="1600" 
+        <ThumbnailSlide
+          class="thumbnail"
+          v-for="slide in renderSlides"
+          :key="slide.id"
+          :slide="slide"
+          :size="1600"
         />
       </div>
     </div>
     <div class="configs">
       <div class="row">
         <div class="title">导出格式：</div>
-        <RadioGroup
-          class="config-item"
-          v-model:value="format"
-        >
-          <RadioButton style="width: 50%;" value="jpeg">JPEG</RadioButton>
-          <RadioButton style="width: 50%;" value="png">PNG</RadioButton>
+        <RadioGroup class="config-item" v-model:value="format">
+          <RadioButton style="width: 50%" value="jpeg">JPEG</RadioButton>
+          <RadioButton style="width: 50%" value="png">PNG</RadioButton>
         </RadioGroup>
       </div>
       <div class="row">
         <div class="title">导出范围：</div>
-        <RadioGroup
-          class="config-item"
-          v-model:value="rangeType"
-        >
-          <RadioButton style="width: 33.33%;" value="all">全部</RadioButton>
-          <RadioButton style="width: 33.33%;" value="current">当前页</RadioButton>
-          <RadioButton style="width: 33.33%;" value="custom">自定义</RadioButton>
+        <RadioGroup class="config-item" v-model:value="rangeType">
+          <RadioButton style="width: 33.33%" value="all">全部</RadioButton>
+          <RadioButton style="width: 33.33%" value="current"
+            >当前页</RadioButton
+          >
+          <RadioButton style="width: 33.33%" value="custom">自定义</RadioButton>
         </RadioGroup>
       </div>
       <div class="row" v-if="rangeType === 'custom'">
-        <div class="title" :data-range="`（${range[0]} ~ ${range[1]}）`">自定义范围：</div>
+        <div class="title" :data-range="`（${range[0]} ~ ${range[1]}）`">
+          自定义范围：
+        </div>
         <Slider
           class="config-item"
           range
@@ -59,13 +57,20 @@
       <div class="row">
         <div class="title">忽略在线字体：</div>
         <div class="config-item">
-          <Switch v-model:value="ignoreWebfont" v-tooltip="'导出时默认忽略在线字体，若您在幻灯片中使用了在线字体，且希望导出后保留相关样式，可选择关闭【忽略在线字体】选项，但要注意这将会增加导出用时。'" />
+          <Switch
+            v-model:value="ignoreWebfont"
+            v-tooltip="
+              '导出时默认忽略在线字体，若您在幻灯片中使用了在线字体，且希望导出后保留相关样式，可选择关闭【忽略在线字体】选项，但要注意这将会增加导出用时。'
+            "
+          />
         </div>
       </div>
     </div>
 
     <div class="btns">
-      <Button class="btn export" type="primary" @click="expImage()">导出图片</Button>
+      <Button class="btn export" type="primary" @click="expImage()"
+        >导出图片</Button
+      >
       <Button class="btn close" @click="emit('close')">关闭</Button>
     </div>
 
@@ -88,7 +93,7 @@ import RadioButton from '@/components/RadioButton.vue'
 import RadioGroup from '@/components/RadioGroup.vue'
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const { slides, currentSlide } = storeToRefs(useSlidesStore())
@@ -113,7 +118,12 @@ const { exportImage, exporting } = useExport()
 
 const expImage = () => {
   if (!imageThumbnailsRef.value) return
-  exportImage(imageThumbnailsRef.value, format.value, quality.value, ignoreWebfont.value)
+  exportImage(
+    imageThumbnailsRef.value,
+    format.value,
+    quality.value,
+    ignoreWebfont.value
+  )
 }
 </script>
 
@@ -131,7 +141,7 @@ const expImage = () => {
   @include absolute-0();
 
   &::after {
-    content: '';
+    content: "";
     background-color: #fff;
     @include absolute-0();
   }

@@ -31,7 +31,9 @@ export default (viewportRef: Ref<HTMLElement | undefined>) => {
   }
 
   // 通过鼠标框选时的起点和终点，计算线条在画布中的位置和起点终点
-  const formatCreateSelectionForLine = (selectionData: CreateElementSelectionData) => {
+  const formatCreateSelectionForLine = (
+    selectionData: CreateElementSelectionData
+  ) => {
     const { start, end } = selectionData
 
     if (!viewportRef.value) return
@@ -66,16 +68,22 @@ export default (viewportRef: Ref<HTMLElement | undefined>) => {
     }
   }
 
-  const { createTextElement, createShapeElement, createLineElement } = useCreateElement()
+  const { createTextElement, createShapeElement, createLineElement } =
+    useCreateElement()
 
   // 根据鼠标选区的位置大小插入元素
-  const insertElementFromCreateSelection = (selectionData: CreateElementSelectionData) => {
+  const insertElementFromCreateSelection = (
+    selectionData: CreateElementSelectionData
+  ) => {
     if (!creatingElement.value) return
 
     const type = creatingElement.value.type
     if (type === 'text') {
       const position = formatCreateSelection(selectionData)
-      position && createTextElement(position, { vertical: creatingElement.value.vertical })
+      position &&
+        createTextElement(position, {
+          vertical: creatingElement.value.vertical,
+        })
     }
     else if (type === 'shape') {
       const position = formatCreateSelection(selectionData)

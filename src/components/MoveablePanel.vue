@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="moveable-panel"
     ref="moveablePanelRef"
     :style="{
@@ -10,8 +10,8 @@
     }"
   >
     <template v-if="title">
-      <div class="header" @mousedown="$event => startMove($event)">
-        <div class="title">{{title}}</div>
+      <div class="header" @mousedown="($event) => startMove($event)">
+        <div class="title">{{ title }}</div>
         <div class="close-btn" @click="emit('close')"><IconClose /></div>
       </div>
 
@@ -20,43 +20,50 @@
       </div>
     </template>
 
-    <div v-else class="content" @mousedown="$event => startMove($event)">
+    <div v-else class="content" @mousedown="($event) => startMove($event)">
       <slot></slot>
     </div>
 
-    <div class="resizer" v-if="resizeable" @mousedown="$event => startResize($event)"></div>
+    <div
+      class="resizer"
+      v-if="resizeable"
+      @mousedown="($event) => startResize($event)"
+    ></div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 
-const props = withDefaults(defineProps<{
-  width: number
-  height: number
-  minWidth?: number
-  minHeight?: number
-  maxWidth?: number
-  maxHeight?: number
-  left?: number
-  top?: number
-  title?: string
-  moveable?: boolean
-  resizeable?: boolean
-}>(), {
-  minWidth: 20,
-  minHeight: 20,
-  maxWidth: 500,
-  maxHeight: 500,
-  left: 10,
-  top: 10,
-  title: '',
-  moveable: true,
-  resizeable: false,
-})
+const props = withDefaults(
+  defineProps<{
+    width: number;
+    height: number;
+    minWidth?: number;
+    minHeight?: number;
+    maxWidth?: number;
+    maxHeight?: number;
+    left?: number;
+    top?: number;
+    title?: string;
+    moveable?: boolean;
+    resizeable?: boolean;
+  }>(),
+  {
+    minWidth: 20,
+    minHeight: 20,
+    maxWidth: 500,
+    maxHeight: 500,
+    left: 10,
+    top: 10,
+    title: '',
+    moveable: true,
+    resizeable: false,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const x = ref(0)
@@ -96,7 +103,7 @@ const startMove = (e: MouseEvent) => {
   const originLeft = x.value
   const originTop = y.value
 
-  document.onmousemove = e => {
+  document.onmousemove = (e) => {
     if (!isMouseDown) return
 
     const moveX = e.pageX - startPageX
@@ -108,7 +115,9 @@ const startMove = (e: MouseEvent) => {
     if (left < 0) left = 0
     if (top < 0) top = 0
     if (left + w.value > windowWidth) left = windowWidth - w.value
-    if (top + realHeight.value > clientHeight) top = clientHeight - realHeight.value
+    if (top + realHeight.value > clientHeight) {
+      top = clientHeight - realHeight.value
+    }
 
     x.value = left
     y.value = top
@@ -132,7 +141,7 @@ const startResize = (e: MouseEvent) => {
   const originWidth = w.value
   const originHeight = h.value
 
-  document.onmousemove = e => {
+  document.onmousemove = (e) => {
     if (!isMouseDown) return
 
     const moveX = e.pageX - startPageX
@@ -162,7 +171,7 @@ const startResize = (e: MouseEvent) => {
 .moveable-panel {
   position: fixed;
   background-color: #fff;
-  box-shadow: 0 2px 12px 0 rgba(56, 56, 56, .15);
+  box-shadow: 0 2px 12px 0 rgba(56, 56, 56, 0.15);
   border: 1px solid $borderColor;
   border-radius: $borderRadius;
   display: flex;

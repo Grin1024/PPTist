@@ -2,19 +2,21 @@
   <div class="layout-pool">
     <div class="header">页面模板</div>
     <div class="list">
-      <div 
-        class="layout-item"
-        v-for="slide in layouts" 
-        :key="slide.id"
-      >
+      <div class="layout-item" v-for="slide in layouts" :key="slide.id">
         <ThumbnailSlide class="thumbnail" :slide="slide" :size="180" />
 
         <div class="btns">
-          <Button class="btn" type="primary" size="small" @click="insertTemplate(slide)">插入模板</Button>
+          <Button
+            class="btn"
+            type="primary"
+            size="small"
+            @click="insertTemplate(slide)"
+            >插入模板</Button
+          >
         </div>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -26,7 +28,7 @@ import ThumbnailSlide from '@/views/components/ThumbnailSlide/index.vue'
 import Button from '@/components/Button.vue'
 
 const emit = defineEmits<{
-  (event: 'select', payload: Slide): void
+  (event: 'select', payload: Slide): void;
 }>()
 
 const slidesStore = useSlidesStore()
@@ -61,7 +63,8 @@ const insertTemplate = (slide: Slide) => {
   position: relative;
   @include flex-grid-layout-children(2, 48%);
 
-  &:nth-last-child(2), &:last-child {
+  &:nth-last-child(2),
+  &:last-child {
     margin-bottom: 0;
   }
 
@@ -80,7 +83,7 @@ const insertTemplate = (slide: Slide) => {
     justify-content: center;
     align-items: center;
     display: flex;
-    background-color: rgba($color: #000, $alpha: .25);
+    background-color: rgba($color: #000, $alpha: 0.25);
     opacity: 0;
     transition: opacity $transitionDelay;
   }

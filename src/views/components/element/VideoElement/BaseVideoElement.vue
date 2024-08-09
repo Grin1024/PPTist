@@ -1,5 +1,6 @@
 <template>
-  <div class="base-element-video"
+  <div
+    class="base-element-video"
     :style="{
       top: elementInfo.top + 'px',
       left: elementInfo.left + 'px',
@@ -11,7 +12,14 @@
       class="rotate-wrapper"
       :style="{ transform: `rotate(${elementInfo.rotate}deg)` }"
     >
-      <div class="element-content" :style="{ backgroundImage: elementInfo.poster ? `url(${elementInfo.poster})` : '' }">
+      <div
+        class="element-content"
+        :style="{
+          backgroundImage: elementInfo.poster
+            ? `url(${elementInfo.poster})`
+            : '',
+        }"
+      >
         <IconPlayOne class="icon" />
       </div>
     </div>
@@ -22,7 +30,7 @@
 import type { PPTVideoElement } from '@/types/slides'
 
 defineProps<{
-  elementInfo: PPTVideoElement
+  elementInfo: PPTVideoElement;
 }>()
 </script>
 

@@ -1,19 +1,19 @@
 <template>
-  <div 
+  <div
     class="shape-create-canvas"
     ref="shapeCanvasRef"
-    @mousedown.stop="$event => addPoint($event)"
-    @mousemove="$event => updateMousePosition($event)"
+    @mousedown.stop="($event) => addPoint($event)"
+    @mousemove="($event) => updateMousePosition($event)"
     @contextmenu.stop.prevent="close()"
   >
     <svg overflow="visible">
-			<path
-        :d="path" 
-        stroke="#d14424" 
-        :fill="closed ? 'rgba(226, 83, 77, 0.15)' : 'none'" 
-        stroke-width="2" 
+      <path
+        :d="path"
+        stroke="#d14424"
+        :fill="closed ? 'rgba(226, 83, 77, 0.15)' : 'none'"
+        stroke-width="2"
       ></path>
-		</svg>
+    </svg>
   </div>
 </template>
 
@@ -26,7 +26,7 @@ import { KEYS } from '@/configs/hotkey'
 import message from '@/utils/message'
 
 const emit = defineEmits<{
-  (event: 'created', payload: CreateCustomShapeData): void
+  (event: 'created', payload: CreateCustomShapeData): void;
 }>()
 const mainStore = useMainStore()
 const { ctrlOrShiftKeyActive } = storeToRefs(useKeyboardStore())
@@ -77,7 +77,10 @@ const updateMousePosition = (e: MouseEvent) => {
 
   if (points.value.length >= 2) {
     const [firstPointX, firstPointY] = points.value[0]
-    if (Math.abs(firstPointX - pageX) < 5 && Math.abs(firstPointY - pageY) < 5) {
+    if (
+      Math.abs(firstPointX - pageX) < 5 &&
+      Math.abs(firstPointY - pageY) < 5
+    ) {
       closed.value = true
     }
     else closed.value = false
@@ -99,14 +102,14 @@ const path = computed(() => {
 })
 
 const getCreateData = (close = true) => {
-  const xList = points.value.map(item => item[0])
-  const yList = points.value.map(item => item[1])
+  const xList = points.value.map((item) => item[0])
+  const yList = points.value.map((item) => item[1])
   const minX = Math.min(...xList)
   const minY = Math.min(...yList)
   const maxX = Math.max(...xList)
   const maxY = Math.max(...yList)
 
-  const formatedPoints = points.value.map(point => {
+  const formatedPoints = points.value.map((point) => {
     return [point[0] - minX, point[1] - minY]
   })
 
@@ -118,7 +121,10 @@ const getCreateData = (close = true) => {
   }
   if (close) path += 'Z'
 
-  const start: [number, number] = [minX + offset.value.x, minY + offset.value.y]
+  const start: [number, number] = [
+    minX + offset.value.x,
+    minY + offset.value.y,
+  ]
   const end: [number, number] = [maxX + offset.value.x, maxY + offset.value.y]
   const viewBox: [number, number] = [maxX - minX, maxY - minY]
 
@@ -165,9 +171,12 @@ const keydownListener = (e: KeyboardEvent) => {
   if (key === KEYS.ENTER) create()
 }
 onMounted(() => {
-  message.success('点击绘制任意形状，首尾闭合完成绘制，按 ESC 键或鼠标右键取消，按 ENTER 键提前完成', {
-    duration: 0,
-  })
+  message.success(
+    '点击绘制任意形状，首尾闭合完成绘制，按 ESC 键或鼠标右键取消，按 ENTER 键提前完成',
+    {
+      duration: 0,
+    }
+  )
   document.addEventListener('keydown', keydownListener)
 })
 onUnmounted(() => {

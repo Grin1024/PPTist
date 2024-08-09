@@ -1,6 +1,7 @@
 // svg转base64图片，参考：https://github.com/scriptex/svg64
 
-const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+const characters =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
 const PREFIX = 'data:image/svg+xml;base64,'
 
 const utf8Encode = (string: string) => {
@@ -42,7 +43,12 @@ const encode = (input: string) => {
     enc4 = chr3 & 63
     if (isNaN(chr2)) enc3 = enc4 = 64
     else if (isNaN(chr3)) enc4 = 64
-    output = output + characters.charAt(enc1) + characters.charAt(enc2) + characters.charAt(enc3) + characters.charAt(enc4)
+    output =
+      output +
+      characters.charAt(enc1) +
+      characters.charAt(enc2) +
+      characters.charAt(enc3) +
+      characters.charAt(enc4)
   }
   return output
 }

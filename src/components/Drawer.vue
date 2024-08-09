@@ -1,13 +1,20 @@
 <template>
   <Teleport to="body">
-    <Transition :name="`drawer-slide-${placement}`"
+    <Transition
+      :name="`drawer-slide-${placement}`"
       @afterLeave="contentVisible = false"
       @before-enter="contentVisible = true"
     >
-      <div :class="['drawer', placement]" v-show="visible" :style="{ width: props.width + 'px' }">
+      <div
+        :class="['drawer', placement]"
+        v-show="visible"
+        :style="{ width: props.width + 'px' }"
+      >
         <div class="header">
           <slot name="title"></slot>
-          <span class="close-btn" @click="emit('update:visible', false)"><IconClose /></span>
+          <span class="close-btn" @click="emit('update:visible', false)"
+            ><IconClose
+          /></span>
         </div>
         <div class="content" v-if="contentVisible" :style="contentStyle">
           <slot></slot>
@@ -20,18 +27,21 @@
 <script lang="ts" setup>
 import { computed, ref, type CSSProperties } from 'vue'
 
-const props = withDefaults(defineProps<{
-  visible: boolean
-  width?: number
-  contentStyle?: CSSProperties
-  placement?: 'left' | 'right'
-}>(), {
-  width: 320,
-  placement: 'right',
-})
+const props = withDefaults(
+  defineProps<{
+    visible: boolean;
+    width?: number;
+    contentStyle?: CSSProperties;
+    placement?: 'left' | 'right';
+  }>(),
+  {
+    width: 320,
+    placement: 'right',
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:visible', payload: boolean): void
+  (event: 'update:visible', payload: boolean): void;
 }>()
 
 const contentVisible = ref(false)
@@ -39,7 +49,7 @@ const contentVisible = ref(false)
 const contentStyle = computed(() => {
   return {
     width: props.width + 'px',
-    ...(props.contentStyle || {})
+    ...(props.contentStyle || {}),
   }
 })
 </script>
@@ -57,11 +67,13 @@ const contentStyle = computed(() => {
 
   &.left {
     left: 0;
-    box-shadow: 3px 0 6px -4px rgba(0, 0, 0, 0.12), 9px 0 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 3px 0 6px -4px rgba(0, 0, 0, 0.12),
+      9px 0 28px 8px rgba(0, 0, 0, 0.05);
   }
   &.right {
     right: 0;
-    box-shadow: -3px 0 6px -4px rgba(0, 0, 0, 0.12), -9px 0 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: -3px 0 6px -4px rgba(0, 0, 0, 0.12),
+      -9px 0 28px 8px rgba(0, 0, 0, 0.05);
   }
 }
 
@@ -91,16 +103,16 @@ const contentStyle = computed(() => {
 }
 
 .drawer-slide-right-enter-active {
-  animation: drawer-slide-right-enter .25s both ease;
+  animation: drawer-slide-right-enter 0.25s both ease;
 }
 .drawer-slide-right-leave-active {
-  animation: drawer-slide-right-leave .25s both ease;
+  animation: drawer-slide-right-leave 0.25s both ease;
 }
 .drawer-slide-left-enter-active {
-  animation: drawer-slide-left-enter .25s both ease;
+  animation: drawer-slide-left-enter 0.25s both ease;
 }
 .drawer-slide-left-leave-active {
-  animation: drawer-slide-left-leave .25s both ease;
+  animation: drawer-slide-left-leave 0.25s both ease;
 }
 
 @keyframes drawer-slide-right-enter {

@@ -9,21 +9,34 @@ export default () => {
 
   const toggleHideElement = (id: string) => {
     if (hiddenElementIdList.value.includes(id)) {
-      mainStore.setHiddenElementIdList(hiddenElementIdList.value.filter(item => item !== id))
+      mainStore.setHiddenElementIdList(
+        hiddenElementIdList.value.filter((item) => item !== id)
+      )
     }
     else mainStore.setHiddenElementIdList([...hiddenElementIdList.value, id])
-  
-    if (activeElementIdList.value.includes(id)) mainStore.setActiveElementIdList([])
+
+    if (activeElementIdList.value.includes(id)) {
+      mainStore.setActiveElementIdList([])
+    }
   }
-  
+
   const showAllElements = () => {
-    const currentSlideElIdList = currentSlide.value.elements.map(item => item.id)
-    const needHiddenElementIdList = hiddenElementIdList.value.filter(item => !currentSlideElIdList.includes(item))
+    const currentSlideElIdList = currentSlide.value.elements.map(
+      (item) => item.id
+    )
+    const needHiddenElementIdList = hiddenElementIdList.value.filter(
+      (item) => !currentSlideElIdList.includes(item)
+    )
     mainStore.setHiddenElementIdList(needHiddenElementIdList)
   }
   const hideAllElements = () => {
-    const currentSlideElIdList = currentSlide.value.elements.map(item => item.id)
-    mainStore.setHiddenElementIdList([...hiddenElementIdList.value, ...currentSlideElIdList])
+    const currentSlideElIdList = currentSlide.value.elements.map(
+      (item) => item.id
+    )
+    mainStore.setHiddenElementIdList([
+      ...hiddenElementIdList.value,
+      ...currentSlideElIdList,
+    ])
     if (activeElementIdList.value.length) mainStore.setActiveElementIdList([])
   }
 

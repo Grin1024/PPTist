@@ -1,26 +1,28 @@
 <template>
-  <div class="image-element-operate" :class="{ 'cliping': isCliping }">
-    <BorderLine 
+  <div class="image-element-operate" :class="{ cliping: isCliping }">
+    <BorderLine
       class="operate-border-line"
-      v-for="line in borderLines" 
-      :key="line.type" 
-      :type="line.type" 
+      v-for="line in borderLines"
+      :key="line.type"
+      :type="line.type"
       :style="line.style"
     />
     <template v-if="handlerVisible">
       <ResizeHandler
-        class="operate-resize-handler" 
+        class="operate-resize-handler"
         v-for="point in resizeHandlers"
         :key="point.direction"
         :type="point.direction"
         :rotate="elementInfo.rotate"
         :style="point.style"
-        @mousedown.stop="$event => scaleElement($event, elementInfo, point.direction)"
+        @mousedown.stop="
+          ($event) => scaleElement($event, elementInfo, point.direction)
+        "
       />
       <RotateHandler
-        class="operate-rotate-handler" 
+        class="operate-rotate-handler"
         :style="{ left: scaleWidth / 2 + 'px' }"
-        @mousedown.stop="$event => rotateElement($event, elementInfo)"
+        @mousedown.stop="($event) => rotateElement($event, elementInfo)"
       />
     </template>
   </div>
@@ -45,19 +47,30 @@ import ResizeHandler from './ResizeHandler.vue'
 import BorderLine from './BorderLine.vue'
 
 const props = defineProps<{
-  elementInfo: PPTImageElement
-  handlerVisible: boolean
-  rotateElement: (e: MouseEvent, element: PPTImageElement) => void
-  scaleElement: (e: MouseEvent, element: PPTImageElement, command: OperateResizeHandlers) => void
+  elementInfo: PPTImageElement;
+  handlerVisible: boolean;
+  rotateElement: (e: MouseEvent, element: PPTImageElement) => void;
+  scaleElement: (
+    e: MouseEvent,
+    element: PPTImageElement,
+    command: OperateResizeHandlers
+  ) => void;
 }>()
 
 const { canvasScale, clipingImageElementId } = storeToRefs(useMainStore())
 
-const isCliping = computed(() => clipingImageElementId.value === props.elementInfo.id)
+const isCliping = computed(
+  () => clipingImageElementId.value === props.elementInfo.id
+)
 
 const scaleWidth = computed(() => props.elementInfo.width * canvasScale.value)
-const scaleHeight = computed(() => props.elementInfo.height * canvasScale.value)
-const { resizeHandlers, borderLines } = useCommonOperate(scaleWidth, scaleHeight)
+const scaleHeight = computed(
+  () => props.elementInfo.height * canvasScale.value
+)
+const { resizeHandlers, borderLines } = useCommonOperate(
+  scaleWidth,
+  scaleHeight
+)
 </script>
 
 <style lang="scss" scoped>

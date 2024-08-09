@@ -1,6 +1,12 @@
 import type { Ref } from 'vue'
 import { useSlidesStore } from '@/store'
-import type { PPTElement, PPTLineElement, PPTVideoElement, PPTAudioElement, PPTChartElement } from '@/types/slides'
+import type {
+  PPTElement,
+  PPTLineElement,
+  PPTVideoElement,
+  PPTAudioElement,
+  PPTChartElement,
+} from '@/types/slides'
 import useHistorySnapshot from '@/hooks/useHistorySnapshot'
 
 /**
@@ -10,24 +16,30 @@ import useHistorySnapshot from '@/hooks/useHistorySnapshot'
  */
 const getAngleFromCoordinate = (x: number, y: number) => {
   const radian = Math.atan2(x, y)
-  const angle = 180 / Math.PI * radian
+  const angle = (180 / Math.PI) * radian
   return angle
 }
 
 export default (
   elementList: Ref<PPTElement[]>,
   viewportRef: Ref<HTMLElement | undefined>,
-  canvasScale: Ref<number>,
+  canvasScale: Ref<number>
 ) => {
   const slidesStore = useSlidesStore()
 
   const { addHistorySnapshot } = useHistorySnapshot()
 
   // 旋转元素
-  const rotateElement = (e: MouseEvent | TouchEvent, element: Exclude<PPTElement, PPTChartElement | PPTLineElement | PPTVideoElement | PPTAudioElement>) => {
+  const rotateElement = (
+    e: MouseEvent | TouchEvent,
+    element: Exclude<
+      PPTElement,
+      PPTChartElement | PPTLineElement | PPTVideoElement | PPTAudioElement
+    >
+  ) => {
     const isTouchEvent = !(e instanceof MouseEvent)
     if (isTouchEvent && (!e.changedTouches || !e.changedTouches[0])) return
-  
+
     let isMouseDown = true
     let angle = 0
     const elOriginRotate = element.rotate || 0
@@ -47,9 +59,11 @@ export default (
     const handleMousemove = (e: MouseEvent | TouchEvent) => {
       if (!isMouseDown) return
 
-      const currentPageX = e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
-      const currentPageY = e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
-      
+      const currentPageX =
+        e instanceof MouseEvent ? e.pageX : e.changedTouches[0].pageX
+      const currentPageY =
+        e instanceof MouseEvent ? e.pageY : e.changedTouches[0].pageY
+
       // 计算当前鼠标位置相对元素中心点连线的角度（弧度）
       const mouseX = (currentPageX - viewportRect.left) / canvasScale.value
       const mouseY = (currentPageY - viewportRect.top) / canvasScale.value
@@ -60,17 +74,35 @@ export default (
 
       // 靠近45倍数的角度时有吸附效果
       const sorptionRange = 5
-      if ( Math.abs(angle) <= sorptionRange ) angle = 0
-      else if ( angle > 0 && Math.abs(angle - 45) <= sorptionRange ) angle -= (angle - 45)
-      else if ( angle < 0 && Math.abs(angle + 45) <= sorptionRange ) angle -= (angle + 45)
-      else if ( angle > 0 && Math.abs(angle - 90) <= sorptionRange ) angle -= (angle - 90)
-      else if ( angle < 0 && Math.abs(angle + 90) <= sorptionRange ) angle -= (angle + 90)
-      else if ( angle > 0 && Math.abs(angle - 135) <= sorptionRange ) angle -= (angle - 135)
-      else if ( angle < 0 && Math.abs(angle + 135) <= sorptionRange ) angle -= (angle + 135)
-      else if ( angle > 0 && Math.abs(angle - 180) <= sorptionRange ) angle -= (angle - 180)
-      else if ( angle < 0 && Math.abs(angle + 180) <= sorptionRange ) angle -= (angle + 180)
+      if (Math.abs(angle) <= sorptionRange) angle = 0
+      else if (angle > 0 && Math.abs(angle - 45) <= sorptionRange) {
+        angle -= angle - 45
+      }
+      else if (angle < 0 && Math.abs(angle + 45) <= sorptionRange) {
+        angle -= angle + 45
+      }
+      else if (angle > 0 && Math.abs(angle - 90) <= sorptionRange) {
+        angle -= angle - 90
+      }
+      else if (angle < 0 && Math.abs(angle + 90) <= sorptionRange) {
+        angle -= angle + 90
+      }
+      else if (angle > 0 && Math.abs(angle - 135) <= sorptionRange) {
+        angle -= angle - 135
+      }
+      else if (angle < 0 && Math.abs(angle + 135) <= sorptionRange) {
+        angle -= angle + 135
+      }
+      else if (angle > 0 && Math.abs(angle - 180) <= sorptionRange) {
+        angle -= angle - 180
+      }
+      else if (angle < 0 && Math.abs(angle + 180) <= sorptionRange) {
+        angle -= angle + 180
+      }
 
-      elementList.value = elementList.value.map(el => element.id === el.id ? { ...el, rotate: angle } : el)
+      elementList.value = elementList.value.map((el) =>
+        element.id === el.id ? { ...el, rotate: angle } : el
+      )
     }
 
     const handleMouseup = () => {

@@ -1,15 +1,15 @@
 <template>
   <div class="mobile-editor">
     <Header :changeMode="changeMode" />
-    
+
     <div class="content" ref="contentRef" @touchstart="handleClickBlankArea()">
       <div class="viewport-wrapper" :style="viewportStyles">
         <div class="background" :style="backgroundStyle"></div>
-        <AlignmentLine 
-          v-for="(line, index) in alignmentLines" 
-          :key="index" 
-          :type="line.type" 
-          :axis="line.axis" 
+        <AlignmentLine
+          v-for="(line, index) in alignmentLines"
+          :key="index"
+          :type="line.type"
+          :axis="line.axis"
           :length="line.length"
           :canvasScale="canvasScale"
         />
@@ -23,9 +23,13 @@
             :rotateElement="rotateElement"
           />
         </template>
-        <div class="viewport" ref="viewportRef" :style="{ transform: `scale(${canvasScale})` }">
-          <MobileEditableElement 
-            v-for="(element, index) in elementList" 
+        <div
+          class="viewport"
+          ref="viewportRef"
+          :style="{ transform: `scale(${canvasScale})` }"
+        >
+          <MobileEditableElement
+            v-for="(element, index) in elementList"
             :key="element.id"
             :elementInfo="element"
             :elementIndex="index + 1"
@@ -61,7 +65,7 @@ import ElementToolbar from './ElementToolbar.vue'
 import Header from './Header.vue'
 
 defineProps<{
-  changeMode: (mode: Mode) => void
+  changeMode: (mode: Mode) => void;
 }>()
 
 const slidesStore = useSlidesStore()
@@ -83,7 +87,9 @@ const canvasScale = computed(() => {
   const contentheight = contentRef.value.clientHeight
 
   const contentRatio = contentheight / contentWidth
-  if (contentRatio >= viewportRatio.value) return (contentWidth - 20) / VIEWPORT_SIZE
+  if (contentRatio >= viewportRatio.value) {
+    return (contentWidth - 20) / VIEWPORT_SIZE
+  }
   return (contentheight - 20) / viewportRatio.value / VIEWPORT_SIZE
 })
 
@@ -99,15 +105,33 @@ const viewportStyles = computed(() => ({
 
 const elementList = ref<PPTElement[]>([])
 const setLocalElementList = () => {
-  elementList.value = currentSlide.value ? JSON.parse(JSON.stringify(currentSlide.value.elements)) : []
+  elementList.value = currentSlide.value
+    ? JSON.parse(JSON.stringify(currentSlide.value.elements))
+    : []
 }
 watchEffect(setLocalElementList)
 
-const { dragElement } = useDragElement(elementList, alignmentLines, canvasScale)
-const { scaleElement } = useScaleElement(elementList, alignmentLines, canvasScale)
-const { rotateElement } = useRotateElement(elementList, viewportRef, canvasScale)
+const { dragElement } = useDragElement(
+  elementList,
+  alignmentLines,
+  canvasScale
+)
+const { scaleElement } = useScaleElement(
+  elementList,
+  alignmentLines,
+  canvasScale
+)
+const { rotateElement } = useRotateElement(
+  elementList,
+  viewportRef,
+  canvasScale
+)
 
-const selectElement = (e: TouchEvent, element: PPTElement, startMove = true) => {
+const selectElement = (
+  e: TouchEvent,
+  element: PPTElement,
+  startMove = true
+) => {
   if (!activeElementIdList.value.includes(element.id)) {
     mainStore.setActiveElementIdList([element.id])
     mainStore.setHandleElementId(element.id)

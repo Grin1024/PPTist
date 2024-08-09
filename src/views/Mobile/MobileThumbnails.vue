@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-thumbnails">
-    <Draggable 
+    <Draggable
       class="thumbnail-list"
       :modelValue="slides"
       :animation="200"
@@ -14,11 +14,16 @@
       <template #item="{ element, index }">
         <div
           class="thumbnail-item"
-          :class="{ 'active': slideIndex === index }"
+          :class="{ active: slideIndex === index }"
           @click="changeSlideIndex(index)"
         >
           <div class="label">{{ index + 1 }}</div>
-          <ThumbnailSlide class="thumbnail" :slide="element" :size="120" :visible="index < slidesLoadLimit" />
+          <ThumbnailSlide
+            class="thumbnail"
+            :slide="element"
+            :size="120"
+            :visible="index < slidesLoadLimit"
+          />
         </div>
       </template>
     </Draggable>
@@ -47,7 +52,9 @@ const changeSlideIndex = (index: number) => {
 // 拖拽调整顺序后进行数据的同步
 const handleDragEnd = (eventData: { newIndex: number; oldIndex: number }) => {
   const { newIndex, oldIndex } = eventData
-  if (newIndex === undefined || oldIndex === undefined || newIndex === oldIndex) return
+  if (newIndex === undefined || oldIndex === undefined || newIndex === oldIndex) {
+    return
+  }
   sortSlides(newIndex, oldIndex)
 }
 </script>

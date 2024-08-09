@@ -1,15 +1,16 @@
 <template>
   <div class="writing-board-tool">
-    <div class="writing-board-wrap"
+    <div
+      class="writing-board-wrap"
       :style="{
         width: slideWidth + 'px',
         height: slideHeight + 'px',
       }"
     >
-      <WritingBoard 
-        ref="writingBoardRef" 
-        :color="writingBoardColor" 
-        :blackboard="blackboard" 
+      <WritingBoard
+        ref="writingBoardRef"
+        :color="writingBoardColor"
+        :blackboard="blackboard"
         :model="writingBoardModel"
         :penSize="penSize"
         :markSize="markSize"
@@ -18,11 +19,11 @@
       />
     </div>
 
-    <MoveablePanel 
-      class="tools-panel" 
-      :width="520" 
+    <MoveablePanel
+      class="tools-panel"
+      :width="520"
       :height="50"
-      :left="left" 
+      :left="left"
       :top="top"
       :moveable="sizePopoverType === ''"
     >
@@ -32,10 +33,21 @@
             <template #content>
               <div class="size">
                 <div class="label">墨迹粗细：</div>
-                <Slider class="size-slider" :min="4" :max="10" :step="2" v-model:value="penSize" />
+                <Slider
+                  class="size-slider"
+                  :min="4"
+                  :max="10"
+                  :step="2"
+                  v-model:value="penSize"
+                />
               </div>
             </template>
-            <div class="btn" :class="{ 'active': writingBoardModel === 'pen' }" v-tooltip="'画笔'" @click="changeModel('pen')">
+            <div
+              class="btn"
+              :class="{ active: writingBoardModel === 'pen' }"
+              v-tooltip="'画笔'"
+              @click="changeModel('pen')"
+            >
               <IconWrite class="icon" />
             </div>
           </Popover>
@@ -43,10 +55,21 @@
             <template #content>
               <div class="size">
                 <div class="label">墨迹粗细：</div>
-                <Slider class="size-slider" :min="16" :max="40" :step="4" v-model:value="markSize" />
+                <Slider
+                  class="size-slider"
+                  :min="16"
+                  :max="40"
+                  :step="4"
+                  v-model:value="markSize"
+                />
               </div>
             </template>
-            <div class="btn" :class="{ 'active': writingBoardModel === 'mark' }" v-tooltip="'荧光笔'" @click="changeModel('mark')">
+            <div
+              class="btn"
+              :class="{ active: writingBoardModel === 'mark' }"
+              v-tooltip="'荧光笔'"
+              @click="changeModel('mark')"
+            >
               <IconHighLight class="icon" />
             </div>
           </Popover>
@@ -54,23 +77,39 @@
             <template #content>
               <div class="size">
                 <div class="label">橡皮大小：</div>
-                <Slider class="size-slider" :min="20" :max="200" :step="20" v-model:value="rubberSize" />
+                <Slider
+                  class="size-slider"
+                  :min="20"
+                  :max="200"
+                  :step="20"
+                  v-model:value="rubberSize"
+                />
               </div>
             </template>
-            <div class="btn" :class="{ 'active': writingBoardModel === 'eraser' }" v-tooltip="'橡皮擦'" @click="changeModel('eraser')">
+            <div
+              class="btn"
+              :class="{ active: writingBoardModel === 'eraser' }"
+              v-tooltip="'橡皮擦'"
+              @click="changeModel('eraser')"
+            >
               <IconErase class="icon" />
             </div>
           </Popover>
           <div class="btn" v-tooltip="'清除墨迹'" @click="clearCanvas()">
             <IconClear class="icon" />
           </div>
-          <div class="btn" :class="{ 'active': blackboard }" v-tooltip="'黑板'" @click="blackboard = !blackboard">
+          <div
+            class="btn"
+            :class="{ active: blackboard }"
+            v-tooltip="'黑板'"
+            @click="blackboard = !blackboard"
+          >
             <IconFill class="icon" />
           </div>
           <div class="colors">
-            <div 
-              class="color" 
-              :class="{ 'active': color === writingBoardColor }"
+            <div
+              class="color"
+              :class="{ active: color === writingBoardColor }"
               v-for="color in writingBoardColors"
               :key="color"
               :style="{ backgroundColor: color }"
@@ -97,22 +136,36 @@ import MoveablePanel from '@/components/MoveablePanel.vue'
 import Slider from '@/components/Slider.vue'
 import Popover from '@/components/Popover.vue'
 
-const writingBoardColors = ['#000000', '#ffffff', '#1e497b', '#4e81bb', '#e2534d', '#9aba60', '#8165a0', '#47acc5', '#f9974c', '#ffff3a']
+const writingBoardColors = [
+  '#000000',
+  '#ffffff',
+  '#1e497b',
+  '#4e81bb',
+  '#e2534d',
+  '#9aba60',
+  '#8165a0',
+  '#47acc5',
+  '#f9974c',
+  '#ffff3a',
+]
 
-type WritingBoardModel = 'pen' | 'mark' | 'eraser'
+type WritingBoardModel = 'pen' | 'mark' | 'eraser';
 
-withDefaults(defineProps<{
-  slideWidth: number
-  slideHeight: number
-  left?: number
-  top?: number
-}>(), {
-  left: -5,
-  top: -5,
-})
+withDefaults(
+  defineProps<{
+    slideWidth: number;
+    slideHeight: number;
+    left?: number;
+    top?: number;
+  }>(),
+  {
+    left: -5,
+    top: -5,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'close'): void
+  (event: 'close'): void;
 }>()
 
 const { currentSlide } = storeToRefs(useSlidesStore())
@@ -154,23 +207,35 @@ const closeWritingBoard = () => {
 }
 
 // 打开画笔工具或切换页面时，将数据库中存储的墨迹绘制到画布上
-watch(currentSlide, () => {
-  db.writingBoardImgs.where('id').equals(currentSlide.value.id).toArray().then(ret => {
-    const currentImg = ret[0]
-    writingBoardRef.value!.setImageDataURL(currentImg?.dataURL || '')
-  })
-}, { immediate: true })
+watch(
+  currentSlide,
+  () => {
+    db.writingBoardImgs
+      .where('id')
+      .equals(currentSlide.value.id)
+      .toArray()
+      .then((ret) => {
+        const currentImg = ret[0]
+        writingBoardRef.value!.setImageDataURL(currentImg?.dataURL || '')
+      })
+  },
+  { immediate: true }
+)
 
 // 每次绘制完成后将绘制完的图片更新到数据库
 const hanldeWritingEnd = () => {
   const dataURL = writingBoardRef.value!.getImageDataURL()
   if (!dataURL) return
 
-  db.writingBoardImgs.where('id').equals(currentSlide.value.id).toArray().then(ret => {
-    const currentImg = ret[0]
-    if (currentImg) db.writingBoardImgs.update(currentImg, { dataURL })
-    else db.writingBoardImgs.add({ id: currentSlide.value.id, dataURL })
-  })
+  db.writingBoardImgs
+    .where('id')
+    .equals(currentSlide.value.id)
+    .toArray()
+    .then((ret) => {
+      const currentImg = ret[0]
+      if (currentImg) db.writingBoardImgs.update(currentImg, { dataURL })
+      else db.writingBoardImgs.add({ id: currentSlide.value.id, dataURL })
+    })
 }
 </script>
 
@@ -206,7 +271,7 @@ const hanldeWritingEnd = () => {
       color: $themeColor;
     }
     &.active {
-      background-color: rgba($color: $themeColor, $alpha: .5);
+      background-color: rgba($color: $themeColor, $alpha: 0.5);
       color: #fff;
     }
   }

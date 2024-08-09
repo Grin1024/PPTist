@@ -1,23 +1,26 @@
 <template>
-  <div class="tabs"
+  <div
+    class="tabs"
     :class="{
-      'card': card,
+      card: card,
       'space-around': spaceAround,
       'space-between': spaceBetween,
-    }" 
+    }"
     :style="tabsStyle || {}"
   >
-    <div 
-      class="tab" 
-      :class="{ 'active': tab.key === value }"
-      v-for="tab in tabs" 
+    <div
+      class="tab"
+      :class="{ active: tab.key === value }"
+      v-for="tab in tabs"
       :key="tab.key"
       :style="{
         ...(tabStyle || {}),
         '--color': tab.color,
       }"
       @click="emit('update:value', tab.key)"
-    >{{tab.label}}</div>
+    >
+      {{ tab.label }}
+    </div>
   </div>
 </template>
 
@@ -25,27 +28,30 @@
 import { type CSSProperties } from 'vue'
 
 interface TabItem {
-  key: string
-  label: string
-  color?: string
+  key: string;
+  label: string;
+  color?: string;
 }
 
-withDefaults(defineProps<{
-  value: string
-  tabs: TabItem[]
-  card?: boolean
-  tabsStyle?: CSSProperties
-  tabStyle?: CSSProperties
-  spaceAround?: boolean
-  spaceBetween?: boolean
-}>(), {
-  card: false,
-  spaceAround: false,
-  spaceBetween: false,
-})
+withDefaults(
+  defineProps<{
+    value: string;
+    tabs: TabItem[];
+    card?: boolean;
+    tabsStyle?: CSSProperties;
+    tabStyle?: CSSProperties;
+    spaceAround?: boolean;
+    spaceBetween?: boolean;
+  }>(),
+  {
+    card: false,
+    spaceAround: false,
+    spaceBetween: false,
+  }
+)
 
 const emit = defineEmits<{
-  (event: 'update:value', payload: string): void
+  (event: 'update:value', payload: string): void;
 }>()
 </script>
 

@@ -1,9 +1,9 @@
 <template>
-  <div 
+  <div
     class="chart"
     :style="{ flexDirection: legend === 'top' ? 'column-reverse' : 'column' }"
   >
-    <div 
+    <div
       class="chart-content"
       ref="chartRef"
       :style="{
@@ -12,15 +12,22 @@
         transform: `scale(${1 / slideScale})`,
       }"
     ></div>
-    <div class="legends" :style="{ transform: `scale(${1 / slideScale})` }" v-if="legend">
-      <div 
-        class="legend" 
-        v-for="(legend, index) in legends" 
+    <div
+      class="legends"
+      :style="{ transform: `scale(${1 / slideScale})` }"
+      v-if="legend"
+    >
+      <div
+        class="legend"
+        v-for="(legend, index) in legends"
         :key="index"
         :style="{ color: gridColor }"
       >
-        <div class="block" :style="{ backgroundColor: themeColors[index] }"></div>
-        {{legend}}
+        <div
+          class="block"
+          :style="{ backgroundColor: themeColors[index] }"
+        ></div>
+        {{ legend }}
       </div>
     </div>
   </div>
@@ -36,15 +43,15 @@ import { injectKeySlideScale } from '@/types/injectKey'
 import 'chartist/dist/index.css'
 
 const props = defineProps<{
-  width: number
-  height: number
-  type: ChartType
-  data: ChartData
-  themeColor: string[]
-  legends: string[]
-  options?: ChartOptions
-  gridColor?: string
-  legend?: '' | 'top' | 'bottom'
+  width: number;
+  height: number;
+  type: ChartType;
+  data: ChartData;
+  themeColor: string[];
+  legends: string[];
+  options?: ChartOptions;
+  gridColor?: string;
+  legend?: '' | 'top' | 'bottom';
 }>()
 
 const chartRef = ref<HTMLElement>()
@@ -72,9 +79,15 @@ const renderChart = () => {
   if (!chartRef.value) return
 
   const options = getOptions()
-  if (props.type === 'bar') chart = new BarChart(chartRef.value, props.data, options)
-  if (props.type === 'line') chart = new LineChart(chartRef.value, props.data, options)
-  if (props.type === 'pie') chart = new PieChart(chartRef.value, getPieChartData(), options)
+  if (props.type === 'bar') {
+    chart = new BarChart(chartRef.value, props.data, options)
+  }
+  if (props.type === 'line') {
+    chart = new LineChart(chartRef.value, props.data, options)
+  }
+  if (props.type === 'pie') {
+    chart = new PieChart(chartRef.value, getPieChartData(), options)
+  }
 }
 
 const updateChart = () => {
@@ -87,23 +100,32 @@ const updateChart = () => {
   chart.update(data, options)
 }
 
-watch([
-  () => props.width,
-  () => props.height,
-  () => props.data,
-  () => props.options,
-  slideScale,
-], updateChart)
+watch(
+  [
+    () => props.width,
+    () => props.height,
+    () => props.data,
+    () => props.options,
+    slideScale,
+  ],
+  updateChart
+)
 
 onMounted(renderChart)
 
 const themeColors = computed(() => {
   let colors: string[] = []
   if (props.themeColor.length >= 10) colors = props.themeColor
-  else if (props.themeColor.length === 1) colors = tinycolor(props.themeColor[0]).analogous(10).map(color => color.toRgbString())
+  else if (props.themeColor.length === 1) {
+    colors = tinycolor(props.themeColor[0])
+      .analogous(10)
+      .map((color) => color.toRgbString())
+  }
   else {
     const len = props.themeColor.length
-    const supplement = tinycolor(props.themeColor[len - 1]).analogous(10 + 1 - len).map(color => color.toRgbString())
+    const supplement = tinycolor(props.themeColor[len - 1])
+      .analogous(10 + 1 - len)
+      .map((color) => color.toRgbString())
     colors = [...props.themeColor.slice(0, len - 1), ...supplement]
   }
   return colors
@@ -115,7 +137,10 @@ const updateTheme = () => {
   if (!chartRef.value) return
 
   for (let i = 0; i < 10; i++) {
-    chartRef.value.style.setProperty(`--theme-color-${i + 1}`, themeColors.value[i])
+    chartRef.value.style.setProperty(
+      `--theme-color-${i + 1}`,
+      themeColors.value[i]
+    )
   }
 }
 
@@ -125,7 +150,9 @@ onMounted(updateTheme)
 // 更新网格颜色，包括坐标的文字部分
 const updateGridColor = () => {
   if (!chartRef.value) return
-  if (props.gridColor) chartRef.value.style.setProperty(`--grid-color`, props.gridColor)
+  if (props.gridColor) {
+    chartRef.value.style.setProperty(`--grid-color`, props.gridColor)
+  }
 }
 
 watch(() => props.gridColor, updateGridColor)

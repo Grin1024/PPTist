@@ -2,24 +2,33 @@
   <div class="video-style-panel">
     <div class="title">视频预览封面</div>
     <div class="background-image-wrapper">
-      <FileInput @change="files => setVideoPoster(files)">
+      <FileInput @change="(files) => setVideoPoster(files)">
         <div class="background-image">
-          <div class="content" :style="{ backgroundImage: handleVideoElement.poster ? `url(${handleVideoElement.poster})` : '' }">
+          <div
+            class="content"
+            :style="{
+              backgroundImage: handleVideoElement.poster
+                ? `url(${handleVideoElement.poster})`
+                : '',
+            }"
+          >
             <IconPlus />
           </div>
         </div>
       </FileInput>
     </div>
     <div class="row">
-      <Button style="flex: 1;" @click="updateVideo({ poster: '' })">重置封面</Button>
+      <Button style="flex: 1" @click="updateVideo({ poster: '' })"
+        >重置封面</Button
+      >
     </div>
 
     <div class="row switch-row">
-      <div style="width: 40%;">自动播放：</div>
-      <div class="switch-wrapper" style="width: 60%;">
-        <Switch 
-          :value="handleVideoElement.autoplay" 
-          @update:value="value => updateVideo({ autoplay: value })" 
+      <div style="width: 40%">自动播放：</div>
+      <div class="switch-wrapper" style="width: 60%">
+        <Switch
+          :value="handleVideoElement.autoplay"
+          @update:value="(value) => updateVideo({ autoplay: value })"
         />
       </div>
     </div>
@@ -55,7 +64,9 @@ const updateVideo = (props: Partial<PPTVideoElement>) => {
 const setVideoPoster = (files: FileList) => {
   const imageFile = files[0]
   if (!imageFile) return
-  getImageDataURL(imageFile).then(dataURL => updateVideo({ poster: dataURL }))
+  getImageDataURL(imageFile).then((dataURL) =>
+    updateVideo({ poster: dataURL })
+  )
 }
 </script>
 

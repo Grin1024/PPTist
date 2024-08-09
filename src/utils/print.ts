@@ -1,7 +1,7 @@
 interface PageSize {
-  width: number
-  height: number
-  margin: number
+  width: number;
+  height: number;
+  margin: number;
 }
 
 const createIframe = () => {
@@ -18,7 +18,11 @@ const createIframe = () => {
   return iframe
 }
 
-const writeContent = (doc: Document, printNode: HTMLElement, size: PageSize) => {
+const writeContent = (
+  doc: Document,
+  printNode: HTMLElement,
+  size: PageSize
+) => {
   const docType = '<!DOCTYPE html>'
 
   let style = ''

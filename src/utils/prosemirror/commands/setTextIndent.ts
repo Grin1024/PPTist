@@ -1,11 +1,20 @@
 import type { Schema } from 'prosemirror-model'
-import { type Transaction, TextSelection, AllSelection } from 'prosemirror-state'
+import {
+  type Transaction,
+  TextSelection,
+  AllSelection,
+} from 'prosemirror-state'
 import type { EditorView } from 'prosemirror-view'
 import { isList } from '../utils'
 
-type IndentKey = 'indent' | 'textIndent'
+type IndentKey = 'indent' | 'textIndent';
 
-function setNodeIndentMarkup(tr: Transaction, pos: number, delta: number, indentKey: IndentKey): Transaction {
+function setNodeIndentMarkup(
+  tr: Transaction,
+  pos: number,
+  delta: number,
+  indentKey: IndentKey
+): Transaction {
   if (!tr.doc) return tr
 
   const node = tr.doc.nodeAt(pos)
@@ -28,11 +37,20 @@ function setNodeIndentMarkup(tr: Transaction, pos: number, delta: number, indent
   return tr.setNodeMarkup(pos, node.type, nodeAttrs, node.marks)
 }
 
-const setIndent = (tr: Transaction, schema: Schema, delta: number, indentKey: IndentKey): Transaction => {
+const setIndent = (
+  tr: Transaction,
+  schema: Schema,
+  delta: number,
+  indentKey: IndentKey
+): Transaction => {
   const { selection, doc } = tr
   if (!selection || !doc) return tr
 
-  if (!(selection instanceof TextSelection || selection instanceof AllSelection)) return tr
+  if (
+    !(selection instanceof TextSelection || selection instanceof AllSelection)
+  ) {
+    return tr
+  }
 
   const { from, to } = selection
 
@@ -42,7 +60,7 @@ const setIndent = (tr: Transaction, schema: Schema, delta: number, indentKey: In
     if (nodeType.name === 'paragraph' || nodeType.name === 'blockquote') {
       tr = setNodeIndentMarkup(tr, pos, delta, indentKey)
       return false
-    } 
+    }
     else if (isList(node, schema)) return false
     return true
   })
@@ -58,7 +76,7 @@ export const indentCommand = (view: EditorView, delta: number) => {
     state.tr.setSelection(selection),
     schema,
     delta,
-    'indent',
+    'indent'
   )
   if (tr.docChanged) {
     view.dispatch(tr)
@@ -76,7 +94,7 @@ export const textIndentCommand = (view: EditorView, delta: number) => {
     state.tr.setSelection(selection),
     schema,
     delta,
-    'textIndent',
+    'textIndent'
   )
   if (tr.docChanged) {
     view.dispatch(tr)

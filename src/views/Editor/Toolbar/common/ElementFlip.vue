@@ -1,16 +1,18 @@
 <template>
   <div class="element-flip">
     <ButtonGroup class="row">
-      <CheckboxButton 
-        style="flex: 1;"
+      <CheckboxButton
+        style="flex: 1"
         :checked="flipV"
         @click="updateFlip({ flipV: !flipV })"
-      ><IconFlipVertically /> 垂直翻转</CheckboxButton>
-      <CheckboxButton 
-        style="flex: 1;"
+        ><IconFlipVertically /> 垂直翻转</CheckboxButton
+      >
+      <CheckboxButton
+        style="flex: 1"
         :checked="flipH"
         @click="updateFlip({ flipH: !flipH })"
-      ><IconFlipHorizontally /> 水平翻转</CheckboxButton>
+        ><IconFlipHorizontally /> 水平翻转</CheckboxButton
+      >
     </ButtonGroup>
   </div>
 </template>
@@ -31,12 +33,20 @@ const { handleElement } = storeToRefs(useMainStore())
 const flipH = ref(false)
 const flipV = ref(false)
 
-watch(handleElement, () => {
-  if (handleElement.value && (handleElement.value.type === 'image' || handleElement.value.type === 'shape')) {
-    flipH.value = !!handleElement.value.flipH
-    flipV.value = !!handleElement.value.flipV
-  }
-}, { deep: true, immediate: true })
+watch(
+  handleElement,
+  () => {
+    if (
+      handleElement.value &&
+      (handleElement.value.type === 'image' ||
+        handleElement.value.type === 'shape')
+    ) {
+      flipH.value = !!handleElement.value.flipH
+      flipV.value = !!handleElement.value.flipV
+    }
+  },
+  { deep: true, immediate: true }
+)
 
 const { addHistorySnapshot } = useHistorySnapshot()
 

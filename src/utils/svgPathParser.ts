@@ -3,82 +3,92 @@ import { SVGPathData } from 'svg-pathdata'
 import arcToBezier from 'svg-arc-to-cubic-bezier'
 
 type CommandM = {
-  relative: boolean
-  type: typeof SVGPathData.MOVE_TO
-  x: number
-  y: number
-}
+  relative: boolean;
+  type: typeof SVGPathData.MOVE_TO;
+  x: number;
+  y: number;
+};
 type CommandL = {
-  relative: boolean
-  type: typeof SVGPathData.LINE_TO
-  x: number
-  y: number
-}
+  relative: boolean;
+  type: typeof SVGPathData.LINE_TO;
+  x: number;
+  y: number;
+};
 type CommandH = {
-  relative: boolean
-  type: typeof SVGPathData.HORIZ_LINE_TO
-  x: number
-}
+  relative: boolean;
+  type: typeof SVGPathData.HORIZ_LINE_TO;
+  x: number;
+};
 type CommandV = {
-  relative: boolean
-  type: typeof SVGPathData.VERT_LINE_TO
-  y: number
-}
+  relative: boolean;
+  type: typeof SVGPathData.VERT_LINE_TO;
+  y: number;
+};
 type CommandZ = {
-  type: typeof SVGPathData.CLOSE_PATH
-}
+  type: typeof SVGPathData.CLOSE_PATH;
+};
 type CommandQ = {
-  relative: boolean
-  type: typeof SVGPathData.QUAD_TO
-  x1: number
-  y1: number
-  x: number
-  y: number
-}
+  relative: boolean;
+  type: typeof SVGPathData.QUAD_TO;
+  x1: number;
+  y1: number;
+  x: number;
+  y: number;
+};
 type CommandT = {
-  relative: boolean
-  type: typeof SVGPathData.SMOOTH_QUAD_TO
-  x: number
-  y: number
-}
+  relative: boolean;
+  type: typeof SVGPathData.SMOOTH_QUAD_TO;
+  x: number;
+  y: number;
+};
 type CommandC = {
-  relative: boolean
-  type: typeof SVGPathData.CURVE_TO
-  x1: number
-  y1: number
-  x2: number
-  y2: number
-  x: number
-  y: number
-}
+  relative: boolean;
+  type: typeof SVGPathData.CURVE_TO;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  x: number;
+  y: number;
+};
 type CommandS = {
-  relative: boolean
-  type: typeof SVGPathData.SMOOTH_CURVE_TO
-  x2: number
-  y2: number
-  x: number
-  y: number
-}
+  relative: boolean;
+  type: typeof SVGPathData.SMOOTH_CURVE_TO;
+  x2: number;
+  y2: number;
+  x: number;
+  y: number;
+};
 type CommandA = {
-  relative: boolean
-  type: typeof SVGPathData.ARC
-  rX: number
-  rY: number
-  xRot: number
-  sweepFlag: 0 | 1
-  lArcFlag: 0 | 1
-  x: number
-  y: number
-  cX?: number
-  cY?: number
-  phi1?: number
-  phi2?: number
-}
-type SVGCommand = CommandM | CommandL | CommandH | CommandV | CommandZ | CommandQ | CommandT | CommandC | CommandS | CommandA
+  relative: boolean;
+  type: typeof SVGPathData.ARC;
+  rX: number;
+  rY: number;
+  xRot: number;
+  sweepFlag: 0 | 1;
+  lArcFlag: 0 | 1;
+  x: number;
+  y: number;
+  cX?: number;
+  cY?: number;
+  phi1?: number;
+  phi2?: number;
+};
+type SVGCommand =
+  | CommandM
+  | CommandL
+  | CommandH
+  | CommandV
+  | CommandZ
+  | CommandQ
+  | CommandT
+  | CommandC
+  | CommandS
+  | CommandA;
 
 declare class SVGPathData {
   commands: SVGCommand[]
-  constructor(content: string | SVGCommand[])
+  constructor(content: string | SVGCommand[]);
   static readonly CLOSE_PATH: 1
   static readonly MOVE_TO: 2
   static readonly HORIZ_LINE_TO: 4
@@ -113,13 +123,13 @@ const typeMap = {
 export const parseSvgPath = (d: string) => {
   const pathData = new SVGPathData(d)
 
-  const ret = pathData.commands.map(item => {
+  const ret = pathData.commands.map((item) => {
     return { ...item, type: typeMap[item.type] }
   })
   return ret
 }
 
-export type SvgPath = ReturnType<typeof parseSvgPath>
+export type SvgPath = ReturnType<typeof parseSvgPath>;
 
 /**
  * 解析SVG路径，并将圆弧（A）类型的路径转为三次贝塞尔（C）类型的路径
@@ -127,7 +137,7 @@ export type SvgPath = ReturnType<typeof parseSvgPath>
  */
 export const toPoints = (d: string) => {
   const pathData = new SVGPathData(d)
-  
+
   const points = []
   for (const item of pathData.commands) {
     const type = typeMap[item.type]
@@ -142,7 +152,7 @@ export const toPoints = (d: string) => {
     }
     if (item.type === 32) {
       points.push({
-        x: item.x, 
+        x: item.x,
         y: item.y,
         curve: {
           type: 'cubic',
@@ -157,7 +167,7 @@ export const toPoints = (d: string) => {
     }
     else if (item.type === 128) {
       points.push({
-        x: item.x, 
+        x: item.x,
         y: item.y,
         curve: {
           type: 'quadratic',
@@ -185,7 +195,7 @@ export const toPoints = (d: string) => {
       })
       for (const cbPoint of cubicBezierPoints) {
         points.push({
-          x: cbPoint.x, 
+          x: cbPoint.x,
           y: cbPoint.y,
           curve: {
             type: 'cubic',
@@ -207,4 +217,4 @@ export const toPoints = (d: string) => {
   return points
 }
 
-export type SvgPoints = ReturnType<typeof toPoints>
+export type SvgPoints = ReturnType<typeof toPoints>;
